@@ -40,9 +40,9 @@ DB_CONFIG = {
 
 # ✅ ログの設定
 def set_logger():
-    log_dir = 'tests/test_log'
+    log_dir = 'logs'
     os.makedirs(log_dir, exist_ok=True)
-    log_file = os.path.join(log_dir, 'test_fetch.log')
+    log_file = os.path.join(log_dir, 'alpha_vantage_API_fetch.log')
 
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)

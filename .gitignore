@@ -17,4 +17,4 @@ docker-compose.override.yml
 *.sock
 
 # ログファイル（個別のログも除外）
-*.log
+exit
