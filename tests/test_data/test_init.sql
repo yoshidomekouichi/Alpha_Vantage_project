@@ -1,7 +1,0 @@
-CREATE TABLE IF NOT EXISTS test_stock_prices (
-    id SERIAL PRIMARY KEY,
-    symbol VARCHAR(10) NOT NULL,
-    price NUMERIC(10, 2) NOT NULL,
-    volume BIGINT NOT NULL,
-    timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-);

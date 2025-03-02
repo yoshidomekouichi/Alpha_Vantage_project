@@ -28,13 +28,15 @@ params = {
 }
 
 # ✅ データベース設定
+
 DB_CONFIG = {
-    "dbname": "test_alpha_vantage",
+    "dbname": "my_db",
     "user": "myuser",
     "password": "0000",
-    "host": "alpha_vantage_db",  
-    "port": "5432",
+    "host": "localhost",
+    "port": "5433",  # Docker側のポートに合わせる！
 }
+
 
 # ✅ ログの設定
 def set_logger():

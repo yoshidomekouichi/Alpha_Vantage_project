@@ -1,140 +1,8 @@
-2025-03-01 02:05:04,808 [INFO] 🚀 データ取得を開始
-2025-03-01 02:05:04,808 [DEBUG] スクリプト開始
-2025-03-01 02:05:04,808 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
-2025-03-01 02:05:06,972 [DEBUG] API Response Status: 200
-2025-03-01 02:05:06,972 [DEBUG] API Response Content: {
-    "Meta Data": {
-        "1. Information": "Daily Prices (open, high, low, close) and Volumes",
-        "2. Symbol": "NVDA",
-        "3. Last Refreshed": "2025-02-27",
-        "4. Output Size": "Compact",
-        "5. Time Zone": "US/Eastern"
-    },
-    "Time Series (Daily)": {
-        "2025-02-27": {
-            "1. open": "135.0000",
-            "2. high": "135.0100",
-            "3. low": "120.0100",
-            "4. close": "120.1500",
-            "5. volume": "443175846"
-        },
-      
-2025-03-01 02:05:06,973 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
-2025-03-01 02:05:06,995 [INFO] ✅ データ品質チェック OK！
-2025-03-01 02:05:06,996 [DEBUG] データベース接続を開始
-2025-03-01 02:05:07,008 [ERROR] ❌ データ保存エラー: could not translate host name "alpha_vantage_db" to address: nodename nor servname provided, or not known
-Traceback (most recent call last):
-  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/tests/test_src/test_fetch.py", line 117, in save_to_db
-    conn = psycopg2.connect(**DB_CONFIG)
-  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
-    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
-psycopg2.OperationalError: could not translate host name "alpha_vantage_db" to address: nodename nor servname provided, or not known
-
-2025-03-01 02:05:07,009 [INFO] 🎉 処理完了
-2025-03-01 02:15:12,172 [INFO] 🚀 データ取得を開始
-2025-03-01 02:15:12,172 [DEBUG] スクリプト開始
-2025-03-01 02:15:12,172 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
-2025-03-01 02:15:12,574 [DEBUG] API Response Status: 200
-2025-03-01 02:15:12,574 [DEBUG] API Response Content: {
-    "Meta Data": {
-        "1. Information": "Daily Prices (open, high, low, close) and Volumes",
-        "2. Symbol": "NVDA",
-        "3. Last Refreshed": "2025-02-27",
-        "4. Output Size": "Compact",
-        "5. Time Zone": "US/Eastern"
-    },
-    "Time Series (Daily)": {
-        "2025-02-27": {
-            "1. open": "135.0000",
-            "2. high": "135.0100",
-            "3. low": "120.0100",
-            "4. close": "120.1500",
-            "5. volume": "443175846"
-        },
-      
-2025-03-01 02:15:12,574 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
-2025-03-01 02:15:12,586 [INFO] ✅ データ品質チェック OK！
-2025-03-01 02:15:12,587 [DEBUG] データベース接続を開始
-2025-03-01 02:15:12,601 [ERROR] ❌ データ保存エラー: could not translate host name "alpha_vantage_db" to address: nodename nor servname provided, or not known
-Traceback (most recent call last):
-  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/tests/test_src/test_fetch.py", line 117, in save_to_db
-    conn = psycopg2.connect(**DB_CONFIG)
-  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
-    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
-psycopg2.OperationalError: could not translate host name "alpha_vantage_db" to address: nodename nor servname provided, or not known
-
-2025-03-01 02:15:12,602 [INFO] 🎉 処理完了
-2025-03-01 02:18:51,453 [INFO] 🚀 データ取得を開始
-2025-03-01 02:18:51,453 [DEBUG] スクリプト開始
-2025-03-01 02:18:51,453 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
-2025-03-01 02:18:52,148 [DEBUG] API Response Status: 200
-2025-03-01 02:18:52,148 [DEBUG] API Response Content: {
-    "Meta Data": {
-        "1. Information": "Daily Prices (open, high, low, close) and Volumes",
-        "2. Symbol": "NVDA",
-        "3. Last Refreshed": "2025-02-27",
-        "4. Output Size": "Compact",
-        "5. Time Zone": "US/Eastern"
-    },
-    "Time Series (Daily)": {
-        "2025-02-27": {
-            "1. open": "135.0000",
-            "2. high": "135.0100",
-            "3. low": "120.0100",
-            "4. close": "120.1500",
-            "5. volume": "443175846"
-        },
-      
-2025-03-01 02:18:52,148 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
-2025-03-01 02:18:52,161 [INFO] ✅ データ品質チェック OK！
-2025-03-01 02:18:52,161 [DEBUG] データベース接続を開始
-2025-03-01 02:18:52,165 [ERROR] ❌ データ保存エラー: could not translate host name "alpha_vantage_db" to address: nodename nor servname provided, or not known
-Traceback (most recent call last):
-  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/tests/test_src/test_fetch.py", line 117, in save_to_db
-    conn = psycopg2.connect(**DB_CONFIG)
-  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
-    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
-psycopg2.OperationalError: could not translate host name "alpha_vantage_db" to address: nodename nor servname provided, or not known
-
-2025-03-01 02:18:52,166 [INFO] 🎉 処理完了
-2025-03-01 02:20:18,292 [INFO] 🚀 データ取得を開始
-2025-03-01 02:20:18,293 [DEBUG] スクリプト開始
-2025-03-01 02:20:18,293 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
-2025-03-01 02:20:18,994 [DEBUG] API Response Status: 200
-2025-03-01 02:20:18,995 [DEBUG] API Response Content: {
-    "Meta Data": {
-        "1. Information": "Daily Prices (open, high, low, close) and Volumes",
-        "2. Symbol": "NVDA",
-        "3. Last Refreshed": "2025-02-27",
-        "4. Output Size": "Compact",
-        "5. Time Zone": "US/Eastern"
-    },
-    "Time Series (Daily)": {
-        "2025-02-27": {
-            "1. open": "135.0000",
-            "2. high": "135.0100",
-            "3. low": "120.0100",
-            "4. close": "120.1500",
-            "5. volume": "443175846"
-        },
-      
-2025-03-01 02:20:18,995 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
-2025-03-01 02:20:19,020 [INFO] ✅ データ品質チェック OK！
-2025-03-01 02:20:19,020 [DEBUG] データベース接続を開始
-2025-03-01 02:20:19,198 [ERROR] ❌ データ保存エラー: connection to server at "localhost" (::1), port 5432 failed: FATAL:  role "myuser" does not exist
-Traceback (most recent call last):
-  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/tests/test_src/test_fetch.py", line 117, in save_to_db
-    conn = psycopg2.connect(**DB_CONFIG)
-  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
-    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
-psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 failed: FATAL:  role "myuser" does not exist
-
-2025-03-01 02:20:19,199 [INFO] 🎉 処理完了
-2025-03-01 16:16:25,114 [INFO] 🚀 データ取得を開始
-2025-03-01 16:16:25,114 [DEBUG] スクリプト開始
-2025-03-01 16:16:25,114 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
-2025-03-01 16:16:25,550 [DEBUG] API Response Status: 200
-2025-03-01 16:16:25,550 [DEBUG] API Response Content: {
+2025-03-01 21:16:13,079 [INFO] 🚀 データ取得を開始
+2025-03-01 21:16:13,079 [DEBUG] スクリプト開始
+2025-03-01 21:16:13,079 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
+2025-03-01 21:16:13,788 [DEBUG] API Response Status: 200
+2025-03-01 21:16:13,789 [DEBUG] API Response Content: {
     "Meta Data": {
         "1. Information": "Daily Prices (open, high, low, close) and Volumes",
         "2. Symbol": "NVDA",
@@ -148,26 +16,26 @@ psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 
             "2. high": "125.0900",
             "3. low": "116.4000",
             "4. close": "124.9200",
-            "5. volume": "384810304"
+            "5. volume": "389091145"
         },
       
-2025-03-01 16:16:25,550 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
-2025-03-01 16:16:25,562 [INFO] ✅ データ品質チェック OK！
-2025-03-01 16:16:25,563 [DEBUG] データベース接続を開始
-2025-03-01 16:16:25,761 [ERROR] ❌ データ保存エラー: connection to server at "localhost" (::1), port 5432 failed: FATAL:  role "myuser" does not exist
+2025-03-01 21:16:13,789 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
+2025-03-01 21:16:13,807 [INFO] ✅ データ品質チェック OK！
+2025-03-01 21:16:13,807 [DEBUG] データベース接続を開始
+2025-03-01 21:16:13,836 [ERROR] ❌ データ保存エラー: could not translate host name "postgres_container" to address: nodename nor servname provided, or not known
 Traceback (most recent call last):
   File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/tests/test_src/test_fetch.py", line 117, in save_to_db
     conn = psycopg2.connect(**DB_CONFIG)
   File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
     conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
-psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 failed: FATAL:  role "myuser" does not exist
+psycopg2.OperationalError: could not translate host name "postgres_container" to address: nodename nor servname provided, or not known
 
-2025-03-01 16:16:25,763 [INFO] 🎉 処理完了
-2025-03-01 16:22:23,823 [INFO] 🚀 データ取得を開始
-2025-03-01 16:22:23,824 [DEBUG] スクリプト開始
-2025-03-01 16:22:23,824 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
-2025-03-01 16:22:24,511 [DEBUG] API Response Status: 200
-2025-03-01 16:22:24,512 [DEBUG] API Response Content: {
+2025-03-01 21:16:13,837 [INFO] 🎉 処理完了
+2025-03-01 21:45:29,487 [INFO] 🚀 データ取得を開始
+2025-03-01 21:45:29,488 [DEBUG] スクリプト開始
+2025-03-01 21:45:29,488 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
+2025-03-01 21:45:30,221 [DEBUG] API Response Status: 200
+2025-03-01 21:45:30,221 [DEBUG] API Response Content: {
     "Meta Data": {
         "1. Information": "Daily Prices (open, high, low, close) and Volumes",
         "2. Symbol": "NVDA",
@@ -181,26 +49,26 @@ psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 
             "2. high": "125.0900",
             "3. low": "116.4000",
             "4. close": "124.9200",
-            "5. volume": "384810304"
+            "5. volume": "389091145"
         },
       
-2025-03-01 16:22:24,512 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
-2025-03-01 16:22:24,515 [INFO] ✅ データ品質チェック OK！
-2025-03-01 16:22:24,516 [DEBUG] データベース接続を開始
-2025-03-01 16:22:24,973 [ERROR] ❌ データ保存エラー: connection to server at "localhost" (::1), port 5432 failed: FATAL:  role "myuser" does not exist
+2025-03-01 21:45:30,221 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
+2025-03-01 21:45:30,235 [INFO] ✅ データ品質チェック OK！
+2025-03-01 21:45:30,235 [DEBUG] データベース接続を開始
+2025-03-01 21:45:30,251 [ERROR] ❌ データ保存エラー: could not translate host name "postgres_container" to address: nodename nor servname provided, or not known
 Traceback (most recent call last):
   File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/tests/test_src/test_fetch.py", line 117, in save_to_db
     conn = psycopg2.connect(**DB_CONFIG)
   File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
     conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
-psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 failed: FATAL:  role "myuser" does not exist
+psycopg2.OperationalError: could not translate host name "postgres_container" to address: nodename nor servname provided, or not known
 
-2025-03-01 16:22:24,974 [INFO] 🎉 処理完了
-2025-03-01 16:25:47,495 [INFO] 🚀 データ取得を開始
-2025-03-01 16:25:47,496 [DEBUG] スクリプト開始
-2025-03-01 16:25:47,496 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
-2025-03-01 16:25:48,241 [DEBUG] API Response Status: 200
-2025-03-01 16:25:48,241 [DEBUG] API Response Content: {
+2025-03-01 21:45:30,256 [INFO] 🎉 処理完了
+2025-03-01 21:45:44,628 [INFO] 🚀 データ取得を開始
+2025-03-01 21:45:44,628 [DEBUG] スクリプト開始
+2025-03-01 21:45:44,628 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
+2025-03-01 21:45:45,009 [DEBUG] API Response Status: 200
+2025-03-01 21:45:45,009 [DEBUG] API Response Content: {
     "Meta Data": {
         "1. Information": "Daily Prices (open, high, low, close) and Volumes",
         "2. Symbol": "NVDA",
@@ -214,18 +82,84 @@ psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 
             "2. high": "125.0900",
             "3. low": "116.4000",
             "4. close": "124.9200",
-            "5. volume": "384810304"
+            "5. volume": "389091145"
         },
       
-2025-03-01 16:25:48,242 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
-2025-03-01 16:25:48,256 [INFO] ✅ データ品質チェック OK！
-2025-03-01 16:25:48,256 [DEBUG] データベース接続を開始
-2025-03-01 16:25:48,282 [ERROR] ❌ データ保存エラー: could not translate host name "alpha_vantage_db" to address: nodename nor servname provided, or not known
+2025-03-01 21:45:45,009 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
+2025-03-01 21:45:45,023 [INFO] ✅ データ品質チェック OK！
+2025-03-01 21:45:45,023 [DEBUG] データベース接続を開始
+2025-03-01 21:45:45,143 [ERROR] ❌ データ保存エラー: connection to server at "localhost" (::1), port 5432 failed: FATAL:  role "myuser" does not exist
 Traceback (most recent call last):
   File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/tests/test_src/test_fetch.py", line 117, in save_to_db
     conn = psycopg2.connect(**DB_CONFIG)
   File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
     conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
-psycopg2.OperationalError: could not translate host name "alpha_vantage_db" to address: nodename nor servname provided, or not known
+psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 failed: FATAL:  role "myuser" does not exist
 
-2025-03-01 16:25:48,283 [INFO] 🎉 処理完了
+2025-03-01 21:45:45,144 [INFO] 🎉 処理完了
+2025-03-01 21:46:28,999 [INFO] 🚀 データ取得を開始
+2025-03-01 21:46:28,999 [DEBUG] スクリプト開始
+2025-03-01 21:46:28,999 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
+2025-03-01 21:46:29,375 [DEBUG] API Response Status: 200
+2025-03-01 21:46:29,375 [DEBUG] API Response Content: {
+    "Meta Data": {
+        "1. Information": "Daily Prices (open, high, low, close) and Volumes",
+        "2. Symbol": "NVDA",
+        "3. Last Refreshed": "2025-02-28",
+        "4. Output Size": "Compact",
+        "5. Time Zone": "US/Eastern"
+    },
+    "Time Series (Daily)": {
+        "2025-02-28": {
+            "1. open": "118.0200",
+            "2. high": "125.0900",
+            "3. low": "116.4000",
+            "4. close": "124.9200",
+            "5. volume": "389091145"
+        },
+      
+2025-03-01 21:46:29,376 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
+2025-03-01 21:46:29,397 [INFO] ✅ データ品質チェック OK！
+2025-03-01 21:46:29,398 [DEBUG] データベース接続を開始
+2025-03-01 21:46:29,419 [ERROR] ❌ データ保存エラー: connection to server at "localhost" (::1), port 5432 failed: FATAL:  role "myuser" does not exist
+Traceback (most recent call last):
+  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/tests/test_src/test_fetch.py", line 117, in save_to_db
+    conn = psycopg2.connect(**DB_CONFIG)
+  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 failed: FATAL:  role "myuser" does not exist
+
+2025-03-01 21:46:29,420 [INFO] 🎉 処理完了
+2025-03-01 21:59:32,504 [INFO] 🚀 データ取得を開始
+2025-03-01 21:59:32,504 [DEBUG] スクリプト開始
+2025-03-01 21:59:32,504 [DEBUG] API_KEY: WGV3FY8PM9SKEZTK
+2025-03-01 21:59:33,302 [DEBUG] API Response Status: 200
+2025-03-01 21:59:33,302 [DEBUG] API Response Content: {
+    "Meta Data": {
+        "1. Information": "Daily Prices (open, high, low, close) and Volumes",
+        "2. Symbol": "NVDA",
+        "3. Last Refreshed": "2025-02-28",
+        "4. Output Size": "Compact",
+        "5. Time Zone": "US/Eastern"
+    },
+    "Time Series (Daily)": {
+        "2025-02-28": {
+            "1. open": "118.0200",
+            "2. high": "125.0900",
+            "3. low": "116.4000",
+            "4. close": "124.9200",
+            "5. volume": "389091145"
+        },
+      
+2025-03-01 21:59:33,302 [DEBUG] API Request URL: https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=WGV3FY8PM9SKEZTK&outputsize=compact&datatype=json
+2025-03-01 21:59:33,319 [INFO] ✅ データ品質チェック OK！
+2025-03-01 21:59:33,319 [DEBUG] データベース接続を開始
+2025-03-01 21:59:33,514 [ERROR] ❌ データ保存エラー: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "my_database" does not exist
+Traceback (most recent call last):
+  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/tests/test_src/test_fetch.py", line 117, in save_to_db
+    conn = psycopg2.connect(**DB_CONFIG)
+  File "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "my_database" does not exist
+
+2025-03-01 21:59:33,517 [INFO] 🎉 処理完了
