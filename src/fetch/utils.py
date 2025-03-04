@@ -7,7 +7,7 @@ from pathlib import Path
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 
-# ✅ 環境変数のロード
+# * 環境変数のロード
 dotenv_path = Path(__file__).parent.parent.parent / ".env"
 if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
@@ -120,6 +120,7 @@ def check_data_quality(stock_data):
         return False
 
     logging.info("✅ データ品質チェック OK！")
+
     return True
 
 # ✅ DB保存関数
