@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Alpha Vantage株価データパイプライン 学習ガイド</title>
+  <!-- テーマの追加 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/style.min.css" title="docsify-darklight-theme" type="text/css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* カスタムスタイル */
+    :root {
+      --theme-color: #42b983;
+      --sidebar-width: 300px;
+      --heading-h1-font-size: 2rem;
+      --heading-h2-font-size: 1.75rem;
+      --heading-h3-font-size: 1.5rem;
+      --heading-h4-font-size: 1.25rem;
+      --navbar-height: 60px;
+    }
+    
+    /* ダークモード用の変数 */
+    body[data-theme="dark"] {
+      --theme-color: #42d392;
+      --background: #0d1117;
+      --text-color: #c9d1d9;
+      --sidebar-background: #161b22;
+      --sidebar-border-color: #30363d;
+      --code-background: #1f2937;
+      --navbar-background: #161b22;
+      --navbar-text: #c9d1d9;
+      --search-background: #1f2937;
+      --search-text: #c9d1d9;
+      --search-border: #30363d;
+    }
+    
+    /* モバイル向けのカスタムスタイル */
+    @media screen and (max-width: 768px) {
+      .markdown-section {
+        padding: 30px 15px;
+      }
+      .sidebar {
+        width: 250px;
+      }
+      .app-name-link img {
+        max-width: 80%;
+      }
+      /* モバイル向けのナビゲーションバーの調整 */
+      .navbar {
+        padding: 0 10px;
+      }
+      .navbar-buttons {
+        margin-right: 5px;
+      }
+      /* サイドバーが開いている時のコンテンツエリアの調整 */
+      body.close .content {
+        transform: translateX(250px);
+      }
+    }
+    
+    /* コードブロックの横スクロール */
+    .markdown-section pre > code {
+      white-space: pre;
+      overflow-x: auto;
+      border-radius: 8px;
+    }
+    
+    /* 画像の最大幅を設定 */
+    .markdown-section img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* リンクのホバー効果 */
+    .markdown-section a {
+      transition: all 0.3s ease;
+    }
+    .markdown-section a:hover {
+      text-decoration: none;
+      opacity: 0.8;
+    }
+    
+    /* サイドバーのスタイル改善 */
+    .sidebar ul li {
+      margin: 6px 0;
+    }
+    .sidebar ul li a {
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+    }
+    .sidebar ul li a:hover {
+      text-decoration: none;
+      transform: translateX(3px);
+    }
+    .sidebar ul li.active > a {
+      font-weight: 600;
+    }
+    
+    /* 目次のネスト表示を改善 */
+    .sidebar-nav > ul > li > ul {
+      padding-left: 15px;
+    }
+    
+    /* ヘッダーとフッターのスタイル */
+    .app-nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 100;
+      padding: 10px 20px;
+    }
+    
+    /* コンテンツの読みやすさ向上 */
+    .markdown-section {
+      max-width: 900px;
+      margin: 0 auto;
+      line-height: 1.7;
+      padding-top: calc(var(--navbar-height) + 20px); /* ナビゲーションバーの高さ分余白を追加 */
+    }
+    .markdown-section p {
+      margin: 1.2em 0;
+    }
+    .markdown-section h1, 
+    .markdown-section h2, 
+    .markdown-section h3, 
+    .markdown-section h4 {
+      margin-top: 1.5em;
+      margin-bottom: 0.8em;
+      font-weight: 600;
+    }
+    
+    /* テーブルのスタイル改善 */
+    .markdown-section table {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .markdown-section tr:nth-child(2n) {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+    body[data-theme="dark"] .markdown-section tr:nth-child(2n) {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+    
+    /* ダークモードの背景と文字色を強制的に適用 */
+    body[data-theme="dark"] {
+      background-color: #0d1117 !important;
+      color: #c9d1d9 !important;
+    }
+    
+    /* ダークモード時のコンテンツエリアの背景色 */
+    body[data-theme="dark"] .content {
+      background-color: #0d1117 !important;
+    }
+    
+    /* ダークモード時のサイドバーの背景色 */
+    body[data-theme="dark"] .sidebar {
+      background-color: #161b22 !important;
+      color: #c9d1d9 !important;
+      border-right-color: #30363d !important;
+    }
+    
+    /* ダークモード時のコードブロックの背景色 */
+    body[data-theme="dark"] .markdown-section pre {
+      background-color: #1f2937 !important;
+    }
+    
+    /* ダークモード時のインラインコードの背景色 */
+    body[data-theme="dark"] .markdown-section code {
+      background-color: #1f2937 !important;
+    }
+    
+    /* 固定ナビゲーションバー */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--navbar-height);
+      background-color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 200;
+      transition: all 0.3s ease;
+    }
+    
+    body[data-theme="dark"] .navbar {
+      background-color: var(--navbar-background);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .navbar-brand img {
+      height: 30px;
+      margin-right: 10px;
+    }
+    
+    .navbar-buttons {
+      display: flex;
+      align-items: center;
+    }
+    
+    .navbar-button {
+      background: none;
+      border: none;
+      color: #606c71;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-left: 15px;
+      padding: 5px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+    }
+    
+    body[data-theme="dark"] .navbar-button {
+      color: var(--navbar-text);
+    }
+    
+    .navbar-button:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    body[data-theme="dark"] .navbar-button:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* 検索ボックスのスタイル改善 */
+    .search {
+      border-bottom: 1px solid #eaecef;
+      padding: 10px 15px;
+      position: relative;
+    }
+    
+    body[data-theme="dark"] .search {
+      border-bottom-color: var(--sidebar-border-color);
+    }
+    
+    .search input {
+      width: 100%;
+      padding: 10px 30px 10px 15px;
+      border-radius: 20px;
+      border: 1px solid #e1e4e8;
+      background-color: #f6f8fa;
+      color: #24292e;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    
+    body[data-theme="dark"] .search input {
+      background-color: var(--search-background);
+      border-color: var(--search-border);
+      color: var(--search-text);
+    }
+    
+    .search input:focus {
+      border-color: var(--theme-color);
+      box-shadow: 0 0 0 2px rgba(66, 185, 131, 0.2);
+    }
+    
+    .search .clear-button {
+      position: absolute;
+      right: 25px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      cursor: pointer;
+    }
+    
+    /* モバイルでのサイドバートグルボタンの改善 */
+    .sidebar-toggle {
+      background-color: transparent;
+      border: 0;
+      outline: none;
+      padding: 10px;
+      position: absolute;
+      bottom: auto;
+      left: auto;
+      top: 0;
+      z-index: 300;
+    }
+    
+    .sidebar-toggle span {
+      background-color: var(--theme-color);
+      display: block;
+      margin-bottom: 4px;
+      width: 20px;
+      height: 2px;
+    }
+    
+    /* 目次のアイコン追加 */
+    .sidebar-nav li a:before {
+      content: "\f15c";
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 400;
+      margin-right: 8px;
+      color: #999;
+    }
+    
+    .sidebar-nav li a[href*="プロジェクト概要"]:before {
+      content: "\f02d";
+      font-weight: 900;
+    }
+    
+    .sidebar-nav li a[href*="設定管理"]:before {
+      content: "\f085";
+      font-weight: 900;
+    }
+    
+    .sidebar-nav li a[href*="API"]:before {
+      content: "\f1e6";
+      font-weight: 900;
+    }
+    
+    .sidebar-nav li a[href*="データ"]:before {
+      content: "\f1c0";
+      font-weight: 900;
+    }
+    
+    .sidebar-nav li a[href*="ストレージ"]:before {
+      content: "\f0c2";
+      font-weight: 900;
+    }
+    
+    .sidebar-nav li a[href*="ロギング"]:before {
+      content: "\f15c";
+      font-weight: 900;
+    }
+    
+    .sidebar-nav li a[href*="通知"]:before {
+      content: "\f0f3";
+      font-weight: 900;
+    }
+    
+    .sidebar-nav li a[href*="スクリプト"]:before {
+      content: "\f121";
+      font-weight: 900;
+    }
+    
+    .sidebar-nav li a[href*="Lambda"]:before {
+      content: "\f135";
+      font-weight: 900;
+    }
+    
+    /* 進捗表示バー */
+    .progress-bar {
+      position: fixed;
+      top: var(--navbar-height);
+      left: 0;
+      height: 3px;
+      background-color: var(--theme-color);
+      z-index: 999;
+      transition: width 0.2s, opacity 0.2s;
+      opacity: 0;
+    }
+    
+    /* スクロールトップボタン */
+    .scroll-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--theme-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 100;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .scroll-to-top.visible {
+      opacity: 1;
+    }
+    
+    /* モバイルでのサイドバー表示改善 */
+    @media screen and (max-width: 768px) {
+      body.close .sidebar {
+        transform: translateX(0);
+      }
+      
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      
+      .content {
+        transition: transform 0.3s ease;
+      }
+      
+      .sidebar-toggle {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 300;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 固定ナビゲーションバー -->
+  <div class="navbar">
+    <div class="navbar-brand">
+      <span>Alpha Vantage学習ガイド</span>
+    </div>
+    <div class="navbar-buttons">
+      <button class="navbar-button toggle-sidebar-button" aria-label="Toggle Sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+      <button class="navbar-button toggle-search-button" aria-label="Toggle Search">
+        <i class="fas fa-search"></i>
+      </button>
+      <button class="navbar-button toggle-theme-button" aria-label="Toggle Theme">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </div>
+  
+  <!-- 進捗表示バー -->
+  <div class="progress-bar"></div>
+  
+  <!-- スクロールトップボタン -->
+  <div class="scroll-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+  
+  <div id="app"></div>
+  
+  <script>
+    window.$docsify = {
+      name: 'Alpha Vantage学習ガイド',
+      repo: 'yoshidomekouichi/data_engineering_tutorial',
+      loadSidebar: 'SUMMARY.md',
+      subMaxLevel: 3,
+      auto2top: true,
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: '検索',
+        noData: '結果がありません',
+        depth: 6
+      },
+      pagination: {
+        previousText: '前へ',
+        nextText: '次へ',
+        crossChapter: true
+      },
+      copyCode: {
+        buttonText: 'コピー',
+        errorText: 'エラー',
+        successText: 'コピーしました'
+      },
+      // ダークモード設定
+      darklightTheme: {
+        defaultTheme: 'dark', // デフォルトをダークモードに変更
+        siteFont: 'Source Sans Pro, Helvetica Neue, Arial, sans-serif',
+        codeFontFamily: 'Roboto Mono, Monaco, courier, monospace',
+        bodyFontSize: '16px',
+        dark: {
+          background: '#0d1117',
+          textColor: '#c9d1d9',
+          codeBackgroundColor: '#1f2937',
+          codeTextColor: '#e6e6e6',
+          blockQuoteColor: '#8b949e',
+          highlightColor: '#e3b341',
+          sidebarSublink: '#8b949e',
+          codeTypeColor: '#ffffff',
+          coverBackground: 'linear-gradient(to left bottom, hsl(118, 100%, 85%) 0%,hsl(181, 100%, 85%) 100%)',
+          toogleBackground: '#ffffff'
+        },
+        light: {
+          background: 'white',
+          textColor: '#34495e',
+          codeBackgroundColor: '#f8f8f8',
+          codeTextColor: '#525252',
+          blockQuoteColor: '#858585',
+          highlightColor: '#d22778',
+          sidebarSublink: '#505d6b',
+          codeTypeColor: '#091a28',
+          coverBackground: 'linear-gradient(to left bottom, hsl(118, 100%, 85%) 0%,hsl(181, 100%, 85%) 100%)',
+          toogleBackground: '#091a28'
+        }
+      },
+      plugins: [
+        function(hook, vm) {
+          hook.beforeEach(function(html) {
+            return html + '\n\n----\n\n' +
+              '<div style="text-align: center; margin-top: 30px;">' +
+              '最終更新: ' + new Date().toLocaleDateString('ja-JP') +
+              '</div>';
+          });
+          
+          // ページ読み込み完了後の処理
+          hook.ready(function() {
+            // モバイルでのサイドバー表示を改善
+            document.querySelector('.toggle-sidebar-button').addEventListener('click', function() {
+              document.body.classList.toggle('close');
+            });
+            
+            // 検索ボックスの表示/非表示を切り替え
+            document.querySelector('.toggle-search-button').addEventListener('click', function() {
+              const searchBox = document.querySelector('.search');
+              if (searchBox) {
+                searchBox.style.display = searchBox.style.display === 'none' ? 'block' : 'none';
+              }
+            });
+            
+            // テーマ切り替えボタンの処理
+            document.querySelector('.toggle-theme-button').addEventListener('click', function() {
+              const currentTheme = document.body.getAttribute('data-theme');
+              const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+              document.body.setAttribute('data-theme', newTheme);
+              localStorage.setItem('DARK_LIGHT_THEME', newTheme);
+              
+              // アイコンの切り替え
+              const icon = this.querySelector('i');
+              if (newTheme === 'dark') {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+              } else {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+              }
+            });
+            
+            // スクロールトップボタンの処理
+            const scrollToTopButton = document.querySelector('.scroll-to-top');
+            window.addEventListener('scroll', function() {
+              if (window.pageYOffset > 300) {
+                scrollToTopButton.classList.add('visible');
+              } else {
+                scrollToTopButton.classList.remove('visible');
+              }
+              
+              // 進捗バーの更新
+              const progressBar = document.querySelector('.progress-bar');
+              const totalHeight = document.body.scrollHeight - window.innerHeight;
+              const progress = (window.pageYOffset / totalHeight) * 100;
+              progressBar.style.width = progress + '%';
+              progressBar.style.opacity = 1;
+            });
+            
+            scrollToTopButton.addEventListener('click', function() {
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+              });
+            });
+            
+            // ダークモードを強制的に適用
+            setTimeout(function() {
+              document.body.setAttribute('data-theme', 'dark');
+              const themeIcon = document.querySelector('.toggle-theme-button i');
+              themeIcon.classList.remove('fa-sun');
+              themeIcon.classList.add('fa-moon');
+            }, 100);
+          });
+        }
+      ]
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
+  <!-- ダークモード切替スクリプト -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/index.min.js"></script>
+  
+  <!-- ダークモードを強制的に適用するスクリプト -->
+  <script>
+    // ページ読み込み完了後にダークモードを適用
+    window.addEventListener('load', function() {
+      // ローカルストレージにダークモード設定を保存
+      localStorage.setItem('DARK_LIGHT_THEME', 'dark');
+      
+      // ダークモードを適用
+      document.body.setAttribute('data-theme', 'dark');
+      
+      // 定期的にダークモードが適用されているか確認し、適用されていなければ再適用
+      var checkInterval = setInterval(function() {
+        if (document.body.getAttribute('data-theme') !== 'dark') {
+          document.body.setAttribute('data-theme', 'dark');
+        } else {
+          clearInterval(checkInterval);
+        }
+      }, 500);
+      
+      // 検索ボックスを初期状態で非表示に
+      setTimeout(function() {
+        const searchBox = document.querySelector('.search');
+        if (searchBox) {
+          searchBox.style.display = 'none';
+        }
+      }, 100);
+    });
+  </script>
+</body>
+</html>
