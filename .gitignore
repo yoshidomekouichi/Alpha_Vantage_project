@@ -19,6 +19,9 @@ docker-compose.override.yml
 
 # ログファイル（個別のログも除外）
 
+# AWS Lambda関連
+lambda/package/
+lambda/*.zip
 
 #練習問題を解くファイル
 /training/
