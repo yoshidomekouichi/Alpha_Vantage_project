@@ -14,11 +14,12 @@
     :root {
       --theme-color: #4d8cf4;
       --sidebar-width: 300px;
-      --heading-h1-font-size: 2rem;
-      --heading-h2-font-size: 1.75rem;
-      --heading-h3-font-size: 1.5rem;
-      --heading-h4-font-size: 1.25rem;
+      --heading-h1-font-size: 1.8rem;
+      --heading-h2-font-size: 1.5rem;
+      --heading-h3-font-size: 1.3rem;
+      --heading-h4-font-size: 1.1rem;
       --navbar-height: 60px;
+      --code-font-size: 0.85rem;
       
       /* One Dark Pro テーマの色 */
       --one-dark-bg: #282c34;
@@ -67,6 +68,50 @@
       body.close .content {
         transform: translateX(250px);
       }
+      
+      /* モバイル向けのフォントサイズ調整 */
+      :root {
+        --heading-h1-font-size: 1.6rem;
+        --heading-h2-font-size: 1.4rem;
+        --heading-h3-font-size: 1.2rem;
+        --heading-h4-font-size: 1rem;
+        --code-font-size: 0.8rem;
+      }
+      
+      .markdown-section h1 {
+        font-size: var(--heading-h1-font-size);
+      }
+      
+      .markdown-section h2 {
+        font-size: var(--heading-h2-font-size);
+      }
+      
+      .markdown-section h3 {
+        font-size: var(--heading-h3-font-size);
+      }
+      
+      .markdown-section h4 {
+        font-size: var(--heading-h4-font-size);
+      }
+      
+      /* モバイル向けのコードブロック調整 */
+      .markdown-section pre > code {
+        font-size: var(--code-font-size);
+      }
+      
+      .markdown-section code {
+        font-size: var(--code-font-size);
+      }
+      
+      /* モバイル向けのコンテンツ余白調整 */
+      .markdown-section {
+        padding: 20px 12px;
+      }
+      
+      /* モバイル向けのナビゲーションバーのタイトル調整 */
+      .navbar-brand {
+        font-size: 1rem;
+      }
     }
     
     /* コードブロックの横スクロール */
@@ -74,6 +119,13 @@
       white-space: pre;
       overflow-x: auto;
       border-radius: 8px;
+      font-size: var(--code-font-size);
+      line-height: 1.5;
+    }
+    
+    /* インラインコードのスタイル */
+    .markdown-section code {
+      font-size: var(--code-font-size);
     }
     
     /* 画像の最大幅を設定 */
@@ -199,6 +251,22 @@
       position: relative;
       padding-bottom: 0.5em;
       margin-bottom: 1.2em;
+    }
+    
+    .markdown-section h1 {
+      font-size: var(--heading-h1-font-size);
+    }
+    
+    .markdown-section h2 {
+      font-size: var(--heading-h2-font-size);
+    }
+    
+    .markdown-section h3 {
+      font-size: var(--heading-h3-font-size);
+    }
+    
+    .markdown-section h4 {
+      font-size: var(--heading-h4-font-size);
     }
     
     .markdown-section h2 {
