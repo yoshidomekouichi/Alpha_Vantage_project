@@ -12,28 +12,37 @@
   <style>
     /* カスタムスタイル */
     :root {
-      --theme-color: #42b983;
+      --theme-color: #4d8cf4;
       --sidebar-width: 300px;
       --heading-h1-font-size: 2rem;
       --heading-h2-font-size: 1.75rem;
       --heading-h3-font-size: 1.5rem;
       --heading-h4-font-size: 1.25rem;
       --navbar-height: 60px;
+      
+      /* One Dark Pro テーマの色 */
+      --one-dark-bg: #282c34;
+      --one-dark-text: #abb2bf;
+      --one-dark-accent: #61afef;
+      --one-dark-highlight: #e5c07b;
+      --one-dark-comment: #5c6370;
+      --one-dark-selection: #3e4451;
+      --one-dark-border: #181a1f;
     }
     
     /* ダークモード用の変数 */
     body[data-theme="dark"] {
-      --theme-color: #42d392;
-      --background: #0d1117;
-      --text-color: #c9d1d9;
-      --sidebar-background: #161b22;
-      --sidebar-border-color: #30363d;
-      --code-background: #1f2937;
-      --navbar-background: #161b22;
-      --navbar-text: #c9d1d9;
-      --search-background: #1f2937;
-      --search-text: #c9d1d9;
-      --search-border: #30363d;
+      --theme-color: #61afef;
+      --background: #282c34;
+      --text-color: #abb2bf;
+      --sidebar-background: #21252b;
+      --sidebar-border-color: #181a1f;
+      --code-background: #2c313a;
+      --navbar-background: #21252b;
+      --navbar-text: #abb2bf;
+      --search-background: #2c313a;
+      --search-text: #abb2bf;
+      --search-border: #181a1f;
     }
     
     /* モバイル向けのカスタムスタイル */
@@ -149,30 +158,82 @@
     
     /* ダークモードの背景と文字色を強制的に適用 */
     body[data-theme="dark"] {
-      background-color: #0d1117 !important;
-      color: #c9d1d9 !important;
+      background-color: var(--one-dark-bg) !important;
+      color: var(--one-dark-text) !important;
     }
     
     /* ダークモード時のコンテンツエリアの背景色 */
     body[data-theme="dark"] .content {
-      background-color: #0d1117 !important;
+      background-color: var(--one-dark-bg) !important;
     }
     
     /* ダークモード時のサイドバーの背景色 */
     body[data-theme="dark"] .sidebar {
-      background-color: #161b22 !important;
-      color: #c9d1d9 !important;
-      border-right-color: #30363d !important;
+      background-color: var(--sidebar-background) !important;
+      color: var(--one-dark-text) !important;
+      border-right-color: var(--one-dark-border) !important;
     }
     
     /* ダークモード時のコードブロックの背景色 */
     body[data-theme="dark"] .markdown-section pre {
-      background-color: #1f2937 !important;
+      background-color: var(--code-background) !important;
     }
     
     /* ダークモード時のインラインコードの背景色 */
     body[data-theme="dark"] .markdown-section code {
-      background-color: #1f2937 !important;
+      background-color: var(--code-background) !important;
+    }
+    
+    /* ブログ風デザインの追加スタイル */
+    .markdown-section {
+      font-family: 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      line-height: 1.8;
+    }
+    
+    .markdown-section h1, 
+    .markdown-section h2, 
+    .markdown-section h3, 
+    .markdown-section h4 {
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      position: relative;
+      padding-bottom: 0.5em;
+      margin-bottom: 1.2em;
+    }
+    
+    .markdown-section h2 {
+      border-bottom: 2px solid var(--theme-color);
+    }
+    
+    .markdown-section h3 {
+      border-left: 4px solid var(--theme-color);
+      padding-left: 12px;
+    }
+    
+    .markdown-section blockquote {
+      border-left: 4px solid var(--theme-color);
+      color: #666;
+      padding: 10px 15px;
+      background-color: rgba(0, 0, 0, 0.03);
+      margin: 1.5em 0;
+    }
+    
+    body[data-theme="dark"] .markdown-section blockquote {
+      color: #aaa;
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+    
+    /* リンクスタイルの改善 */
+    .markdown-section a {
+      color: var(--theme-color);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--theme-color);
+      padding-bottom: 1px;
+    }
+    
+    .markdown-section a:hover {
+      border-bottom: 1px solid var(--theme-color);
+      opacity: 0.8;
     }
     
     /* 固定ナビゲーションバー */
@@ -524,8 +585,12 @@
   <!-- ダークモード切替スクリプト -->
   <script src="https://cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/index.min.js"></script>
   
-  <!-- カスタムスクリプト -->
+  <!-- インラインJavaScriptを直接記述 -->
   <script>
+    // グローバル変数
+    var sidebarOpen = false;
+    var searchVisible = false;
+    
     // ページ読み込み完了後に実行
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM fully loaded');
@@ -533,25 +598,11 @@
       // ダークモードを強制的に適用
       localStorage.setItem('DARK_LIGHT_THEME', 'dark');
       document.body.setAttribute('data-theme', 'dark');
-      
-      // 検索ボックスを初期状態で非表示に
-      setTimeout(function() {
-        const searchBox = document.querySelector('.search');
-        if (searchBox) {
-          searchBox.style.display = 'none';
-        }
-      }, 500);
-      
-      // ボタンのイベントリスナーを設定
-      setupEventListeners();
     });
     
     // docsifyのロード完了後に実行
     window.addEventListener('load', function() {
       console.log('Window fully loaded');
-      
-      // 少し遅延させてボタンのイベントリスナーを設定（docsifyの初期化完了を待つ）
-      setTimeout(setupEventListeners, 1000);
       
       // ダークモードを定期的に確認して適用
       var checkInterval = setInterval(function() {
@@ -561,93 +612,189 @@
           clearInterval(checkInterval);
         }
       }, 500);
+      
+      // 検索ボックスを初期状態で非表示に
+      setTimeout(function() {
+        var searchBox = document.querySelector('.search');
+        if (searchBox) {
+          searchBox.style.display = 'none';
+          searchVisible = false;
+        }
+      }, 500);
+      
+      // 直接ボタンにイベントリスナーを設定
+      setupButtonListeners();
+      
+      // 1秒後に再度試行（docsifyの初期化完了を待つ）
+      setTimeout(setupButtonListeners, 1000);
+      
+      // 3秒後に再度試行（最終的な保険）
+      setTimeout(setupButtonListeners, 3000);
     });
     
-    // イベントリスナーのセットアップ関数
-    function setupEventListeners() {
-      console.log('Setting up event listeners');
+    // ボタンのイベントリスナーを設定
+    function setupButtonListeners() {
+      console.log('Setting up button listeners');
       
       // サイドバートグルボタン
-      const sidebarToggle = document.querySelector('.toggle-sidebar-button');
-      if (sidebarToggle) {
+      var sidebarToggleBtn = document.querySelector('.toggle-sidebar-button');
+      if (sidebarToggleBtn) {
         console.log('Sidebar toggle button found');
-        sidebarToggle.addEventListener('click', function() {
-          console.log('Sidebar toggle clicked');
-          document.body.classList.toggle('close');
+        
+        // 既存のイベントリスナーを削除
+        sidebarToggleBtn.removeEventListener('click', toggleSidebar);
+        
+        // 新しいイベントリスナーを追加
+        sidebarToggleBtn.addEventListener('click', toggleSidebar);
+        
+        // モバイルでのタッチイベントも追加
+        sidebarToggleBtn.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          toggleSidebar();
         });
       }
       
       // 検索ボタン
-      const searchToggle = document.querySelector('.toggle-search-button');
-      if (searchToggle) {
+      var searchToggleBtn = document.querySelector('.toggle-search-button');
+      if (searchToggleBtn) {
         console.log('Search toggle button found');
-        searchToggle.addEventListener('click', function() {
-          console.log('Search toggle clicked');
-          const searchBox = document.querySelector('.search');
-          if (searchBox) {
-            searchBox.style.display = searchBox.style.display === 'none' ? 'block' : 'none';
-          }
+        
+        // 既存のイベントリスナーを削除
+        searchToggleBtn.removeEventListener('click', toggleSearch);
+        
+        // 新しいイベントリスナーを追加
+        searchToggleBtn.addEventListener('click', toggleSearch);
+        
+        // モバイルでのタッチイベントも追加
+        searchToggleBtn.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          toggleSearch();
         });
       }
       
       // テーマ切り替えボタン
-      const themeToggle = document.querySelector('.toggle-theme-button');
-      if (themeToggle) {
+      var themeToggleBtn = document.querySelector('.toggle-theme-button');
+      if (themeToggleBtn) {
         console.log('Theme toggle button found');
-        themeToggle.addEventListener('click', function() {
-          console.log('Theme toggle clicked');
-          const currentTheme = document.body.getAttribute('data-theme');
-          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-          document.body.setAttribute('data-theme', newTheme);
-          localStorage.setItem('DARK_LIGHT_THEME', newTheme);
-          
-          // アイコンの切り替え
-          const icon = this.querySelector('i');
-          if (icon) {
-            if (newTheme === 'dark') {
-              icon.classList.remove('fa-sun');
-              icon.classList.add('fa-moon');
-            } else {
-              icon.classList.remove('fa-moon');
-              icon.classList.add('fa-sun');
-            }
-          }
+        
+        // 既存のイベントリスナーを削除
+        themeToggleBtn.removeEventListener('click', toggleTheme);
+        
+        // 新しいイベントリスナーを追加
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        
+        // モバイルでのタッチイベントも追加
+        themeToggleBtn.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          toggleTheme();
         });
       }
       
       // スクロールトップボタン
-      const scrollToTopButton = document.querySelector('.scroll-to-top');
-      if (scrollToTopButton) {
+      var scrollTopBtn = document.querySelector('.scroll-to-top');
+      if (scrollTopBtn) {
         console.log('Scroll to top button found');
-        scrollToTopButton.addEventListener('click', function() {
-          console.log('Scroll to top clicked');
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
+        
+        // 既存のイベントリスナーを削除
+        scrollTopBtn.removeEventListener('click', scrollToTop);
+        
+        // 新しいイベントリスナーを追加
+        scrollTopBtn.addEventListener('click', scrollToTop);
+        
+        // モバイルでのタッチイベントも追加
+        scrollTopBtn.addEventListener('touchend', function(e) {
+          e.preventDefault();
+          scrollToTop();
         });
       }
       
       // スクロールイベント
-      window.addEventListener('scroll', function() {
-        const scrollToTopButton = document.querySelector('.scroll-to-top');
-        if (scrollToTopButton) {
-          if (window.pageYOffset > 300) {
-            scrollToTopButton.classList.add('visible');
-          } else {
-            scrollToTopButton.classList.remove('visible');
-          }
+      window.addEventListener('scroll', handleScroll);
+    }
+    
+    // サイドバーの表示/非表示を切り替える関数
+    function toggleSidebar() {
+      console.log('Toggle sidebar called');
+      sidebarOpen = !sidebarOpen;
+      
+      if (sidebarOpen) {
+        document.body.classList.add('close');
+      } else {
+        document.body.classList.remove('close');
+      }
+      
+      // モバイルでのサイドバー表示
+      var sidebar = document.querySelector('.sidebar');
+      if (sidebar) {
+        if (sidebarOpen) {
+          sidebar.style.transform = 'translateX(0)';
+        } else {
+          sidebar.style.transform = 'translateX(-100%)';
         }
-        
-        // 進捗バーの更新
-        const progressBar = document.querySelector('.progress-bar');
-        if (progressBar) {
-          const totalHeight = document.body.scrollHeight - window.innerHeight;
-          const progress = (window.pageYOffset / totalHeight) * 100;
-          progressBar.style.width = progress + '%';
-          progressBar.style.opacity = 1;
+      }
+    }
+    
+    // 検索ボックスの表示/非表示を切り替える関数
+    function toggleSearch() {
+      console.log('Toggle search called');
+      searchVisible = !searchVisible;
+      
+      var searchBox = document.querySelector('.search');
+      if (searchBox) {
+        searchBox.style.display = searchVisible ? 'block' : 'none';
+      }
+    }
+    
+    // テーマを切り替える関数
+    function toggleTheme() {
+      console.log('Toggle theme called');
+      var currentTheme = document.body.getAttribute('data-theme');
+      var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      document.body.setAttribute('data-theme', newTheme);
+      localStorage.setItem('DARK_LIGHT_THEME', newTheme);
+      
+      // アイコンの切り替え
+      var icon = document.querySelector('.toggle-theme-button i');
+      if (icon) {
+        if (newTheme === 'dark') {
+          icon.classList.remove('fa-sun');
+          icon.classList.add('fa-moon');
+        } else {
+          icon.classList.remove('fa-moon');
+          icon.classList.add('fa-sun');
         }
+      }
+    }
+    
+    // トップにスクロールする関数
+    function scrollToTop() {
+      console.log('Scroll to top called');
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
       });
+    }
+    
+    // スクロールイベントを処理する関数
+    function handleScroll() {
+      var scrollTopBtn = document.querySelector('.scroll-to-top');
+      if (scrollTopBtn) {
+        if (window.pageYOffset > 300) {
+          scrollTopBtn.classList.add('visible');
+        } else {
+          scrollTopBtn.classList.remove('visible');
+        }
+      }
+      
+      // 進捗バーの更新
+      var progressBar = document.querySelector('.progress-bar');
+      if (progressBar) {
+        var totalHeight = document.body.scrollHeight - window.innerHeight;
+        var progress = (window.pageYOffset / totalHeight) * 100;
+        progressBar.style.width = progress + '%';
+        progressBar.style.opacity = 1;
+      }
     }
   </script>
 </body>
