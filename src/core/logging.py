@@ -23,7 +23,8 @@ class LoggerManager:
         file_level: int = logging.DEBUG,
         log_format: str = "%(asctime)s [%(levelname)s] %(message)s",
         date_format: str = "%Y-%m-%d %H:%M:%S",
-        add_timestamp_to_filename: bool = False
+        add_timestamp_to_filename: bool = False,
+        is_mock: bool = False
     ):
         """
         Initialize the logger manager.
@@ -36,10 +37,12 @@ class LoggerManager:
             log_format: Format string for log messages
             date_format: Format string for timestamps
             add_timestamp_to_filename: Whether to add a timestamp to the log filename
+            is_mock: Whether this is a mock environment
         """
         self.name = name
         self.log_format = log_format
         self.date_format = date_format
+        self.is_mock = is_mock
         
         # Set up log directory
         if log_dir is None:
@@ -47,6 +50,12 @@ class LoggerManager:
             self.log_dir = Path(__file__).parent.parent.parent / "logs"
         else:
             self.log_dir = Path(log_dir)
+        
+        # Use environment-specific subdirectory
+        if self.is_mock:
+            self.log_dir = self.log_dir / "mock"
+        else:
+            self.log_dir = self.log_dir / "prod"
             
         os.makedirs(self.log_dir, exist_ok=True)
         
@@ -83,7 +92,8 @@ class LoggerManager:
         self.logger.addHandler(self.file_handler)
         
         # Log the initialization
-        self.logger.debug(f"Logger initialized. Log file: {log_file_path}")
+        env_type = "Mock" if self.is_mock else "Production"
+        self.logger.debug(f"{env_type} logger initialized. Log file: {log_file_path}")
     
     def get_logger(self) -> logging.Logger:
         """Get the configured logger instance."""
@@ -128,19 +138,20 @@ class LoggerManager:
             self.logger.info("🔍 Debug mode disabled")
 
 
-def create_default_logger(name: str, debug_mode: bool = False) -> logging.Logger:
+def create_default_logger(name: str, debug_mode: bool = False, is_mock: bool = False) -> logging.Logger:
     """
     Create a logger with default settings.
     
     Args:
         name: Logger name
         debug_mode: Whether to enable debug mode
+        is_mock: Whether this is a mock environment
         
     Returns:
         Configured logger instance
     """
     console_level = logging.DEBUG if debug_mode else logging.INFO
-    manager = LoggerManager(name, console_level=console_level)
+    manager = LoggerManager(name, console_level=console_level, is_mock=is_mock)
     return manager.get_logger()
 
 

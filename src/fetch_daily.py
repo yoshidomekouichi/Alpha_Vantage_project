@@ -43,13 +43,18 @@ def setup_components(config):
         "fetch_daily",
         log_dir=config.log_dir,
         console_level=log_level,
-        file_level=logging.DEBUG
+        file_level=logging.DEBUG,
+        is_mock=config.mock_mode
     )
     logger = logger_manager.get_logger()
     
     # Enable debug mode if configured
     if config.debug_mode:
         logger_manager.set_debug_mode(True)
+    
+    # Log environment type
+    env_type = "Mock" if config.mock_mode else "Production"
+    logger.info(f"🔧 Running in {env_type} environment")
     
     # Set up API client
     api_client = AlphaVantageClient(config.api_key, config.api_base_url)
