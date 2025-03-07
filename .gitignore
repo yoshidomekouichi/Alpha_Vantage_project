@@ -25,3 +25,4 @@ lambda/*.zip
 
 #練習問題を解くファイル
 /training/
+# /Training/ - GitHubページで公開するため、コメントアウト
