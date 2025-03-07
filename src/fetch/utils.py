@@ -102,7 +102,8 @@ def check_data_quality(stock_data):
         return False
 
     df = pd.DataFrame.from_dict(time_series, orient="index")
-    df = df.astype(float)  # ここで明示的に変換
+    # df = df.astype(float)  # ここで明示的に変換
+    df = df.apply(pd.to_numeric, errors='coerce')
     df.index = pd.to_datetime(df.index)
     df.columns = ["open", "high", "low", "close", "volume"]
 
