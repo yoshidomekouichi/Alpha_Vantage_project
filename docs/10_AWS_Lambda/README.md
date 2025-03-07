@@ -134,7 +134,13 @@ os.environ['SAVE_TO_S3'] = 'True'  # S3に保存する
 os.environ['SLACK_ENABLED'] = 'True'  # Slack通知を有効化
 ```
 
-Lambda関数内で環境変数を設定しています。これにより、`fetch_daily.py`スクリプトの動作を制御できます。本番環境では、モックモードを無効にし、S3への保存とSlack通知を有効にしています。
+環境変数の設定部分では、Lambda関数内で実行時の動作を制御するための環境変数を設定しています。各行の処理内容は以下の通りです：
+
+1. `os.environ['MOCK_MODE'] = 'False'`: モックモードを無効に設定します。本番環境では実際のAPIコールを行うためです。
+2. `os.environ['SAVE_TO_S3'] = 'True'`: S3への保存機能を有効に設定します。取得したデータをS3バケットに保存します。
+3. `os.environ['SLACK_ENABLED'] = 'True'`: Slack通知機能を有効に設定します。処理結果をSlackに通知します。
+
+これらの環境変数は、`fetch_daily.py`スクリプトの動作を制御するために使用されます。Lambda関数内で直接設定することで、AWS Lambdaコンソールでの環境変数設定に加えて、追加の制御が可能になります。
 
 ### 3.3 Slack Webhook URLsの取得
 
@@ -151,7 +157,17 @@ else:
     logger.info("Slack Webhook URLs are configured")
 ```
 
-Lambda関数の環境変数からSlack Webhook URLsを取得し、それらが正しく設定されているかを確認しています。設定されていない場合は、警告ログを出力します。
+Slack Webhook URLsの取得部分では、通知送信先の設定を確認しています。各行の処理内容は以下の通りです：
+
+1. `slack_webhook_url_error = os.environ.get('SLACK_WEBHOOK_URL_ERROR')`: エラー通知用のSlack Webhook URLを環境変数から取得します。
+2. `slack_webhook_url_warning = os.environ.get('SLACK_WEBHOOK_URL_WARNING')`: 警告通知用のSlack Webhook URLを環境変数から取得します。
+3. `slack_webhook_url_info = os.environ.get('SLACK_WEBHOOK_URL_INFO')`: 情報通知用のSlack Webhook URLを環境変数から取得します。
+4. `if not (slack_webhook_url_error and slack_webhook_url_warning and slack_webhook_url_info):`: すべてのWebhook URLが設定されているかをチェックします。
+5. `logger.warning("Slack Webhook URLs are not properly configured in environment variables")`: URLが設定されていない場合、警告メッセージをログに記録します。
+6. `else:`: すべてのURLが設定されている場合の処理です。
+7. `logger.info("Slack Webhook URLs are configured")`: 設定が完了していることをログに記録します。
+
+これにより、通知機能が正しく設定されているかを実行時に確認し、問題がある場合はログに警告を残します。
 
 ### 3.4 メイン処理
 
@@ -178,13 +194,20 @@ try:
     }
 ```
 
-Lambda関数のメイン処理部分です。以下の手順で処理が行われます：
+メイン処理部分では、実際のデータ取得処理を実行します。各行の処理内容は以下の通りです：
 
-1. Lambda関数のパッケージをインポートパスに追加
-2. `fetch_daily.py`モジュールをインポート
-3. `main`関数を実行
-4. 実行結果をログに出力
-5. 成功レスポンスを返却
+1. `try:`: 例外処理のためのtryブロックを開始します。
+2. `sys.path.append('/var/task')`: Lambda関数のデプロイパッケージがあるディレクトリをPythonのインポートパスに追加します。
+3. `from fetch_daily import main`: メインの処理ロジックを含む`fetch_daily.py`モジュールから`main`関数をインポートします。
+4. `result = main()`: インポートした`main`関数を実行し、結果を`result`変数に格納します。
+5. `logger.info(f"fetch_daily.py execution completed with result: {result}")`: 実行結果をINFOレベルでログに記録します。
+6. `return {...}`: Lambda関数のレスポンスを返します。
+7. `'statusCode': 200`: HTTPステータスコード200（成功）を設定します。
+8. `'body': json.dumps({...})`: レスポンスボディをJSON形式で設定します。
+9. `'message': 'fetch_daily.py execution completed successfully'`: 成功メッセージを含めます。
+10. `'result': result`: 実行結果を含めます。
+
+この部分は、Lambda関数の主要な処理ロジックを実行し、その結果をフォーマットして返す役割を担っています。
 
 ### 3.5 エラーハンドリング
 
@@ -216,12 +239,29 @@ except Exception as e:
     }
 ```
 
-エラーハンドリング部分です。例外が発生した場合、以下の処理が行われます：
+エラーハンドリング部分では、実行中に発生した例外を捕捉して適切に処理します。各行の処理内容は以下の通りです：
 
-1. エラーメッセージをログに出力
-2. スタックトレースを取得してログに出力
-3. 詳細なエラー情報を含むオブジェクトを作成
-4. エラーレスポンスを返却
+1. `except Exception as e:`: あらゆる種類の例外をキャッチします。
+2. `logger.error(f"Error executing fetch_daily.py: {str(e)}")`: エラーメッセージをERRORレベルでログに記録します。
+3. `import traceback`: スタックトレースを取得するためのモジュールをインポートします。
+4. `error_traceback = traceback.format_exc()`: 例外のスタックトレースを文字列形式で取得します。
+5. `logger.error(error_traceback)`: スタックトレースをERRORレベルでログに記録します。
+6. `error_details = {...}`: 詳細なエラー情報を含む辞書を作成します。
+7. `'error_message': str(e)`: エラーメッセージを含めます。
+8. `'error_type': type(e).__name__`: 例外の型名を含めます。
+9. `'traceback': error_traceback`: スタックトレースを含めます。
+10. `'lambda_function_name': context.function_name`: Lambda関数名を含めます。
+11. `'lambda_function_version': context.function_version`: Lambda関数のバージョンを含めます。
+12. `'lambda_request_id': context.aws_request_id`: AWS リクエストIDを含めます。
+13. `'timestamp': datetime.now().isoformat()`: エラー発生時のタイムスタンプを含めます。
+14. `return {...}`: エラーレスポンスを返します。
+15. `'statusCode': 500`: HTTPステータスコード500（サーバーエラー）を設定します。
+16. `'body': json.dumps({...})`: レスポンスボディをJSON形式で設定します。
+17. `'message': 'Error executing fetch_daily.py'`: エラーメッセージを含めます。
+18. `'error': str(e)`: 簡潔なエラーメッセージを含めます。
+19. `'error_details': error_details`: 詳細なエラー情報を含めます。
+
+この包括的なエラーハンドリングにより、問題が発生した場合でも詳細な診断情報が提供され、トラブルシューティングが容易になります。
 
 ## 4. デプロイパッケージの作成
 

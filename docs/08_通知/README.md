@@ -55,7 +55,13 @@ def __init__(
     self.slack_webhook_url_info = slack_webhook_url_info or slack_webhook_url
 ```
 
-初期化時に、メール設定とSlack webhook URLを設定します。異なるアラートレベル（エラー、警告、情報）に対して異なるSlack webhook URLを設定することもできます。
+初期化メソッドは、アラートマネージャーの設定を行います。各行の処理内容は以下の通りです：
+
+1. `self.email_config = email_config`: メール設定をインスタンス変数に保存します。この設定には、SMTPサーバー情報や送受信者のメールアドレスなどが含まれます。
+2. `self.slack_webhook_url = slack_webhook_url`: デフォルトのSlack webhook URLをインスタンス変数に保存します。
+3. `self.slack_webhook_url_error = slack_webhook_url_error or slack_webhook_url`: エラーメッセージ用のSlack webhook URLを設定します。エラー専用のURLが指定されていない場合は、デフォルトのURLを使用します。
+4. `self.slack_webhook_url_warning = slack_webhook_url_warning or slack_webhook_url`: 警告メッセージ用のSlack webhook URLを設定します。警告専用のURLが指定されていない場合は、デフォルトのURLを使用します。
+5. `self.slack_webhook_url_info = slack_webhook_url_info or slack_webhook_url`: 情報メッセージ用のSlack webhook URLを設定します。情報専用のURLが指定されていない場合は、デフォルトのURLを使用します。
 
 ### 3.2 メール送信
 
@@ -128,7 +134,35 @@ def send_email(
         return False
 ```
 
-このメソッドは、指定された件名と本文でメールを送信します。HTML形式のメール本文もサポートしています。メール設定が提供されていない場合や、エラーが発生した場合は`False`を返します。
+メール送信メソッドは、指定された件名と本文でメールを送信します。各行の処理内容は以下の通りです：
+
+1. `if not self.email_config:`: メール設定が提供されているかチェックします。
+2. `logger.warning("⚠️ Email configuration not provided, skipping email alert")`: メール設定がない場合、警告ログを出力します。
+3. `return False`: メール設定がない場合、Falseを返して処理を終了します。
+4. `try:`: 例外処理のためのtryブロックを開始します。
+5. `msg = MIMEMultipart('alternative')`: マルチパートメッセージ（プレーンテキストとHTML）を作成します。
+6. `msg['Subject'] = subject`: メールの件名を設定します。
+7. `msg['From'] = self.email_config['from_email']`: 送信者のメールアドレスを設定します。
+8. `recipients = to_email or self.email_config['to_email']`: 引数で指定された受信者か、設定ファイルの受信者を使用します。
+9. `if isinstance(recipients, list):`: 受信者が複数の場合の処理です。
+10. `msg['To'] = ', '.join(recipients)`: 複数の受信者をカンマで区切って設定します。
+11. `to_list = recipients`: 送信先リストをそのまま使用します。
+12. `else:`: 受信者が1人の場合の処理です。
+13. `msg['To'] = recipients`: 受信者を直接設定します。
+14. `to_list = [recipients]`: 送信先リストを作成します。
+15. `msg.attach(MIMEText(body, 'plain'))`: プレーンテキスト形式の本文を添付します。
+16. `if html_body:`: HTML形式の本文が提供されている場合の処理です。
+17. `msg.attach(MIMEText(html_body, 'html'))`: HTML形式の本文を添付します。
+18. `server = smtplib.SMTP(...)`: SMTPサーバーに接続します。
+19. `server.starttls()`: TLS暗号化を開始します。
+20. `server.login(...)`: SMTPサーバーにログインします。
+21. `server.sendmail(...)`: メールを送信します。
+22. `server.quit()`: SMTPサーバーとの接続を閉じます。
+23. `logger.info(f"✅ Email alert sent: {subject}")`: 送信成功のログを出力します。
+24. `return True`: 成功した場合はTrueを返します。
+25. `except Exception as e:`: あらゆる例外をキャッチします。
+26. `logger.exception(f"❌ Error sending email alert: {e}")`: エラーの詳細をログに出力します。
+27. `return False`: エラーが発生した場合はFalseを返します。
 
 ### 3.3 Slack送信
 
@@ -198,7 +232,133 @@ def send_slack(
         return False
 ```
 
-このメソッドは、指定されたメッセージとタイトルでSlackにメッセージを送信します。メッセージの色や追加フィールドをカスタマイズすることもできます。Slack webhook URLが提供されていない場合や、エラーが発生した場合は`False`を返します。
+Slack送信メソッドは、指定されたメッセージとタイトルでSlackにメッセージを送信します。各行の処理内容は以下の通りです：
+
+1. `webhook = webhook_url or self.slack_webhook_url`: 引数で指定されたwebhook URLか、デフォルトのURLを使用します。
+2. `if not webhook:`: webhook URLが提供されているかチェックします。
+3. `logger.warning("⚠️ Slack webhook URL not provided, skipping Slack alert")`: webhook URLがない場合、警告ログを出力します。
+4. `return False`: webhook URLがない場合、Falseを返して処理を終了します。
+5. `try:`: 例外処理のためのtryブロックを開始します。
+6. `attachment = {...}`: Slackメッセージのアタッチメントを作成します。
+7. `"color": color`: アタッチメントの色を設定します（デフォルトは緑）。
+8. `"text": message`: メッセージ本文を設定します。
+9. `"mrkdwn_in": ["text", "fields"]`: テキストとフィールドでMarkdownを有効にします。
+10. `if title:`: タイトルが指定されている場合の処理です。
+11. `attachment["title"] = title`: アタッチメントにタイトルを追加します。
+12. `if fields:`: 追加フィールドが指定されている場合の処理です。
+13. `attachment["fields"] = fields`: アタッチメントにフィールドを追加します。
+14. `payload = {"attachments": [attachment]}`: Slack APIに送信するペイロードを作成します。
+15. `response = requests.post(...)`: HTTP POSTリクエストを送信します。
+16. `webhook`: 送信先のwebhook URLです。
+17. `data=json.dumps(payload)`: ペイロードをJSON文字列に変換します。
+18. `headers={"Content-Type": "application/json"}`: コンテンツタイプをJSONに設定します。
+19. `if response.status_code == 200:`: レスポンスが成功（200）かどうかをチェックします。
+20. `logger.info(f"✅ Slack alert sent: {title or message[:30]}...")`: 送信成功のログを出力します。
+21. `return True`: 成功した場合はTrueを返します。
+22. `else:`: レスポンスが失敗の場合の処理です。
+23. `logger.error(f"❌ Error sending Slack alert: {response.status_code} {response.text}")`: エラーの詳細をログに出力します。
+24. `return False`: 失敗した場合はFalseを返します。
+25. `except Exception as e:`: あらゆる例外をキャッチします。
+26. `logger.exception(f"❌ Error sending Slack alert: {e}")`: 例外の詳細をログに出力します。
+27. `return False`: 例外が発生した場合はFalseを返します。
+
+### 3.4 エラーアラートの送信
+
+```python
+def send_error_alert(
+    self,
+    error_message: str,
+    error_details: Optional[str] = None,
+    source: Optional[str] = None,
+    send_email: bool = True,
+    send_slack: bool = True,
+    additional_fields: Optional[List[Dict[str, str]]] = None
+) -> bool:
+    """
+    設定されたすべてのチャネルにエラーアラートを送信します。
+    
+    引数:
+        error_message: 短いエラーメッセージ
+        error_details: 詳細なエラー情報
+        source: エラーのソース（例：スクリプト名）
+        send_email: メールアラートを送信するかどうか
+        send_slack: Slackアラートを送信するかどうか
+        additional_fields: Slackメッセージに含める追加フィールド
+        
+    戻り値:
+        少なくとも1つのアラートが正常に送信されたかどうかを示すブール値
+    """
+    source_info = f" in {source}" if source else ""
+    subject = f"❌ ERROR{source_info}: {error_message}"
+    
+    # メッセージ本文の作成
+    body = f"Error{source_info}:\n\n{error_message}"
+    if error_details:
+        body += f"\n\nDetails:\n{error_details}"
+    
+    # メール用のHTML本文の作成
+    html_body = f"""
+    <h2>Error{source_info}</h2>
+    <p><strong>{error_message}</strong></p>
+    """
+    if error_details:
+        html_body += f"<h3>Details:</h3><pre>{error_details}</pre>"
+    
+    # アラートの送信
+    email_success = False
+    slack_success = False
+    
+    if send_email and self.email_config:
+        email_success = self.send_email(subject, body, html_body)
+        
+    if send_slack and self.slack_webhook_url_error:
+        fields = []
+        if source:
+            fields.append({"title": "Source", "value": source, "short": True})
+        if error_details:
+            fields.append({"title": "Details", "value": f"```{error_details}```", "short": False})
+        
+        # 追加フィールドが提供されている場合は追加
+        if additional_fields:
+            fields.extend(additional_fields)
+            
+        slack_success = self.send_slack(
+            message=error_message,
+            title="❌ ERROR",
+            color="#FF0000",  # 赤
+            fields=fields,
+            webhook_url=self.slack_webhook_url_error
+        )
+    
+    return email_success or slack_success
+```
+
+エラーアラート送信メソッドは、エラーアラートを設定されたすべてのチャネルに送信します。各行の処理内容は以下の通りです：
+
+1. `source_info = f" in {source}" if source else ""`: ソース情報がある場合は「in ソース名」という文字列を作成します。
+2. `subject = f"❌ ERROR{source_info}: {error_message}"`: メールの件名を作成します。
+3. `body = f"Error{source_info}:\n\n{error_message}"`: プレーンテキストのメール本文を作成します。
+4. `if error_details:`: エラーの詳細情報がある場合の処理です。
+5. `body += f"\n\nDetails:\n{error_details}"`: 詳細情報をプレーンテキスト本文に追加します。
+6. `html_body = f"""..."""`: HTMLメール本文の基本部分を作成します。
+7. `if error_details:`: エラーの詳細情報がある場合の処理です（HTML用）。
+8. `html_body += f"<h3>Details:</h3><pre>{error_details}</pre>"`: 詳細情報をHTML本文に追加します。
+9. `email_success = False`: メール送信成功フラグを初期化します。
+10. `slack_success = False`: Slack送信成功フラグを初期化します。
+11. `if send_email and self.email_config:`: メール送信が有効で、メール設定がある場合の処理です。
+12. `email_success = self.send_email(subject, body, html_body)`: メールを送信し、結果を保存します。
+13. `if send_slack and self.slack_webhook_url_error:`: Slack送信が有効で、エラー用webhook URLがある場合の処理です。
+14. `fields = []`: Slackメッセージのフィールドリストを初期化します。
+15. `if source:`: ソース情報がある場合の処理です。
+16. `fields.append({"title": "Source", "value": source, "short": True})`: ソース情報をフィールドに追加します。
+17. `if error_details:`: エラーの詳細情報がある場合の処理です。
+18. `fields.append({"title": "Details", "value": f"```{error_details}```", "short": False})`: 詳細情報をフィールドに追加します。
+19. `if additional_fields:`: 追加フィールドがある場合の処理です。
+20. `fields.extend(additional_fields)`: 追加フィールドをフィールドリストに追加します。
+21. `slack_success = self.send_slack(...)`: Slackメッセージを送信し、結果を保存します。
+22. `message=error_message`: メッセージ本文を設定します。
+23. `title="❌ ERROR"`: メッセージタイトルを設定します。
+24. `color="#FF0000"`:
 
 ### 3.4 エラーアラートの送信
 

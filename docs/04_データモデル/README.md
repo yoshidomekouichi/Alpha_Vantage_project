@@ -56,8 +56,16 @@ class StockPrice:
 
 1. **データクラス**: Pythonの`dataclass`デコレータを使用して、簡潔なデータクラスとして定義されています。
 2. **型アノテーション**: 各フィールドに型アノテーションが付けられており、コード補完やタイプチェックに役立ちます。
-3. **ファクトリーメソッド**: `from_api_response`クラスメソッドを使用して、APIレスポンスデータからインスタンスを作成できます。
-4. **型変換**: 文字列の日付を`datetime`オブジェクトに、文字列の数値を`float`や`int`に変換します。
+
+`from_api_response`メソッドの各行は以下の処理を行います：
+
+1. `return cls(...)`: クラスのコンストラクタを呼び出して新しいインスタンスを作成し返します。
+2. `date=datetime.strptime(date_str, '%Y-%m-%d')`: 文字列形式の日付を`datetime`オブジェクトに変換します。'%Y-%m-%d'は「年-月-日」形式を指定します。
+3. `open=float(data['1. open'])`: APIレスポンスの「1. open」キーの値を浮動小数点数に変換して始値として設定します。
+4. `high=float(data['2. high'])`: APIレスポンスの「2. high」キーの値を浮動小数点数に変換して高値として設定します。
+5. `low=float(data['3. low'])`: APIレスポンスの「3. low」キーの値を浮動小数点数に変換して安値として設定します。
+6. `close=float(data['4. close'])`: APIレスポンスの「4. close」キーの値を浮動小数点数に変換して終値として設定します。
+7. `volume=int(data['5. volume'])`: APIレスポンスの「5. volume」キーの値を整数に変換して取引量として設定します。
 
 ### 3.2 `StockMetadata`クラス
 
@@ -90,8 +98,13 @@ class StockMetadata:
 `StockMetadata`クラスは、株価データに関するメタデータを表します。以下の特徴があります：
 
 1. **データクラス**: `StockPrice`と同様に、`dataclass`デコレータを使用しています。
-2. **メタデータの抽出**: APIレスポンスから必要なメタデータを抽出します。
-3. **日付の変換**: 文字列の日付を`datetime`オブジェクトに変換します。
+
+`from_api_response`メソッドの各行は以下の処理を行います：
+
+1. `return cls(...)`: クラスのコンストラクタを呼び出して新しいインスタンスを作成し返します。
+2. `symbol=metadata['2. Symbol']`: APIレスポンスのメタデータから「2. Symbol」キーの値を取得し、銘柄シンボルとして設定します。
+3. `last_refreshed=datetime.strptime(metadata['3. Last Refreshed'], '%Y-%m-%d')`: 「3. Last Refreshed」キーの値を日付オブジェクトに変換し、最終更新日として設定します。
+4. `time_zone=metadata['5. Time Zone']`: 「5. Time Zone」キーの値をタイムゾーンとして設定します。
 
 ### 3.3 `StockTimeSeries`クラス
 
@@ -127,11 +140,17 @@ class StockTimeSeries:
         return cls(metadata=metadata, prices=prices)
 ```
 
-`StockTimeSeries`クラスは、株価の時系列データ全体を表します。以下の特徴があります：
+`StockTimeSeries`クラスは、株価の時系列データ全体を表します。
 
-1. **データの集約**: メタデータと価格データを1つのオブジェクトにまとめます。
-2. **データの変換**: APIレスポンスから`StockMetadata`と`StockPrice`のリストを作成します。
-3. **データの並べ替え**: 日付で並べ替えて、最新のデータが先頭に来るようにします。
+`from_api_response`メソッドの各行は以下の処理を行います：
+
+1. `metadata = StockMetadata.from_api_response(response['Meta Data'])`: APIレスポンスの「Meta Data」部分を使って`StockMetadata`オブジェクトを作成します。
+2. `time_series = response['Time Series (Daily)']`: APIレスポンスから日次時系列データを取得します。
+3. `prices = [...]`: 時系列データの各日付と価格データを使って`StockPrice`オブジェクトのリストを作成します。
+4. `StockPrice.from_api_response(date, data)`: 各日付と価格データから`StockPrice`オブジェクトを作成します。
+5. `for date, data in time_series.items()`: 時系列データの各項目（日付と価格データのペア）に対してループします。
+6. `prices.sort(key=lambda x: x.date, reverse=True)`: 価格データのリストを日付で降順に並べ替えます（最新のデータが先頭に来るようにします）。
+7. `return cls(metadata=metadata, prices=prices)`: 作成したメタデータと価格データのリストを使って`StockTimeSeries`オブジェクトを作成し返します。
 
 ## 4. データモデルの使用例
 

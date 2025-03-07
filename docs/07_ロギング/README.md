@@ -118,7 +118,54 @@ def __init__(
     self.logger.debug(f"{env_type} logger initialized. Log file: {log_file_path}")
 ```
 
-初期化時に、ロガー名、ログディレクトリ、ログレベル、フォーマットなどを設定し、コンソールとファイルの両方にログを出力するためのハンドラーを作成します。モック環境と本番環境で異なるログディレクトリを使用することで、テスト時のログと本番のログを分離できます。
+初期化メソッドは、ロガーマネージャーの設定と構成を行います。各行の処理内容は以下の通りです：
+
+1. `self.name = name`: ロガー名をインスタンス変数に保存します。
+2. `self.log_format = log_format`: ログメッセージのフォーマット文字列を保存します。
+3. `self.date_format = date_format`: タイムスタンプのフォーマット文字列を保存します。
+4. `self.is_mock = is_mock`: モック環境かどうかのフラグを保存します。
+5. `if log_dir is None:`: ログディレクトリが指定されていない場合の処理です。
+6. `self.log_dir = Path(__file__).parent.parent.parent / "logs"`: デフォルトのログディレクトリをプロジェクトルートの「logs」ディレクトリに設定します。
+7. `else:`: ログディレクトリが指定されている場合の処理です。
+8. `self.log_dir = Path(log_dir)`: 指定されたログディレクトリを使用します。
+9. `if self.is_mock:`: モック環境の場合の処理です。
+10. `self.log_dir = self.log_dir / "mock"`: モック環境用のサブディレクトリを使用します。
+11. `else:`: 本番環境の場合の処理です。
+12. `self.log_dir = self.log_dir / "prod"`: 本番環境用のサブディレクトリを使用します。
+13. `print(f"Log directory: {self.log_dir}")`: デバッグ用にログディレクトリを標準出力に表示します。
+14. `try:`: ログディレクトリの作成を試みます。
+15. `os.makedirs(self.log_dir, exist_ok=True)`: ログディレクトリを作成します（既に存在する場合はエラーにしません）。
+16. `except Exception as e:`: ディレクトリ作成に失敗した場合の処理です。
+17. `print(f"Error creating log directory: {e}")`: エラーメッセージを表示します。
+18. `self.log_dir = Path.cwd() / "logs"`: フォールバックとして現在の作業ディレクトリ下の「logs」ディレクトリを使用します。
+19. `if self.is_mock:`: モック環境の場合の処理です（フォールバック時）。
+20. `self.log_dir = self.log_dir / "mock"`: モック環境用のサブディレクトリを使用します。
+21. `else:`: 本番環境の場合の処理です（フォールバック時）。
+22. `self.log_dir = self.log_dir / "prod"`: 本番環境用のサブディレクトリを使用します。
+23. `print(f"Using fallback log directory: {self.log_dir}")`: フォールバックディレクトリを表示します。
+24. `os.makedirs(self.log_dir, exist_ok=True)`: フォールバックディレクトリを作成します。
+25. `self.logger = logging.getLogger(name)`: 指定された名前でロガーを取得します。
+26. `self.logger.setLevel(logging.DEBUG)`: ロガーの最低レベルをDEBUGに設定します。
+27. `self.logger.propagate = False`: ルートロガーへのログの伝播を防止します。
+28. `if self.logger.hasHandlers():`: ロガーに既存のハンドラーがある場合の処理です。
+29. `self.logger.handlers.clear()`: 既存のハンドラーをクリアします。
+30. `self.formatter = logging.Formatter(log_format, date_format)`: ログフォーマッターを作成します。
+31. `self.console_handler = logging.StreamHandler(sys.stdout)`: 標準出力へのログハンドラーを作成します。
+32. `self.console_handler.setLevel(console_level)`: コンソールハンドラーのログレベルを設定します。
+33. `self.console_handler.setFormatter(self.formatter)`: コンソールハンドラーにフォーマッターを設定します。
+34. `self.logger.addHandler(self.console_handler)`: ロガーにコンソールハンドラーを追加します。
+35. `if add_timestamp_to_filename:`: ファイル名にタイムスタンプを追加するかどうかの処理です。
+36. `timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")`: 現在の日時からタイムスタンプを生成します。
+37. `log_filename = f"{name}_{timestamp}.log"`: タイムスタンプ付きのログファイル名を作成します。
+38. `else:`: タイムスタンプを追加しない場合の処理です。
+39. `log_filename = f"{name}.log"`: シンプルなログファイル名を作成します。
+40. `log_file_path = self.log_dir / log_filename`: ログファイルの完全パスを作成します。
+41. `self.file_handler = logging.FileHandler(log_file_path, mode='a', encoding='utf-8')`: ファイルへのログハンドラーを作成します（追記モード）。
+42. `self.file_handler.setLevel(file_level)`: ファイルハンドラーのログレベルを設定します。
+43. `self.file_handler.setFormatter(self.formatter)`: ファイルハンドラーにフォーマッターを設定します。
+44. `self.logger.addHandler(self.file_handler)`: ロガーにファイルハンドラーを追加します。
+45. `env_type = "Mock" if self.is_mock else "Production"`: 環境タイプの文字列を作成します。
+46. `self.logger.debug(f"{env_type} logger initialized. Log file: {log_file_path}")`: ロガーの初期化完了をログに記録します。
 
 ### 3.2 ロガーの取得
 
@@ -128,7 +175,9 @@ def get_logger(self) -> logging.Logger:
     return self.logger
 ```
 
-このメソッドは、設定されたロガーインスタンスを返します。他のクラスやモジュールでこのロガーを使用できます。
+このメソッドは、設定されたロガーインスタンスを返します：
+
+1. `return self.logger`: 初期化時に設定したロガーインスタンスを返します。これにより、他のクラスやモジュールでこのロガーを使用できます。
 
 ### 3.3 区切り線の追加
 
@@ -138,7 +187,9 @@ def add_separator(self, char: str = "-", length: int = 80):
     self.logger.info(char * length)
 ```
 
-このメソッドは、ログに区切り線を追加します。ログの可読性を向上させるために使用されます。
+このメソッドは、ログに区切り線を追加します：
+
+1. `self.logger.info(char * length)`: 指定された文字を指定された長さ分繰り返した文字列をINFOレベルでログに記録します。これにより、ログの可読性が向上します。
 
 ### 3.4 実行開始のログ
 
@@ -152,7 +203,13 @@ def log_execution_start(self, script_name: str, params: Dict[str, Any] = None):
     self.add_separator("=")
 ```
 
-このメソッドは、スクリプトの実行開始をログに記録します。スクリプト名とパラメータを含め、区切り線で囲むことで、ログの可読性を向上させます。
+このメソッドは、スクリプトの実行開始をログに記録します：
+
+1. `self.add_separator("=")`: 等号（=）を使った区切り線をログに追加します。
+2. `self.logger.info(f"🚀 EXECUTION START: {script_name} at {datetime.now().strftime(self.date_format)}")`: スクリプト名と現在の日時を含む実行開始メッセージをログに記録します。
+3. `if params:`: パラメータが指定されている場合の処理です。
+4. `self.logger.info(f"📋 Parameters: {params}")`: パラメータの内容をログに記録します。
+5. `self.add_separator("=")`: 再度、区切り線をログに追加して実行開始ブロックを閉じます。
 
 ### 3.5 実行終了のログ
 
@@ -167,7 +224,14 @@ def log_execution_end(self, script_name: str, success: bool = True, execution_ti
     self.add_separator("=")
 ```
 
-このメソッドは、スクリプトの実行終了をログに記録します。成功/失敗のステータスと実行時間を含め、区切り線で囲むことで、ログの可読性を向上させます。
+このメソッドは、スクリプトの実行終了をログに記録します：
+
+1. `self.add_separator("=")`: 等号（=）を使った区切り線をログに追加します。
+2. `status = "✅ SUCCESS" if success else "❌ FAILURE"`: 成功または失敗を示すステータス文字列を作成します。
+3. `self.logger.info(f"{status}: {script_name} at {datetime.now().strftime(self.date_format)}")`: ステータス、スクリプト名、現在の日時を含む実行終了メッセージをログに記録します。
+4. `if execution_time is not None:`: 実行時間が指定されている場合の処理です。
+5. `self.logger.info(f"⏱ Execution time: {execution_time:.2f} seconds")`: 実行時間を小数点以下2桁で整形してログに記録します。
+6. `self.add_separator("=")`: 再度、区切り線をログに追加して実行終了ブロックを閉じます。
 
 ### 3.6 ログレベルの設定
 
@@ -181,7 +245,15 @@ def set_file_level(self, level: int):
     self.file_handler.setLevel(level)
 ```
 
-これらのメソッドは、コンソールとファイルのログレベルを個別に設定します。例えば、コンソールには重要なメッセージのみを表示し、ファイルには詳細なログを記録するといった使い方ができます。
+これらのメソッドは、ログレベルを設定します：
+
+1. `set_console_level`: コンソール出力のログレベルを設定します。
+   - `self.console_handler.setLevel(level)`: コンソールハンドラーのログレベルを指定された値に設定します。
+
+2. `set_file_level`: ファイル出力のログレベルを設定します。
+   - `self.file_handler.setLevel(level)`: ファイルハンドラーのログレベルを指定された値に設定します。
+
+これにより、コンソールとファイルで異なるログレベルを使用できます。例えば、コンソールにはINFOレベル以上のメッセージを表示し、ファイルにはDEBUGレベル以上のすべてのメッセージを記録するといった使い方ができます。
 
 ### 3.7 デバッグモードの設定
 
@@ -196,7 +268,14 @@ def set_debug_mode(self, enabled: bool = True):
         self.logger.info("🔍 Debug mode disabled")
 ```
 
-このメソッドは、デバッグモードを有効または無効にします。デバッグモードが有効な場合、コンソールのログレベルがDEBUGに設定され、より詳細なログが表示されます。
+このメソッドは、デバッグモードを設定します：
+
+1. `if enabled:`: デバッグモードを有効にする場合の処理です。
+2. `self.set_console_level(logging.DEBUG)`: コンソール出力のログレベルをDEBUGに設定します。
+3. `self.logger.debug("🔍 Debug mode enabled")`: デバッグモードが有効になったことをログに記録します。
+4. `else:`: デバッグモードを無効にする場合の処理です。
+5. `self.set_console_level(logging.INFO)`: コンソール出力のログレベルをINFOに設定します。
+6. `self.logger.info("🔍 Debug mode disabled")`: デバッグモードが無効になったことをログに記録します。
 
 ## 4. ユーティリティ関数
 
@@ -220,7 +299,11 @@ def create_default_logger(name: str, debug_mode: bool = False, is_mock: bool = F
     return manager.get_logger()
 ```
 
-この関数は、デフォルト設定でロガーを作成します。簡単にロガーを作成したい場合に便利です。
+この関数は、デフォルト設定でロガーを作成します。各行の処理内容は以下の通りです：
+
+1. `console_level = logging.DEBUG if debug_mode else logging.INFO`: デバッグモードが有効な場合はDEBUGレベル、そうでない場合はINFOレベルを設定します。
+2. `manager = LoggerManager(name, console_level=console_level, is_mock=is_mock)`: 指定された名前、コンソールレベル、モックフラグでLoggerManagerインスタンスを作成します。
+3. `return manager.get_logger()`: 作成されたロガーインスタンスを返します。
 
 ### 4.2 実行時間のログ記録デコレータ
 

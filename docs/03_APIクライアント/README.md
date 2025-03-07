@@ -34,7 +34,11 @@ def __init__(self, api_key: str, base_url: str = 'https://www.alphavantage.co/qu
     self.mock_mode = os.getenv('MOCK_MODE', 'False').lower() == 'true'
 ```
 
-初期化時に、APIキーとベースURLを設定します。また、環境変数からモックモードの設定を読み込みます。
+初期化メソッドの各行は以下の処理を行います：
+
+1. `self.api_key = api_key`: 引数で受け取ったAPIキーをインスタンス変数に保存します。このキーは後でAPIリクエストの認証に使用されます。
+2. `self.base_url = base_url`: 引数で受け取ったベースURLをインスタンス変数に保存します。デフォルト値は'https://www.alphavantage.co/query'です。
+3. `self.mock_mode = os.getenv('MOCK_MODE', 'False').lower() == 'true'`: 環境変数'MOCK_MODE'の値を読み取り、モックモードを有効にするかどうかを決定します。環境変数が設定されていない場合は'False'をデフォルト値として使用します。値を小文字に変換し、'true'と等しいかどうかをチェックします。
 
 ### 3.2 日次株価データの取得
 
@@ -64,11 +68,17 @@ def fetch_daily_stock_data(self, symbol: str, outputsize: str = 'compact') -> Op
     return self._make_api_request(params)
 ```
 
-指定された銘柄の日次株価データを取得するメソッドです。モックモードの場合は、モックデータを生成して返します。それ以外の場合は、APIリクエストを送信します。
+日次株価データ取得メソッドの各行は以下の処理を行います：
 
-`outputsize`パラメータにより、取得するデータ量を制御できます：
-- `compact`: 最新の100データポイント（デフォルト）
-- `full`: 最大20年分のデータ
+1. `if self.mock_mode:`: モックモードが有効かどうかをチェックします。モックモードはテスト時に実際のAPIを呼び出さずにダミーデータを使用するために使われます。
+2. `return self._get_mock_data(symbol, outputsize)`: モックモードが有効な場合、内部メソッド`_get_mock_data`を呼び出してモックデータを生成し返します。
+3. `params = {...}`: モックモードが無効な場合、APIリクエストに必要なパラメータを辞書として定義します：
+   - `"function": "TIME_SERIES_DAILY"`: 日次株価データを取得するAPIエンドポイントを指定します。
+   - `"symbol": symbol`: 引数で受け取った株式銘柄（例：'NVDA'）を指定します。
+   - `"apikey": self.api_key`: 初期化時に保存したAPIキーを指定します。
+   - `"outputsize": outputsize`: データ量を制御するパラメータを指定します（'compact'または'full'）。
+   - `"datatype": "json"`: レスポンス形式としてJSONを指定します。
+4. `return self._make_api_request(params)`: 内部メソッド`_make_api_request`を呼び出してAPIリクエストを送信し、結果を返します。
 
 ### 3.3 APIリクエストの送信
 
@@ -134,12 +144,43 @@ def _make_api_request(self, params: Dict[str, str], max_retries: int = 3) -> Opt
     return None
 ```
 
-APIリクエストを送信し、レスポンスを検証するメソッドです。以下の特徴があります：
+APIリクエスト送信メソッドの各行は以下の処理を行います：
 
-1. **指数バックオフリトライ**: リクエストが失敗した場合、指数関数的に増加する待機時間を挟んでリトライします。
-2. **ジッター**: リトライ間隔にランダムな変動（ジッター）を加えることで、複数のクライアントが同時にリトライする場合の負荷を分散します。
-3. **レスポンス検証**: APIレスポンスの形式が期待通りであることを確認します。
-4. **タイムアウト設定**: リクエストのタイムアウトを10秒に設定しています。
+1. `retry_count = 0`: リトライカウンターを0に初期化します。
+2. `while retry_count <= max_retries:`: 最大リトライ回数に達するまでループします。
+3. `try:`: 例外処理のためのtryブロックを開始します。
+4. `logger.debug(f"🛠 Making API request with params: {params}")`: リクエストパラメータをデバッグログに出力します。
+5. `response = requests.get(self.base_url, params=params, timeout=10)`: HTTPリクエストを送信します。タイムアウトは10秒に設定されています。
+6. `response.raise_for_status()`: HTTPエラーがあれば例外を発生させます（400や500系のステータスコード）。
+7. `data = response.json()`: レスポンスをJSON形式でパースします。
+8. `logger.debug(f"🛠 API request URL: {response.url}")`: 実際に送信されたURLをデバッグログに出力します。
+9. `if "Time Series (Daily)" not in data:`: レスポンスに必要なキーが含まれているか検証します。
+10. `error_msg = f"❌ API specification may have changed: 'Time Series (Daily)' key not found! Response: {data}"`: エラーメッセージを作成します。
+11. `logger.error(error_msg)`: エラーメッセージをログに出力します。
+12. `raise ValueError(error_msg)`: 検証エラーを示す例外を発生させます。
+13. `sample_date = next(iter(data["Time Series (Daily)"]))`: 最初の日付キーを取得します。
+14. `sample_data = data["Time Series (Daily)"][sample_date]`: その日付のデータを取得します。
+15. `expected_keys = {"1. open", "2. high", "3. low", "4. close", "5. volume"}`: 期待されるデータキーのセットを定義します。
+16. `actual_keys = set(sample_data.keys())`: 実際のデータキーのセットを取得します。
+17. `if actual_keys != expected_keys:`: 期待されるキーと実際のキーが一致するか検証します。
+18. `error_msg = f"❌ API response format change detected! Expected: {expected_keys}, Actual: {actual_keys}"`: エラーメッセージを作成します。
+19. `logger.error(error_msg)`: エラーメッセージをログに出力します。
+20. `raise ValueError(error_msg)`: 検証エラーを示す例外を発生させます。
+21. `return data`: すべての検証に合格した場合、データを返します。
+22. `except requests.exceptions.RequestException as e:`: HTTPリクエスト関連の例外をキャッチします。
+23. `logger.warning(f"❌ API request error (attempt {retry_count+1}/{max_retries+1}): {e}")`: 警告ログを出力します。
+24. `except ValueError as ve:`: 検証エラーの例外をキャッチします。
+25. `logger.error(f"❌ API response validation error: {ve}")`: エラーログを出力します。
+26. `return None`: 検証エラーの場合はリトライせずにNoneを返します。
+27. `except Exception as ex:`: その他の例外をキャッチします。
+28. `logger.exception(f"❌ Unexpected error during API request: {ex}")`: 例外の詳細をログに出力します。
+29. `if retry_count < max_retries:`: まだリトライ可能かチェックします。
+30. `sleep_time = (2 ** retry_count) + random.uniform(0, 1)`: 指数バックオフとジッターを使用して待機時間を計算します。
+31. `logger.info(f"⏱ Retrying in {sleep_time:.2f} seconds...")`: 待機時間をログに出力します。
+32. `time.sleep(sleep_time)`: 計算された時間だけ待機します。
+33. `retry_count += 1`: リトライカウンターをインクリメントします。
+34. `logger.error(f"❌ All {max_retries+1} API request attempts failed")`: すべてのリトライが失敗した場合、エラーログを出力します。
+35. `return None`: すべてのリトライが失敗した場合、Noneを返します。
 
 ### 3.4 モックデータの生成
 
@@ -206,11 +247,38 @@ def _get_mock_data(self, symbol: str, outputsize: str) -> Dict[str, Any]:
     return mock_data
 ```
 
-モックモード用のテストデータを生成するメソッドです。実際のAPIを呼び出さずにテストできるようにするために使用されます。以下の特徴があります：
+モックデータ生成メソッドの各行は以下の処理を行います：
 
-1. **現実的なデータ生成**: ランダムな価格変動を持つ、現実的な株価データを生成します。
-2. **日付の生成**: 現在の日付から過去に遡って、指定された日数分のデータを生成します。
-3. **APIレスポンス形式の模倣**: 実際のAPIレスポンスと同じ形式でデータを返します。
+1. `logger.info(f"🔍 Using MOCK data for {symbol} (outputsize: {outputsize})")`: モックデータを使用していることをログに記録します。
+2. `from datetime import datetime, timedelta`: 日付操作に必要なクラスをインポートします。
+3. `today = datetime.now()`: 現在の日時を取得します。
+4. `num_days = 100 if outputsize == 'compact' else 500`: 生成するデータポイントの数を決定します。'compact'なら100日分、それ以外なら500日分。
+5. `time_series = {}`: 時系列データを格納する空の辞書を作成します。
+6. `base_price = 100.0`: 開始価格を100.0に設定します。
+7. `for i in range(num_days):`: 指定された日数分のデータを生成するループを開始します。
+8. `date = (today - timedelta(days=i)).strftime('%Y-%m-%d')`: 現在の日付からi日前の日付を'YYYY-MM-DD'形式の文字列として生成します。
+9. `daily_change = random.uniform(-5, 5)`: -5から5の間のランダムな価格変動を生成します。
+10. `open_price = base_price + daily_change`: 基本価格に日々の変動を加えて始値を計算します。
+11. `high_price = open_price * random.uniform(1.0, 1.05)`: 始値の1.0〜1.05倍の範囲でランダムな高値を生成します。
+12. `low_price = open_price * random.uniform(0.95, 1.0)`: 始値の0.95〜1.0倍の範囲でランダムな安値を生成します。
+13. `close_price = random.uniform(low_price, high_price)`: 安値と高値の間でランダムな終値を生成します。
+14. `volume = int(random.uniform(1000000, 10000000))`: 100万〜1000万の間でランダムな取引量を生成します。
+15. `base_price = close_price`: 次の日のための基本価格を今日の終値に更新します。
+16. `time_series[date] = {...}`: 生成した価格データを日付をキーとして辞書に格納します。
+17. `"1. open": f"{open_price:.4f}"`: 始値を小数点以下4桁でフォーマットします。
+18. `"2. high": f"{high_price:.4f}"`: 高値を小数点以下4桁でフォーマットします。
+19. `"3. low": f"{low_price:.4f}"`: 安値を小数点以下4桁でフォーマットします。
+20. `"4. close": f"{close_price:.4f}"`: 終値を小数点以下4桁でフォーマットします。
+21. `"5. volume": f"{volume}"`: 取引量を文字列に変換します。
+22. `mock_data = {...}`: 完全なAPIレスポンス構造を作成します。
+23. `"Meta Data": {...}`: メタデータ部分を作成します。
+24. `"1. Information": f"Daily Prices (open, high, low, close) and Volumes"`: 情報説明を設定します。
+25. `"2. Symbol": symbol`: 引数で受け取った銘柄シンボルを設定します。
+26. `"3. Last Refreshed": today.strftime('%Y-%m-%d')`: 最終更新日を今日の日付に設定します。
+27. `"4. Output Size": outputsize`: 出力サイズを引数で受け取った値に設定します。
+28. `"5. Time Zone": "US/Eastern"`: タイムゾーンを米国東部時間に設定します。
+29. `"Time Series (Daily)": time_series`: 生成した時系列データを設定します。
+30. `return mock_data`: 作成したモックデータを返します。
 
 ## 4. APIレスポンスの形式
 

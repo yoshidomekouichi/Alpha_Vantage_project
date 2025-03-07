@@ -142,16 +142,31 @@ def setup_components(config):
     return logger, api_client, data_processor, s3_storage, atomic_s3, alert_manager
 ```
 
-この関数は、設定オブジェクトを受け取り、以下のコンポーネントを初期化します：
+コンポーネント設定関数は、各コンポーネントを初期化し、連携させます。各行の処理内容は以下の通りです：
 
-1. **ロガー**: ログレベルやログディレクトリなどを設定
-2. **APIクライアント**: Alpha Vantage APIとの通信を担当
-3. **データプロセッサ**: APIレスポンスの検証と変換を担当
-4. **S3ストレージ**: AWS S3へのデータ保存と取得を担当
-5. **アトミックS3更新**: S3へのアトミック更新を担当
-6. **アラートマネージャー**: メールやSlackへの通知を担当
-
-各コンポーネントには、ロガーが設定されます。また、モックモードやデバッグモードの設定も行われます。
+1. `log_level = getattr(logging, config.log_level.upper(), logging.INFO)`: 設定から指定されたログレベルを取得します。指定されていない場合はINFOレベルをデフォルトとします。
+2. `logger_manager = LoggerManager(...)`: ロガーマネージャーを初期化します。
+3. `"fetch_daily"`: ロガー名を指定します。
+4. `log_dir=config.log_dir`: ログファイルの保存先ディレクトリを指定します。
+5. `console_level=log_level`: コンソール出力のログレベルを設定します。
+6. `file_level=logging.DEBUG`: ファイル出力のログレベルをDEBUGに設定します（詳細なログをファイルに記録）。
+7. `is_mock=config.mock_mode`: モックモードの設定を渡します。
+8. `logger = logger_manager.get_logger()`: 設定されたロガーインスタンスを取得します。
+9. `if config.debug_mode:`: デバッグモードが有効かどうかをチェックします。
+10. `logger_manager.set_debug_mode(True)`: デバッグモードを有効にします（コンソールのログレベルをDEBUGに設定）。
+11. `env_type = "Mock" if config.mock_mode else "Production"`: 環境タイプの文字列を作成します。
+12. `logger.info(f"🔧 Running in {env_type} environment")`: 環境タイプをログに記録します。
+13. `api_client = AlphaVantageClient(config.api_key, config.api_base_url)`: APIクライアントを初期化します。
+14. `api_client.set_logger(logger)`: APIクライアントにロガーを設定します。
+15. `data_processor = StockDataProcessor()`: データプロセッサを初期化します。
+16. `data_processor.set_logger(logger)`: データプロセッサにロガーを設定します。
+17. `s3_storage = S3Storage(config.s3_bucket, config.s3_region)`: S3ストレージを初期化します。
+18. `s3_storage.set_logger(logger)`: S3ストレージにロガーを設定します。
+19. `atomic_s3 = AtomicS3(s3_storage)`: アトミックS3更新を初期化します。
+20. `atomic_s3.set_logger(logger)`: アトミックS3更新にロガーを設定します。
+21. `alert_manager = AlertManager(config.email_config, config.slack_webhook_url)`: アラートマネージャーを初期化します。
+22. `alert_manager.set_logger(logger)`: アラートマネージャーにロガーを設定します。
+23. `return logger, api_client, data_processor, s3_storage, atomic_s3, alert_manager`: 初期化されたすべてのコンポーネントをタプルとして返します。
 
 ### 3.3 銘柄処理
 
@@ -240,17 +255,126 @@ def process_symbol(symbol, config, api_client, data_processor, atomic_s3, logger
     return True
 ```
 
-この関数は、単一の株式銘柄を処理します。以下の手順で処理が行われます：
+銘柄処理関数は、単一の株式銘柄のデータを取得、処理、保存します。各行の処理内容は以下の通りです：
 
-1. **データ取得**: Alpha Vantage APIから株価データを取得
-2. **データ検証**: 取得したデータの検証と変換
-3. **最新データの抽出**: 最新の株価データを抽出
-4. **JSON変換**: データをJSON形式に変換
-5. **メタデータの追加**: シンボルや更新日時などのメタデータを追加
-6. **S3保存**: データをS3に保存（最新データ、日次データ、全データ）
-7. **メタデータ更新**: データに関するメタデータを更新
+1. `@log_execution_time(logging.getLogger(__name__))`: 関数の実行時間をログに記録するデコレータを適用します。
+2. `logger.info(f"🔍 Processing symbol: {symbol}")`: 処理開始をログに記録します。
+3. `stock_data = api_client.fetch_daily_stock_data(symbol)`: APIから株価データを取得します。
+4. `if not stock_data:`: データ取得に失敗した場合の処理です。
+5. `logger.error(f"❌ Failed to fetch data for {symbol}")`: エラーをログに記録します。
+6. `return False`: 失敗を示すFalseを返します。
+7. `is_valid, df = data_processor.validate_and_transform(stock_data)`: 取得したデータを検証し、DataFrameに変換します。
+8. `if not is_valid or df is None:`: データ検証に失敗した場合の処理です。
+9. `logger.error(f"❌ Data validation failed for {symbol}")`: エラーをログに記録します。
+10. `return False`: 失敗を示すFalseを返します。
+11. `latest_df = data_processor.extract_latest_data(df)`: 最新の株価データを抽出します。
+12. `latest_date = latest_df.index[0].strftime('%Y-%m-%d')`: 最新データの日付を文字列形式で取得します。
+13. `json_data = data_processor.convert_to_json(df)`: 全データをJSON形式に変換します。
+14. `latest_json_data = data_processor.convert_to_json(latest_df)`: 最新データをJSON形式に変換します。
+15. `json_data['symbol'] = symbol`: 全データにシンボル情報を追加します。
+16. `json_data['last_updated'] = datetime.now().isoformat()`: 全データに更新日時を追加します。
+17. `latest_json_data['symbol'] = symbol`: 最新データにシンボル情報を追加します。
+18. `latest_json_data['last_updated'] = datetime.now().isoformat()`: 最新データに更新日時を追加します。
+19. `full_key = config.get_s3_key(symbol)`: 全データ用のS3キーを取得します。
+20. `latest_key = config.get_s3_key(symbol, is_latest=True)`: 最新データ用のS3キーを取得します。
+21. `daily_key = config.get_s3_key(symbol, date=latest_date)`: 日次データ用のS3キーを取得します。
+22. `if not atomic_s3.atomic_json_update(latest_key, latest_json_data):`: 最新データの保存に失敗した場合の処理です。
+23. `logger.error(f"❌ Failed to save latest data for {symbol}")`: エラーをログに記録します。
+24. `return False`: 失敗を示すFalseを返します。
+25. `if not atomic_s3.atomic_json_update(daily_key, latest_json_data):`: 日次データの保存に失敗した場合の処理です。
+26. `logger.warning(f"⚠️ Failed to save daily data for {symbol}, but latest data was saved")`: 警告をログに記録します。
+27. `if not atomic_s3.atomic_json_update(full_key, json_data):`: 全データの保存に失敗した場合の処理です。
+28. `logger.warning(f"⚠️ Failed to update full data for {symbol}, but latest data was saved")`: 警告をログに記録します。
+29. `metadata = {...}`: メタデータ辞書を作成します。
+30. `'symbol': symbol`: シンボル情報を設定します。
+31. `'last_updated': datetime.now().isoformat()`: 更新日時を設定します。
+32. `'latest_date': latest_date`: 最新データの日付を設定します。
+33. `'data_points': len(df)`: データポイント数を設定します。
+34. `'date_range': {...}`: 日付範囲を設定します。
+35. `'start': df.index[-1].strftime('%Y-%m-%d')`: 開始日を設定します。
+36. `'end': latest_date`: 終了日を設定します。
+37. `metadata_key = config.get_metadata_key(symbol)`: メタデータ用のS3キーを取得します。
+38. `if not atomic_s3.atomic_json_update(metadata_key, metadata):`: メタデータの保存に失敗した場合の処理です。
+39. `logger.warning(f"⚠️ Failed to update metadata for {symbol}")`: 警告をログに記録します。
+40. `logger.info(f"✅ Successfully processed {symbol} for date {latest_date}")`: 処理成功をログに記録します。
+41. `return True`: 成功を示すTrueを返します。
 
-`@log_execution_time`デコレータにより、関数の実行時間がログに記録されます。
+### 3.4 メイン関数
+
+```python
+def main():
+    """メイン関数。"""
+    start_time = time.time()
+    
+    # 設定の読み込み
+    config = Config()
+    
+    # テスト用にモックモードを強制
+    config.mock_mode = True
+    config.debug_mode = True
+    
+    # コンポーネントの設定
+    logger, api_client, data_processor, s3_storage, atomic_s3, alert_manager = setup_components(config)
+    
+    # 実行開始をログに記録
+    logger.info("=" * 80)
+    logger.info(f"🚀 Starting daily stock data fetch at {datetime.now().isoformat()}")
+    logger.info(f"📋 Configuration: {config}")
+    logger.info(f"🔍 Environment STOCK_SYMBOLS: {os.getenv('STOCK_SYMBOLS')}")
+    logger.info(f"🔍 Config stock_symbols: {config.stock_symbols}")
+    logger.info("=" * 80)
+    
+    # 各銘柄を処理
+    results = {}
+    success_count = 0
+    failure_count = 0
+    
+    for symbol in config.stock_symbols:
+        try:
+            success = process_symbol(symbol, config, api_client, data_processor, atomic_s3, logger)
+            results[symbol] = "SUCCESS" if success else "FAILURE"
+            
+            if success:
+                success_count += 1
+            else:
+                failure_count += 1
+                
+        except Exception as e:
+            logger.exception(f"❌ Unexpected error processing {symbol}: {e}")
+            results[symbol] = f"ERROR: {str(e)}"
+            failure_count += 1
+    
+    # 実行時間の計算
+    end_time = time.time()
+    execution_time = end_time - start_time
+    
+    # 実行サマリーをログに記録
+    logger.info("=" * 80)
+    logger.info(f"📊 Execution summary:")
+    logger.info(f"⏱ Total execution time: {execution_time:.2f} seconds")
+    logger.info(f"✅ Successful: {success_count}")
+    logger.info(f"❌ Failed: {failure_count}")
+    logger.info(f"📋 Results by symbol: {json.dumps(results, indent=2)}")
+    logger.info("=" * 80)
+    
+    # 設定されている場合はアラートを送信
+    if config.email_enabled or config.slack_enabled:
+        if failure_count > 0:
+            # 警告またはエラーアラートを送信
+            alert_message = f"Daily stock data fetch completed with {failure_count} failures"
+            alert_details = f"""
+Execution time: {execution_time:.2f} seconds
+Successful: {success_count}
+Failed: {failure_count}
+
+Results by symbol:
+{json.dumps(results, indent=2)}
+"""
+            alert_manager.send_warning_alert(
+                alert_message,
+                alert_details,
+                source="fetch_daily.py"
+            )
 
 ### 3.4 メイン関数
 

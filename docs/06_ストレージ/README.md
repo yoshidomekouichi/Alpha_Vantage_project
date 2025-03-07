@@ -72,7 +72,20 @@ def save_json(self, data: Dict[str, Any], key: str) -> bool:
         return False
 ```
 
-このメソッドは、Pythonの辞書をJSON形式に変換し、S3に保存します。成功した場合は`True`を、失敗した場合は`False`を返します。
+このメソッドは、Pythonの辞書をJSON形式に変換し、S3に保存します。各行の処理内容は以下の通りです：
+
+1. `try:`: 例外処理のためのtryブロックを開始します。
+2. `json_data = json.dumps(data, indent=2)`: Pythonの辞書をJSON文字列に変換します。indent=2を指定することで、読みやすい形式（インデント付き）でフォーマットします。
+3. `self.s3_client.put_object(...)`: S3にオブジェクトを保存するためのAPIを呼び出します。
+4. `Bucket=self.bucket_name`: 保存先のS3バケット名を指定します。
+5. `Key=key`: 保存先のS3オブジェクトキー（パス）を指定します。
+6. `Body=json_data`: 保存するデータ（JSON文字列）を指定します。
+7. `ContentType='application/json'`: コンテンツタイプをJSONとして指定します。
+8. `logger.info(...)`: 保存成功のログを出力します。
+9. `return True`: 成功した場合はTrueを返します。
+10. `except Exception as e:`: あらゆる例外をキャッチします。
+11. `logger.exception(...)`: 例外の詳細をログに出力します。
+12. `return False`: 失敗した場合はFalseを返します。
 
 ### 3.3 CSVデータの保存
 
@@ -105,7 +118,21 @@ def save_csv(self, df: pd.DataFrame, key: str) -> bool:
         return False
 ```
 
-このメソッドは、PandasのDataFrameをCSV形式に変換し、S3に保存します。一時的なバッファを使用して、メモリ上でCSVを生成します。
+このメソッドは、PandasのDataFrameをCSV形式に変換し、S3に保存します。各行の処理内容は以下の通りです：
+
+1. `try:`: 例外処理のためのtryブロックを開始します。
+2. `csv_buffer = io.StringIO()`: メモリ上に文字列バッファを作成します。これにより、ファイルをディスクに書き込まずにCSVデータを生成できます。
+3. `df.to_csv(csv_buffer, index=True)`: DataFrameをCSV形式に変換し、バッファに書き込みます。index=Trueを指定することで、インデックスもCSVに含めます。
+4. `self.s3_client.put_object(...)`: S3にオブジェクトを保存するためのAPIを呼び出します。
+5. `Bucket=self.bucket_name`: 保存先のS3バケット名を指定します。
+6. `Key=key`: 保存先のS3オブジェクトキー（パス）を指定します。
+7. `Body=csv_buffer.getvalue()`: バッファから文字列を取得し、保存するデータとして指定します。
+8. `ContentType='text/csv'`: コンテンツタイプをCSVとして指定します。
+9. `logger.info(...)`: 保存成功のログを出力します。
+10. `return True`: 成功した場合はTrueを返します。
+11. `except Exception as e:`: あらゆる例外をキャッチします。
+12. `logger.exception(...)`: 例外の詳細をログに出力します。
+13. `return False`: 失敗した場合はFalseを返します。
 
 ### 3.4 Parquetデータの保存
 
@@ -137,7 +164,20 @@ def save_parquet(self, df: pd.DataFrame, key: str) -> bool:
         return False
 ```
 
-このメソッドは、PandasのDataFrameをParquet形式に変換し、S3に保存します。Parquetは列指向の圧縮ファイル形式で、大規模なデータセットに適しています。
+このメソッドは、PandasのDataFrameをParquet形式に変換し、S3に保存します。各行の処理内容は以下の通りです：
+
+1. `try:`: 例外処理のためのtryブロックを開始します。
+2. `parquet_buffer = io.BytesIO()`: メモリ上にバイトバッファを作成します。Parquetはバイナリ形式のため、BytesIOを使用します。
+3. `df.to_parquet(parquet_buffer)`: DataFrameをParquet形式に変換し、バッファに書き込みます。
+4. `self.s3_client.put_object(...)`: S3にオブジェクトを保存するためのAPIを呼び出します。
+5. `Bucket=self.bucket_name`: 保存先のS3バケット名を指定します。
+6. `Key=key`: 保存先のS3オブジェクトキー（パス）を指定します。
+7. `Body=parquet_buffer.getvalue()`: バッファからバイトデータを取得し、保存するデータとして指定します。
+8. `logger.info(...)`: 保存成功のログを出力します。
+9. `return True`: 成功した場合はTrueを返します。
+10. `except Exception as e:`: あらゆる例外をキャッチします。
+11. `logger.exception(...)`: 例外の詳細をログに出力します。
+12. `return False`: 失敗した場合はFalseを返します。
 
 ### 3.5 JSONデータの読み込み
 
@@ -168,7 +208,22 @@ def load_json(self, key: str) -> Optional[Dict[str, Any]]:
         return None
 ```
 
-このメソッドは、S3からJSONデータを読み込み、Pythonの辞書に変換します。オブジェクトが存在しない場合や、その他のエラーが発生した場合は`None`を返します。
+このメソッドは、S3からJSONデータを読み込み、Pythonの辞書に変換します。各行の処理内容は以下の通りです：
+
+1. `try:`: 例外処理のためのtryブロックを開始します。
+2. `response = self.s3_client.get_object(Bucket=self.bucket_name, Key=key)`: S3からオブジェクトを取得します。
+3. `json_data = json.loads(response['Body'].read().decode('utf-8'))`: レスポンスのボディを読み取り、UTF-8でデコードし、JSON文字列をPythonの辞書に変換します。
+4. `logger.info(...)`: 読み込み成功のログを出力します。
+5. `return json_data`: 読み込まれたデータを返します。
+6. `except self.ClientError as e:`: boto3のクライアントエラーをキャッチします。
+7. `if e.response['Error']['Code'] == 'NoSuchKey':`: エラーコードが「NoSuchKey」（オブジェクトが存在しない）かどうかをチェックします。
+8. `logger.warning(...)`: オブジェクトが存在しない場合の警告ログを出力します。
+9. `else:`: その他のクライアントエラーの場合の処理です。
+10. `logger.exception(...)`: エラーの詳細をログに出力します。
+11. `return None`: エラーが発生した場合はNoneを返します。
+12. `except Exception as e:`: その他のあらゆる例外をキャッチします。
+13. `logger.exception(...)`: 例外の詳細をログに出力します。
+14. `return None`: 例外が発生した場合はNoneを返します。
 
 ### 3.6 CSVデータの読み込み
 
@@ -199,7 +254,22 @@ def load_csv(self, key: str) -> Optional[pd.DataFrame]:
         return None
 ```
 
-このメソッドは、S3からCSVデータを読み込み、PandasのDataFrameに変換します。
+このメソッドは、S3からCSVデータを読み込み、PandasのDataFrameに変換します。各行の処理内容は以下の通りです：
+
+1. `try:`: 例外処理のためのtryブロックを開始します。
+2. `response = self.s3_client.get_object(Bucket=self.bucket_name, Key=key)`: S3からオブジェクトを取得します。
+3. `df = pd.read_csv(io.BytesIO(response['Body'].read()))`: レスポンスのボディを読み取り、バイトIOオブジェクトに変換し、PandasのDataFrameとして読み込みます。
+4. `logger.info(...)`: 読み込み成功のログを出力します。
+5. `return df`: 読み込まれたDataFrameを返します。
+6. `except self.ClientError as e:`: boto3のクライアントエラーをキャッチします。
+7. `if e.response['Error']['Code'] == 'NoSuchKey':`: エラーコードが「NoSuchKey」（オブジェクトが存在しない）かどうかをチェックします。
+8. `logger.warning(...)`: オブジェクトが存在しない場合の警告ログを出力します。
+9. `else:`: その他のクライアントエラーの場合の処理です。
+10. `logger.exception(...)`: エラーの詳細をログに出力します。
+11. `return None`: エラーが発生した場合はNoneを返します。
+12. `except Exception as e:`: その他のあらゆる例外をキャッチします。
+13. `logger.exception(...)`: 例外の詳細をログに出力します。
+14. `return None`: 例外が発生した場合はNoneを返します。
 
 ### 3.7 Parquetデータの読み込み
 
@@ -230,7 +300,22 @@ def load_parquet(self, key: str) -> Optional[pd.DataFrame]:
         return None
 ```
 
-このメソッドは、S3からParquetデータを読み込み、PandasのDataFrameに変換します。
+このメソッドは、S3からParquetデータを読み込み、PandasのDataFrameに変換します。各行の処理内容は以下の通りです：
+
+1. `try:`: 例外処理のためのtryブロックを開始します。
+2. `response = self.s3_client.get_object(Bucket=self.bucket_name, Key=key)`: S3からオブジェクトを取得します。
+3. `df = pd.read_parquet(io.BytesIO(response['Body'].read()))`: レスポンスのボディを読み取り、バイトIOオブジェクトに変換し、PandasのDataFrameとして読み込みます。
+4. `logger.info(...)`: 読み込み成功のログを出力します。
+5. `return df`: 読み込まれたDataFrameを返します。
+6. `except self.ClientError as e:`: boto3のクライアントエラーをキャッチします。
+7. `if e.response['Error']['Code'] == 'NoSuchKey':`: エラーコードが「NoSuchKey」（オブジェクトが存在しない）かどうかをチェックします。
+8. `logger.warning(...)`: オブジェクトが存在しない場合の警告ログを出力します。
+9. `else:`: その他のクライアントエラーの場合の処理です。
+10. `logger.exception(...)`: エラーの詳細をログに出力します。
+11. `return None`: エラーが発生した場合はNoneを返します。
+12. `except Exception as e:`: その他のあらゆる例外をキャッチします。
+13. `logger.exception(...)`: 例外の詳細をログに出力します。
+14. `return None`: 例外が発生した場合はNoneを返します。
 
 ### 3.8 オブジェクトの存在確認
 
@@ -252,7 +337,35 @@ def object_exists(self, key: str) -> bool:
         return False
 ```
 
-このメソッドは、指定されたキーのオブジェクトがS3に存在するかどうかを確認します。`head_object`メソッドを使用することで、オブジェクトの内容を取得せずに存在確認ができます。
+このメソッドは、指定されたキーのオブジェクトがS3に存在するかどうかを確認します。各行の処理内容は以下の通りです：
+
+1. `try:`: 例外処理のためのtryブロックを開始します。
+2. `self.s3_client.head_object(Bucket=self.bucket_name, Key=key)`: S3オブジェクトのメタデータのみを取得します。これはオブジェクトの内容を取得せずに存在確認ができる効率的な方法です。
+3. `return True`: オブジェクトが存在する場合はTrueを返します。
+4. `except self.ClientError:`: boto3のクライアントエラー（オブジェクトが存在しない場合など）をキャッチします。
+5. `return False`: オブジェクトが存在しない場合はFalseを返します。
+
+### 3.9 オブジェクトのリスト取得
+
+```python
+def list_objects(self, prefix: str = '') -> List[str]:
+    """
+    指定されたプレフィックスでS3バケット内のオブジェクトをリストします。
+    
+    引数:
+        prefix: フィルタリングするS3キープレフィックス
+        
+    戻り値:
+        オブジェクトキーのリスト
+    """
+    try:
+        response = self.s3_client.list_objects_v2(Bucket=self.bucket_name, Prefix=prefix)
+        
+        if 'Contents' not in response:
+            return []
+            
+        return [obj['Key'] for obj in response['Contents']]
+    except Exception
 
 ### 3.9 オブジェクトのリスト取得
 
