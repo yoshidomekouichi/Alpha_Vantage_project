@@ -23,7 +23,10 @@ class AlertManager:
     def __init__(
         self,
         email_config: Optional[Dict[str, str]] = None,
-        slack_webhook_url: Optional[str] = None
+        slack_webhook_url: Optional[str] = None,
+        slack_webhook_url_error: Optional[str] = None,
+        slack_webhook_url_warning: Optional[str] = None,
+        slack_webhook_url_info: Optional[str] = None
     ):
         """
         Initialize the alert manager.
@@ -36,10 +39,18 @@ class AlertManager:
                 - smtp_password: SMTP password
                 - from_email: Sender email address
                 - to_email: Recipient email address(es) (string or list)
-            slack_webhook_url: Slack webhook URL for sending messages
+            slack_webhook_url: Default Slack webhook URL for sending messages
+            slack_webhook_url_error: Slack webhook URL for error messages
+            slack_webhook_url_warning: Slack webhook URL for warning messages
+            slack_webhook_url_info: Slack webhook URL for info messages
         """
         self.email_config = email_config
         self.slack_webhook_url = slack_webhook_url
+        
+        # Slack webhook URLs for different alert levels
+        self.slack_webhook_url_error = slack_webhook_url_error or slack_webhook_url
+        self.slack_webhook_url_warning = slack_webhook_url_warning or slack_webhook_url
+        self.slack_webhook_url_info = slack_webhook_url_info or slack_webhook_url
         
     def set_logger(self, custom_logger):
         """Set a custom logger for the alert manager."""
@@ -183,7 +194,8 @@ class AlertManager:
         error_details: Optional[str] = None,
         source: Optional[str] = None,
         send_email: bool = True,
-        send_slack: bool = True
+        send_slack: bool = True,
+        additional_fields: Optional[List[Dict[str, str]]] = None
     ) -> bool:
         """
         Send an error alert to all configured channels.
@@ -194,6 +206,7 @@ class AlertManager:
             source: Source of the error (e.g., script name)
             send_email: Whether to send an email alert
             send_slack: Whether to send a Slack alert
+            additional_fields: Additional fields to include in the Slack message
             
         Returns:
             Boolean indicating if at least one alert was sent successfully
@@ -221,18 +234,23 @@ class AlertManager:
         if send_email and self.email_config:
             email_success = self.send_email(subject, body, html_body)
             
-        if send_slack and self.slack_webhook_url:
+        if send_slack and self.slack_webhook_url_error:
             fields = []
             if source:
                 fields.append({"title": "Source", "value": source, "short": True})
             if error_details:
                 fields.append({"title": "Details", "value": f"```{error_details}```", "short": False})
+            
+            # Add additional fields if provided
+            if additional_fields:
+                fields.extend(additional_fields)
                 
             slack_success = self.send_slack(
                 message=error_message,
                 title="❌ ERROR",
                 color="#FF0000",  # Red
-                fields=fields
+                fields=fields,
+                webhook_url=self.slack_webhook_url_error
             )
         
         return email_success or slack_success
@@ -243,7 +261,9 @@ class AlertManager:
         details: Optional[str] = None,
         source: Optional[str] = None,
         send_email: bool = True,
-        send_slack: bool = True
+        send_slack: bool = True,
+        additional_fields: Optional[List[Dict[str, str]]] = None,
+        stock_data: Optional[Dict[str, Any]] = None
     ) -> bool:
         """
         Send a success alert to all configured channels.
@@ -254,6 +274,8 @@ class AlertManager:
             source: Source of the success (e.g., script name)
             send_email: Whether to send an email alert
             send_slack: Whether to send a Slack alert
+            additional_fields: Additional fields to include in the Slack message
+            stock_data: Stock data to include in the message (for daily updates)
             
         Returns:
             Boolean indicating if at least one alert was sent successfully
@@ -281,18 +303,44 @@ class AlertManager:
         if send_email and self.email_config:
             email_success = self.send_email(subject, body, html_body)
             
-        if send_slack and self.slack_webhook_url:
+        if send_slack and self.slack_webhook_url_info:
             fields = []
             if source:
                 fields.append({"title": "Source", "value": source, "short": True})
+            
+            # Add stock data if provided
+            if stock_data:
+                # Format stock data for display
+                if 'symbol' in stock_data:
+                    fields.append({"title": "Symbol", "value": stock_data['symbol'], "short": True})
+                
+                if 'latest_date' in stock_data:
+                    fields.append({"title": "Date", "value": stock_data['latest_date'], "short": True})
+                
+                # Add price information if available
+                if 'data_points' in stock_data and stock_data['data_points'] > 0:
+                    price_info = "Latest price information available"
+                    fields.append({"title": "Data Points", "value": str(stock_data['data_points']), "short": True})
+                    
+                # Add date range if available
+                if 'date_range' in stock_data:
+                    date_range = stock_data['date_range']
+                    range_text = f"From {date_range.get('start', 'N/A')} to {date_range.get('end', 'N/A')}"
+                    fields.append({"title": "Date Range", "value": range_text, "short": False})
+            
             if details:
                 fields.append({"title": "Details", "value": f"```{details}```", "short": False})
+            
+            # Add additional fields if provided
+            if additional_fields:
+                fields.extend(additional_fields)
                 
             slack_success = self.send_slack(
                 message=message,
                 title="✅ SUCCESS",
                 color="#36a64f",  # Green
-                fields=fields
+                fields=fields,
+                webhook_url=self.slack_webhook_url_info
             )
         
         return email_success or slack_success
@@ -303,7 +351,9 @@ class AlertManager:
         warning_details: Optional[str] = None,
         source: Optional[str] = None,
         send_email: bool = True,
-        send_slack: bool = True
+        send_slack: bool = True,
+        additional_fields: Optional[List[Dict[str, str]]] = None,
+        data_issues: Optional[Dict[str, Any]] = None
     ) -> bool:
         """
         Send a warning alert to all configured channels.
@@ -314,6 +364,8 @@ class AlertManager:
             source: Source of the warning (e.g., script name)
             send_email: Whether to send an email alert
             send_slack: Whether to send a Slack alert
+            additional_fields: Additional fields to include in the Slack message
+            data_issues: Data issues to include in the message (for data warnings)
             
         Returns:
             Boolean indicating if at least one alert was sent successfully
@@ -341,18 +393,42 @@ class AlertManager:
         if send_email and self.email_config:
             email_success = self.send_email(subject, body, html_body)
             
-        if send_slack and self.slack_webhook_url:
+        if send_slack and self.slack_webhook_url_warning:
             fields = []
             if source:
                 fields.append({"title": "Source", "value": source, "short": True})
+            
+            # Add data issues if provided
+            if data_issues:
+                # Format data issues for display
+                if 'symbol' in data_issues:
+                    fields.append({"title": "Symbol", "value": data_issues['symbol'], "short": True})
+                
+                if 'date' in data_issues:
+                    fields.append({"title": "Date", "value": data_issues['date'], "short": True})
+                
+                if 'issue_type' in data_issues:
+                    fields.append({"title": "Issue Type", "value": data_issues['issue_type'], "short": True})
+                
+                if 'affected_fields' in data_issues:
+                    affected_fields = data_issues['affected_fields']
+                    if isinstance(affected_fields, list):
+                        affected_fields = ", ".join(affected_fields)
+                    fields.append({"title": "Affected Fields", "value": affected_fields, "short": True})
+            
             if warning_details:
                 fields.append({"title": "Details", "value": f"```{warning_details}```", "short": False})
+            
+            # Add additional fields if provided
+            if additional_fields:
+                fields.extend(additional_fields)
                 
             slack_success = self.send_slack(
                 message=warning_message,
                 title="⚠️ WARNING",
                 color="#FFA500",  # Orange
-                fields=fields
+                fields=fields,
+                webhook_url=self.slack_webhook_url_warning
             )
         
         return email_success or slack_success
