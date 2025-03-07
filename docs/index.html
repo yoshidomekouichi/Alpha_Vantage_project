@@ -508,72 +508,6 @@
               '最終更新: ' + new Date().toLocaleDateString('ja-JP') +
               '</div>';
           });
-          
-          // ページ読み込み完了後の処理
-          hook.ready(function() {
-            // モバイルでのサイドバー表示を改善
-            document.querySelector('.toggle-sidebar-button').addEventListener('click', function() {
-              document.body.classList.toggle('close');
-            });
-            
-            // 検索ボックスの表示/非表示を切り替え
-            document.querySelector('.toggle-search-button').addEventListener('click', function() {
-              const searchBox = document.querySelector('.search');
-              if (searchBox) {
-                searchBox.style.display = searchBox.style.display === 'none' ? 'block' : 'none';
-              }
-            });
-            
-            // テーマ切り替えボタンの処理
-            document.querySelector('.toggle-theme-button').addEventListener('click', function() {
-              const currentTheme = document.body.getAttribute('data-theme');
-              const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-              document.body.setAttribute('data-theme', newTheme);
-              localStorage.setItem('DARK_LIGHT_THEME', newTheme);
-              
-              // アイコンの切り替え
-              const icon = this.querySelector('i');
-              if (newTheme === 'dark') {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-              } else {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-              }
-            });
-            
-            // スクロールトップボタンの処理
-            const scrollToTopButton = document.querySelector('.scroll-to-top');
-            window.addEventListener('scroll', function() {
-              if (window.pageYOffset > 300) {
-                scrollToTopButton.classList.add('visible');
-              } else {
-                scrollToTopButton.classList.remove('visible');
-              }
-              
-              // 進捗バーの更新
-              const progressBar = document.querySelector('.progress-bar');
-              const totalHeight = document.body.scrollHeight - window.innerHeight;
-              const progress = (window.pageYOffset / totalHeight) * 100;
-              progressBar.style.width = progress + '%';
-              progressBar.style.opacity = 1;
-            });
-            
-            scrollToTopButton.addEventListener('click', function() {
-              window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-              });
-            });
-            
-            // ダークモードを強制的に適用
-            setTimeout(function() {
-              document.body.setAttribute('data-theme', 'dark');
-              const themeIcon = document.querySelector('.toggle-theme-button i');
-              themeIcon.classList.remove('fa-sun');
-              themeIcon.classList.add('fa-moon');
-            }, 100);
-          });
         }
       ]
     };
@@ -590,24 +524,15 @@
   <!-- ダークモード切替スクリプト -->
   <script src="https://cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/index.min.js"></script>
   
-  <!-- ダークモードを強制的に適用するスクリプト -->
+  <!-- カスタムスクリプト -->
   <script>
-    // ページ読み込み完了後にダークモードを適用
-    window.addEventListener('load', function() {
-      // ローカルストレージにダークモード設定を保存
+    // ページ読み込み完了後に実行
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM fully loaded');
+      
+      // ダークモードを強制的に適用
       localStorage.setItem('DARK_LIGHT_THEME', 'dark');
-      
-      // ダークモードを適用
       document.body.setAttribute('data-theme', 'dark');
-      
-      // 定期的にダークモードが適用されているか確認し、適用されていなければ再適用
-      var checkInterval = setInterval(function() {
-        if (document.body.getAttribute('data-theme') !== 'dark') {
-          document.body.setAttribute('data-theme', 'dark');
-        } else {
-          clearInterval(checkInterval);
-        }
-      }, 500);
       
       // 検索ボックスを初期状態で非表示に
       setTimeout(function() {
@@ -615,8 +540,115 @@
         if (searchBox) {
           searchBox.style.display = 'none';
         }
-      }, 100);
+      }, 500);
+      
+      // ボタンのイベントリスナーを設定
+      setupEventListeners();
     });
+    
+    // docsifyのロード完了後に実行
+    window.addEventListener('load', function() {
+      console.log('Window fully loaded');
+      
+      // 少し遅延させてボタンのイベントリスナーを設定（docsifyの初期化完了を待つ）
+      setTimeout(setupEventListeners, 1000);
+      
+      // ダークモードを定期的に確認して適用
+      var checkInterval = setInterval(function() {
+        if (document.body.getAttribute('data-theme') !== 'dark') {
+          document.body.setAttribute('data-theme', 'dark');
+        } else {
+          clearInterval(checkInterval);
+        }
+      }, 500);
+    });
+    
+    // イベントリスナーのセットアップ関数
+    function setupEventListeners() {
+      console.log('Setting up event listeners');
+      
+      // サイドバートグルボタン
+      const sidebarToggle = document.querySelector('.toggle-sidebar-button');
+      if (sidebarToggle) {
+        console.log('Sidebar toggle button found');
+        sidebarToggle.addEventListener('click', function() {
+          console.log('Sidebar toggle clicked');
+          document.body.classList.toggle('close');
+        });
+      }
+      
+      // 検索ボタン
+      const searchToggle = document.querySelector('.toggle-search-button');
+      if (searchToggle) {
+        console.log('Search toggle button found');
+        searchToggle.addEventListener('click', function() {
+          console.log('Search toggle clicked');
+          const searchBox = document.querySelector('.search');
+          if (searchBox) {
+            searchBox.style.display = searchBox.style.display === 'none' ? 'block' : 'none';
+          }
+        });
+      }
+      
+      // テーマ切り替えボタン
+      const themeToggle = document.querySelector('.toggle-theme-button');
+      if (themeToggle) {
+        console.log('Theme toggle button found');
+        themeToggle.addEventListener('click', function() {
+          console.log('Theme toggle clicked');
+          const currentTheme = document.body.getAttribute('data-theme');
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          document.body.setAttribute('data-theme', newTheme);
+          localStorage.setItem('DARK_LIGHT_THEME', newTheme);
+          
+          // アイコンの切り替え
+          const icon = this.querySelector('i');
+          if (icon) {
+            if (newTheme === 'dark') {
+              icon.classList.remove('fa-sun');
+              icon.classList.add('fa-moon');
+            } else {
+              icon.classList.remove('fa-moon');
+              icon.classList.add('fa-sun');
+            }
+          }
+        });
+      }
+      
+      // スクロールトップボタン
+      const scrollToTopButton = document.querySelector('.scroll-to-top');
+      if (scrollToTopButton) {
+        console.log('Scroll to top button found');
+        scrollToTopButton.addEventListener('click', function() {
+          console.log('Scroll to top clicked');
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      }
+      
+      // スクロールイベント
+      window.addEventListener('scroll', function() {
+        const scrollToTopButton = document.querySelector('.scroll-to-top');
+        if (scrollToTopButton) {
+          if (window.pageYOffset > 300) {
+            scrollToTopButton.classList.add('visible');
+          } else {
+            scrollToTopButton.classList.remove('visible');
+          }
+        }
+        
+        // 進捗バーの更新
+        const progressBar = document.querySelector('.progress-bar');
+        if (progressBar) {
+          const totalHeight = document.body.scrollHeight - window.innerHeight;
+          const progress = (window.pageYOffset / totalHeight) * 100;
+          progressBar.style.width = progress + '%';
+          progressBar.style.opacity = 1;
+        }
+      });
+    }
   </script>
 </body>
 </html>
