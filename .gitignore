@@ -7,4 +7,17 @@ logs/
 tests/test_log/
 data/
 
+# PostgreSQL関連（DockerのデータをGit管理しない）
+postgres_data/
+db_data/
+
+# Docker関連
+docker-compose.override.yml
+*.pid
+*.sock
+
+# ログファイル（個別のログも除外）
+
+
+#練習問題を解くファイル
 /training/
