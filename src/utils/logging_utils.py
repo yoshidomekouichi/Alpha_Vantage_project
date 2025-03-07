@@ -48,7 +48,17 @@ class LoggerManager:
         else:
             self.log_dir = Path(log_dir)
             
-        os.makedirs(self.log_dir, exist_ok=True)
+        # Print for debugging
+        print(f"Log directory: {self.log_dir}")
+        
+        try:
+            os.makedirs(self.log_dir, exist_ok=True)
+        except Exception as e:
+            print(f"Error creating log directory: {e}")
+            # Use a fallback directory
+            self.log_dir = Path.cwd() / "logs"
+            print(f"Using fallback log directory: {self.log_dir}")
+            os.makedirs(self.log_dir, exist_ok=True)
         
         # Create logger
         self.logger = logging.getLogger(name)

@@ -48,7 +48,8 @@ class Config:
     def _load_env_file(self):
         """Load environment variables from .env file."""
         if self.env_path.exists():
-            load_dotenv(self.env_path)
+            # Force override existing environment variables
+            load_dotenv(self.env_path, override=True)
             logger.debug(f"Loaded environment variables from {self.env_path}")
         else:
             logger.warning(f"⚠️ Environment file not found: {self.env_path}")
@@ -65,10 +66,17 @@ class Config:
         
         # Stock symbols to fetch
         symbols_str = os.getenv('STOCK_SYMBOLS', 'NVDA')
+        # Remove comments from the symbols string
+        if '#' in symbols_str:
+            symbols_str = symbols_str.split('#')[0].strip()
         self.stock_symbols = [s.strip() for s in symbols_str.split(',')]
         
         # S3 configuration
-        self.s3_bucket = os.getenv('S3_BUCKET')
+        s3_bucket = os.getenv('S3_BUCKET')
+        # Remove comments from the bucket name
+        if s3_bucket and '#' in s3_bucket:
+            s3_bucket = s3_bucket.split('#')[0].strip()
+        self.s3_bucket = s3_bucket
         self.s3_region = os.getenv('AWS_REGION', 'ap-northeast-1')
         self.s3_prefix = os.getenv('S3_PREFIX', 'stock-data')
         

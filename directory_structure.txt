@@ -1,15 +1,65 @@
 .
+├── README.md
+├── Training
+│   └── Data Quality Check
+│       └── training_1.py
+├── clinerules.txt
 ├── configs
 │   └── secrets
 ├── db
-│   ├── init.sql
-│   └── tests
-│       └── test_log
-│           └── test_fetch.log
+│   └── docker-compose.yml
 ├── directory_structure.txt
+├── logs
+│   ├── alpha_vantage_API_fetch.log
+│   ├── cron_fetch_daily.log
+│   ├── fetch_daily.log
+│   └── fetch_history.log
 ├── requirements.txt
 ├── src
-│   └── fetch
+│   ├── __init__.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   └── alpha_vantage
+│   │       ├── __init__.py
+│   │       ├── client.py
+│   │       └── models.py
+│   ├── config.py
+│   ├── core
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   └── logging.py
+│   ├── data
+│   │   ├── __init__.py
+│   │   ├── processing.py
+│   │   └── validation.py
+│   ├── fetch
+│   │   ├── __pycache__
+│   │   │   └── utils.cpython-313.pyc
+│   │   ├── fetch_daily.py
+│   │   ├── fetch_history.py
+│   │   ├── send_email.py
+│   │   ├── test_fetch.py
+│   │   └── utils.py
+│   ├── fetch_bulk.py
+│   ├── fetch_daily.py
+│   ├── notifications
+│   │   ├── __init__.py
+│   │   └── alerts.py
+│   ├── scripts
+│   │   ├── __init__.py
+│   │   ├── fetch_bulk.py
+│   │   └── fetch_daily.py
+│   ├── storage
+│   │   ├── __init__.py
+│   │   ├── atomic.py
+│   │   └── s3.py
+│   └── utils
+│       ├── alerts.py
+│       ├── api_client.py
+│       ├── atomic_s3.py
+│       ├── data_processing.py
+│       ├── logging_utils.py
+│       └── storage.py
 ├── tests
 │   ├── test_data
 │   ├── test_log
@@ -58,6 +108,7 @@
     │           │   ├── LICENSE
     │           │   ├── METADATA
     │           │   ├── RECORD
+    │           │   ├── REQUESTED
     │           │   ├── WHEEL
     │           │   └── top_level.txt
     │           ├── charset_normalizer
@@ -96,6 +147,7 @@
     │           │   ├── LICENSE
     │           │   ├── METADATA
     │           │   ├── RECORD
+    │           │   ├── REQUESTED
     │           │   ├── WHEEL
     │           │   ├── entry_points.txt
     │           │   └── top_level.txt
@@ -187,6 +239,7 @@
     │           │   ├── LICENSE.md
     │           │   ├── METADATA
     │           │   ├── RECORD
+    │           │   ├── REQUESTED
     │           │   └── WHEEL
     │           ├── loguru
     │           │   ├── __init__.py
@@ -5370,7 +5423,9 @@
     │           │   │   │   ├── version.py
     │           │   │   │   └── windows.py
     │           │   │   ├── pygments
+    │           │   │   │   ├── __init__ 2.py
     │           │   │   │   ├── __init__.py
+    │           │   │   │   ├── __main__ 2.py
     │           │   │   │   ├── __main__.py
     │           │   │   │   ├── __pycache__
     │           │   │   │   │   ├── __init__.cpython-313.pyc
@@ -5389,13 +5444,17 @@
     │           │   │   │   │   ├── token.cpython-313.pyc
     │           │   │   │   │   ├── unistring.cpython-313.pyc
     │           │   │   │   │   └── util.cpython-313.pyc
+    │           │   │   │   ├── cmdline 2.py
     │           │   │   │   ├── cmdline.py
+    │           │   │   │   ├── console 2.py
     │           │   │   │   ├── console.py
+    │           │   │   │   ├── filter 2.py
     │           │   │   │   ├── filter.py
     │           │   │   │   ├── filters
     │           │   │   │   │   ├── __init__.py
     │           │   │   │   │   └── __pycache__
     │           │   │   │   │       └── __init__.cpython-313.pyc
+    │           │   │   │   ├── formatter 2.py
     │           │   │   │   ├── formatter.py
     │           │   │   │   ├── formatters
     │           │   │   │   │   ├── __init__.py
@@ -5427,6 +5486,7 @@
     │           │   │   │   │   ├── svg.py
     │           │   │   │   │   ├── terminal.py
     │           │   │   │   │   └── terminal256.py
+    │           │   │   │   ├── lexer 2.py
     │           │   │   │   ├── lexer.py
     │           │   │   │   ├── lexers
     │           │   │   │   │   ├── __init__.py
@@ -5436,11 +5496,17 @@
     │           │   │   │   │   │   └── python.cpython-313.pyc
     │           │   │   │   │   ├── _mapping.py
     │           │   │   │   │   └── python.py
+    │           │   │   │   ├── modeline 2.py
     │           │   │   │   ├── modeline.py
+    │           │   │   │   ├── plugin 2.py
     │           │   │   │   ├── plugin.py
+    │           │   │   │   ├── regexopt 2.py
     │           │   │   │   ├── regexopt.py
+    │           │   │   │   ├── scanner 2.py
     │           │   │   │   ├── scanner.py
+    │           │   │   │   ├── sphinxext 2.py
     │           │   │   │   ├── sphinxext.py
+    │           │   │   │   ├── style 2.py
     │           │   │   │   ├── style.py
     │           │   │   │   ├── styles
     │           │   │   │   │   ├── __init__.py
@@ -5448,8 +5514,11 @@
     │           │   │   │   │   │   ├── __init__.cpython-313.pyc
     │           │   │   │   │   │   └── _mapping.cpython-313.pyc
     │           │   │   │   │   └── _mapping.py
+    │           │   │   │   ├── token 2.py
     │           │   │   │   ├── token.py
+    │           │   │   │   ├── unistring 2.py
     │           │   │   │   ├── unistring.py
+    │           │   │   │   ├── util 2.py
     │           │   │   │   └── util.py
     │           │   │   ├── pyproject_hooks
     │           │   │   │   ├── __init__.py
@@ -5832,7 +5901,7 @@
     │           │   ├── pool.py
     │           │   ├── sql.py
     │           │   └── tz.py
-    │           ├── psycopg2_binary-2.9.10.dist-info
+    │           ├── psycopg2-2.9.10.dist-info
     │           │   ├── INSTALLER
     │           │   ├── LICENSE
     │           │   ├── METADATA
@@ -7345,9 +7414,10 @@
     │               ├── INSTALLER
     │               ├── METADATA
     │               ├── RECORD
+    │               ├── REQUESTED
     │               ├── WHEEL
     │               └── licenses
     │                   └── LICENSE.txt
     └── pyvenv.cfg
 
-678 directories, 6673 files
+688 directories, 6733 files

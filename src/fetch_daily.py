@@ -163,6 +163,10 @@ def main():
     # Load configuration
     config = Config()
     
+    # Force mock mode for testing
+    config.mock_mode = True
+    config.debug_mode = True
+    
     # Set up components
     logger, api_client, data_processor, s3_storage, atomic_s3, alert_manager = setup_components(config)
     
@@ -170,6 +174,8 @@ def main():
     logger.info("=" * 80)
     logger.info(f"🚀 Starting daily stock data fetch at {datetime.now().isoformat()}")
     logger.info(f"📋 Configuration: {config}")
+    logger.info(f"🔍 Environment STOCK_SYMBOLS: {os.getenv('STOCK_SYMBOLS')}")
+    logger.info(f"🔍 Config stock_symbols: {config.stock_symbols}")
     logger.info("=" * 80)
     
     # Process each symbol

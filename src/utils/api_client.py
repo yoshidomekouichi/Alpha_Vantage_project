@@ -46,7 +46,11 @@ class AlphaVantageClient:
         Returns:
             Dictionary containing the stock data or None if an error occurred
         """
+        # Check if MOCK_MODE is enabled in environment variables
+        self.mock_mode = os.getenv('MOCK_MODE', 'False').lower() == 'true'
+        
         if self.mock_mode:
+            logger.info(f"🔍 Using mock mode for {symbol}")
             return self._get_mock_data(symbol, outputsize)
             
         params = {

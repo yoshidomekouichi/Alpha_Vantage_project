@@ -25,6 +25,7 @@ class AtomicS3:
             s3_storage: An instance of S3Storage
         """
         self.s3 = s3_storage
+        self.mock_mode = os.getenv('MOCK_MODE', 'False').lower() == 'true'
         
     def set_logger(self, custom_logger):
         """Set a custom logger for the atomic handler."""
@@ -43,6 +44,10 @@ class AtomicS3:
         Returns:
             Boolean indicating success
         """
+        if self.mock_mode:
+            logger.info(f"🔍 [MOCK] Performed atomic update to s3://{self.s3.bucket_name}/{key}")
+            return True
+            
         # Generate a temporary key
         tmp_key = f"{key}.tmp.{uuid.uuid4()}"
         

@@ -145,8 +145,14 @@ class StockDataProcessor:
         Returns:
             Dictionary representation of the DataFrame
         """
+        # Make a copy of the DataFrame to avoid modifying the original
+        df_copy = df.copy()
+        
+        # Name the index 'date' before resetting
+        df_copy.index.name = 'date'
+        
         # Reset index to make date a column
-        df_reset = df.reset_index()
+        df_reset = df_copy.reset_index()
         
         # Convert to dictionary with date as string
         df_reset['date'] = df_reset['date'].dt.strftime('%Y-%m-%d')
