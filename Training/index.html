@@ -5,8 +5,29 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta charset="UTF-8">
   <title>Alpha Vantage株価データパイプライン 学習ガイド</title>
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/themes/vue.css">
+  <!-- テーマの追加 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/style.min.css" title="docsify-darklight-theme" type="text/css">
   <style>
+    /* カスタムスタイル */
+    :root {
+      --theme-color: #42b983;
+      --sidebar-width: 300px;
+      --heading-h1-font-size: 2rem;
+      --heading-h2-font-size: 1.75rem;
+      --heading-h3-font-size: 1.5rem;
+      --heading-h4-font-size: 1.25rem;
+    }
+    
+    /* ダークモード用の変数 */
+    body[data-theme="dark"] {
+      --theme-color: #42d392;
+      --background: #0d1117;
+      --text-color: #c9d1d9;
+      --sidebar-background: #161b22;
+      --sidebar-border-color: #30363d;
+      --code-background: #1f2937;
+    }
+    
     /* モバイル向けのカスタムスタイル */
     @media screen and (max-width: 768px) {
       .markdown-section {
@@ -15,15 +36,121 @@
       .sidebar {
         width: 250px;
       }
+      .app-name-link img {
+        max-width: 80%;
+      }
     }
+    
     /* コードブロックの横スクロール */
     .markdown-section pre > code {
       white-space: pre;
       overflow-x: auto;
+      border-radius: 8px;
     }
+    
     /* 画像の最大幅を設定 */
     .markdown-section img {
       max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* リンクのホバー効果 */
+    .markdown-section a {
+      transition: all 0.3s ease;
+    }
+    .markdown-section a:hover {
+      text-decoration: none;
+      opacity: 0.8;
+    }
+    
+    /* サイドバーのスタイル改善 */
+    .sidebar ul li {
+      margin: 6px 0;
+    }
+    .sidebar ul li a {
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+    .sidebar ul li a:hover {
+      text-decoration: none;
+      transform: translateX(3px);
+    }
+    .sidebar ul li.active > a {
+      font-weight: 600;
+    }
+    
+    /* 目次のネスト表示を改善 */
+    .sidebar-nav > ul > li > ul {
+      padding-left: 15px;
+    }
+    
+    /* ヘッダーとフッターのスタイル */
+    .app-nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 100;
+      padding: 10px 20px;
+    }
+    
+    /* コンテンツの読みやすさ向上 */
+    .markdown-section {
+      max-width: 900px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .markdown-section p {
+      margin: 1.2em 0;
+    }
+    .markdown-section h1, 
+    .markdown-section h2, 
+    .markdown-section h3, 
+    .markdown-section h4 {
+      margin-top: 1.5em;
+      margin-bottom: 0.8em;
+      font-weight: 600;
+    }
+    
+    /* テーブルのスタイル改善 */
+    .markdown-section table {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .markdown-section tr:nth-child(2n) {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+    body[data-theme="dark"] .markdown-section tr:nth-child(2n) {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+    
+    /* ダークモードの背景と文字色を強制的に適用 */
+    body[data-theme="dark"] {
+      background-color: #0d1117 !important;
+      color: #c9d1d9 !important;
+    }
+    
+    /* ダークモード時のコンテンツエリアの背景色 */
+    body[data-theme="dark"] .content {
+      background-color: #0d1117 !important;
+    }
+    
+    /* ダークモード時のサイドバーの背景色 */
+    body[data-theme="dark"] .sidebar {
+      background-color: #161b22 !important;
+      color: #c9d1d9 !important;
+      border-right-color: #30363d !important;
+    }
+    
+    /* ダークモード時のコードブロックの背景色 */
+    body[data-theme="dark"] .markdown-section pre {
+      background-color: #1f2937 !important;
+    }
+    
+    /* ダークモード時のインラインコードの背景色 */
+    body[data-theme="dark"] .markdown-section code {
+      background-color: #1f2937 !important;
     }
   </style>
 </head>
@@ -53,6 +180,37 @@
         errorText: 'エラー',
         successText: 'コピーしました'
       },
+      // ダークモード設定
+      darklightTheme: {
+        defaultTheme: 'dark', // デフォルトをダークモードに変更
+        siteFont: 'Source Sans Pro, Helvetica Neue, Arial, sans-serif',
+        codeFontFamily: 'Roboto Mono, Monaco, courier, monospace',
+        bodyFontSize: '16px',
+        dark: {
+          background: '#0d1117',
+          textColor: '#c9d1d9',
+          codeBackgroundColor: '#1f2937',
+          codeTextColor: '#e6e6e6',
+          blockQuoteColor: '#8b949e',
+          highlightColor: '#e3b341',
+          sidebarSublink: '#8b949e',
+          codeTypeColor: '#ffffff',
+          coverBackground: 'linear-gradient(to left bottom, hsl(118, 100%, 85%) 0%,hsl(181, 100%, 85%) 100%)',
+          toogleBackground: '#ffffff'
+        },
+        light: {
+          background: 'white',
+          textColor: '#34495e',
+          codeBackgroundColor: '#f8f8f8',
+          codeTextColor: '#525252',
+          blockQuoteColor: '#858585',
+          highlightColor: '#d22778',
+          sidebarSublink: '#505d6b',
+          codeTypeColor: '#091a28',
+          coverBackground: 'linear-gradient(to left bottom, hsl(118, 100%, 85%) 0%,hsl(181, 100%, 85%) 100%)',
+          toogleBackground: '#091a28'
+        }
+      },
       plugins: [
         function(hook, vm) {
           hook.beforeEach(function(html) {
@@ -61,18 +219,54 @@
               '最終更新: ' + new Date().toLocaleDateString('ja-JP') +
               '</div>';
           });
+          
+          // ページ読み込み完了後の処理
+          hook.ready(function() {
+            // モバイルでのサイドバー表示を改善
+            document.querySelector('button.sidebar-toggle').addEventListener('click', function() {
+              document.querySelector('aside.sidebar').classList.toggle('mobile-sidebar-open');
+            });
+            
+            // ダークモードを強制的に適用
+            setTimeout(function() {
+              document.body.setAttribute('data-theme', 'dark');
+            }, 100);
+          });
         }
       ]
     };
   </script>
-  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
+  <!-- ダークモード切替スクリプト -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-darklight-theme@latest/dist/index.min.js"></script>
+  
+  <!-- ダークモードを強制的に適用するスクリプト -->
+  <script>
+    // ページ読み込み完了後にダークモードを適用
+    window.addEventListener('load', function() {
+      // ローカルストレージにダークモード設定を保存
+      localStorage.setItem('DARK_LIGHT_THEME', 'dark');
+      
+      // ダークモードを適用
+      document.body.setAttribute('data-theme', 'dark');
+      
+      // 定期的にダークモードが適用されているか確認し、適用されていなければ再適用
+      var checkInterval = setInterval(function() {
+        if (document.body.getAttribute('data-theme') !== 'dark') {
+          document.body.setAttribute('data-theme', 'dark');
+        } else {
+          clearInterval(checkInterval);
+        }
+      }, 500);
+    });
+  </script>
 </body>
 </html>
