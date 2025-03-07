@@ -7,3 +7,4 @@ logs/
 tests/test_log/
 data/
 
+/training/
