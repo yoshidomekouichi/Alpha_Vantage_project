@@ -1,9 +1,10 @@
 venv/
-__pycache__/
+pycache__/
 *.pyc
 *.pyo
 .env
 logs/
+debug_logs/
 tests/test_log/
 data/
 
@@ -20,6 +21,8 @@ docker-compose.override.yml
 
 # AWS Lambda関連
 lambda/package/
+lambda/layer/
+lambda/layer_venv/
 
 lambda/*.zip
 
