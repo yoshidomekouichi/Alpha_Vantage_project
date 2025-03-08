@@ -8,9 +8,90 @@ to console and file, with support for different log levels and formatting.
 import os
 import logging
 import sys
+import re
+import json
 from pathlib import Path
 from datetime import datetime
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Set, Pattern, Union
+
+class SensitiveDataFilter(logging.Filter):
+    """Filter to mask sensitive data in log messages."""
+    
+    def __init__(self, sensitive_patterns: Dict[str, Pattern] = None):
+        """
+        Initialize the filter with patterns to mask.
+        
+        Args:
+            sensitive_patterns: Dictionary of name:pattern pairs to mask
+        """
+        super().__init__()
+        self.sensitive_patterns = sensitive_patterns or {}
+        
+        # Add default patterns for common sensitive data
+        if not self.sensitive_patterns:
+            self.sensitive_patterns = {
+                'api_key': re.compile(r'([\'"][A-Za-z0-9]{20,}[\'"])', re.IGNORECASE),
+                'webhook_url': re.compile(r'(https://hooks\.slack\.com/services/[A-Za-z0-9/]+)', re.IGNORECASE),
+                'password': re.compile(r'([\'"]?password[\'"]?\s*[:=]\s*[\'"][^\'\"]+[\'"])', re.IGNORECASE),
+                'secret_key': re.compile(r'([\'"]?secret[_-]?key[\'"]?\s*[:=]\s*[\'"][^\'\"]+[\'"])', re.IGNORECASE),
+                'access_key': re.compile(r'([\'"]?access[_-]?key[\'"]?\s*[:=]\s*[\'"][^\'\"]+[\'"])', re.IGNORECASE),
+            }
+    
+    def filter(self, record: logging.LogRecord) -> bool:
+        """
+        Filter log records to mask sensitive data.
+        
+        Args:
+            record: The log record to filter
+            
+        Returns:
+            True to include the record in the log
+        """
+        if isinstance(record.msg, str):
+            # Mask sensitive data in string messages
+            for name, pattern in self.sensitive_patterns.items():
+                record.msg = pattern.sub(f'***MASKED_{name.upper()}***', record.msg)
+        elif isinstance(record.msg, dict):
+            # Mask sensitive data in dictionary messages
+            record.msg = self._mask_dict(record.msg)
+        
+        # Always include the record
+        return True
+    
+    def _mask_dict(self, data: Dict) -> Dict:
+        """
+        Recursively mask sensitive data in a dictionary.
+        
+        Args:
+            data: Dictionary to mask
+            
+        Returns:
+            Masked dictionary
+        """
+        result = {}
+        sensitive_keys = {'password', 'api_key', 'secret', 'token', 'webhook', 'key', 'access_key', 'secret_key'}
+        
+        for key, value in data.items():
+            # Check if this is a sensitive key
+            is_sensitive = any(sk in key.lower() for sk in sensitive_keys)
+            
+            if is_sensitive and isinstance(value, str):
+                # Mask sensitive string values
+                result[key] = f"***MASKED_{key.upper()}***"
+            elif isinstance(value, dict):
+                # Recursively process nested dictionaries
+                result[key] = self._mask_dict(value)
+            elif isinstance(value, list):
+                # Process lists
+                result[key] = [
+                    self._mask_dict(item) if isinstance(item, dict) else item
+                    for item in value
+                ]
+            else:
+                # Keep other values as is
+                result[key] = value
+                
+        return result
 
 class LoggerManager:
     """Manages logging configuration and provides logger instances."""
@@ -24,7 +105,8 @@ class LoggerManager:
         log_format: str = "%(asctime)s [%(levelname)s] %(message)s",
         date_format: str = "%Y-%m-%d %H:%M:%S",
         add_timestamp_to_filename: bool = False,
-        is_mock: bool = False
+        is_mock: bool = False,
+        mask_sensitive_data: bool = True
     ):
         """
         Initialize the logger manager.
@@ -38,6 +120,7 @@ class LoggerManager:
             date_format: Format string for timestamps
             add_timestamp_to_filename: Whether to add a timestamp to the log filename
             is_mock: Whether this is a mock environment
+            mask_sensitive_data: Whether to mask sensitive data in logs
         """
         self.name = name
         self.log_format = log_format
@@ -85,6 +168,11 @@ class LoggerManager:
         # Create formatter
         self.formatter = logging.Formatter(log_format, date_format)
         
+        # Add sensitive data filter if requested
+        if mask_sensitive_data:
+            self.sensitive_filter = SensitiveDataFilter()
+            self.logger.addFilter(self.sensitive_filter)
+        
         # Set up console handler
         self.console_handler = logging.StreamHandler(sys.stdout)
         self.console_handler.setLevel(console_level)
@@ -122,7 +210,9 @@ class LoggerManager:
         self.add_separator("=")
         self.logger.info(f"🚀 EXECUTION START: {script_name} at {datetime.now().strftime(self.date_format)}")
         if params:
-            self.logger.info(f"📋 Parameters: {params}")
+            # Filter out sensitive environment variables before logging
+            safe_params = self._filter_sensitive_env_vars(params)
+            self.logger.info(f"📋 Parameters: {safe_params}")
         self.add_separator("=")
     
     def log_execution_end(self, script_name: str, success: bool = True, execution_time: float = None):
@@ -150,9 +240,47 @@ class LoggerManager:
         else:
             self.set_console_level(logging.INFO)
             self.logger.info("🔍 Debug mode disabled")
+    
+    def _filter_sensitive_env_vars(self, env_vars: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Filter sensitive information from environment variables.
+        
+        Args:
+            env_vars: Dictionary of environment variables
+            
+        Returns:
+            Filtered dictionary with sensitive values masked
+        """
+        if not isinstance(env_vars, dict):
+            return env_vars
+            
+        sensitive_keys = {
+            'api_key', 'key', 'token', 'password', 'secret', 'webhook', 
+            'access_key', 'secret_key', 'webhook_url'
+        }
+        
+        result = {}
+        for key, value in env_vars.items():
+            # Check if this is a sensitive key
+            key_lower = key.lower()
+            is_sensitive = any(sk in key_lower for sk in sensitive_keys)
+            
+            if is_sensitive and isinstance(value, str):
+                # Mask sensitive values
+                result[key] = f"***MASKED_{key.upper()}***"
+            else:
+                # Keep other values as is
+                result[key] = value
+                
+        return result
 
 
-def create_default_logger(name: str, debug_mode: bool = False, is_mock: bool = False) -> logging.Logger:
+def create_default_logger(
+    name: str, 
+    debug_mode: bool = False, 
+    is_mock: bool = False,
+    mask_sensitive_data: bool = True
+) -> logging.Logger:
     """
     Create a logger with default settings.
     
@@ -160,12 +288,18 @@ def create_default_logger(name: str, debug_mode: bool = False, is_mock: bool = F
         name: Logger name
         debug_mode: Whether to enable debug mode
         is_mock: Whether this is a mock environment
+        mask_sensitive_data: Whether to mask sensitive data in logs
         
     Returns:
         Configured logger instance
     """
     console_level = logging.DEBUG if debug_mode else logging.INFO
-    manager = LoggerManager(name, console_level=console_level, is_mock=is_mock)
+    manager = LoggerManager(
+        name, 
+        console_level=console_level, 
+        is_mock=is_mock,
+        mask_sensitive_data=mask_sensitive_data
+    )
     return manager.get_logger()
 
 
@@ -204,3 +338,44 @@ def log_execution_time(logger, func_name: str = None):
                 
         return wrapper
     return decorator
+
+
+def safe_log_dict(logger, level: int, message: str, data: Dict[str, Any]):
+    """
+    Safely log a dictionary with sensitive data masked.
+    
+    Args:
+        logger: Logger instance
+        level: Logging level
+        message: Message prefix
+        data: Dictionary to log
+    """
+    # Create a copy to avoid modifying the original
+    filtered_data = {}
+    sensitive_keys = {
+        'api_key', 'key', 'token', 'password', 'secret', 'webhook', 
+        'access_key', 'secret_key', 'webhook_url'
+    }
+    
+    for key, value in data.items():
+        key_lower = key.lower()
+        is_sensitive = any(sk in key_lower for sk in sensitive_keys)
+        
+        if is_sensitive and isinstance(value, str):
+            filtered_data[key] = f"***MASKED_{key.upper()}***"
+        elif isinstance(value, dict):
+            # Recursively filter nested dictionaries
+            filtered_data[key] = {}
+            for k, v in value.items():
+                k_lower = k.lower()
+                is_k_sensitive = any(sk in k_lower for sk in sensitive_keys)
+                
+                if is_k_sensitive and isinstance(v, str):
+                    filtered_data[key][k] = f"***MASKED_{k.upper()}***"
+                else:
+                    filtered_data[key][k] = v
+        else:
+            filtered_data[key] = value
+    
+    # Log the filtered data
+    logger.log(level, f"{message}: {json.dumps(filtered_data, indent=2)}")
