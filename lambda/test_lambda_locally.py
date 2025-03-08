@@ -31,6 +31,4 @@ from fetch_daily_lambda import handler
 print("Lambda関数を実行中...")
 result = handler(event, LambdaContext())
 
-# 結果を表示
-print("\n--- 実行結果 ---")
 print(json.dumps(result, indent=2, ensure_ascii=False))
