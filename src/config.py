@@ -60,6 +60,9 @@ class Config:
         self.debug_mode = os.getenv('DEBUG_MODE', 'False').lower() == 'true'
         self.mock_mode = os.getenv('MOCK_MODE', 'False').lower() == 'true'
         
+        # 環境設定 (test/prod)
+        self.environment = os.getenv('ENVIRONMENT', 'test')
+        
         # API configuration
         self.api_key = os.getenv('ALPHA_VANTAGE_API_KEY')
         self.api_base_url = os.getenv('ALPHA_VANTAGE_BASE_URL', 'https://www.alphavantage.co/query')
@@ -96,10 +99,44 @@ class Config:
         
         # Slack configuration
         self.slack_enabled = os.getenv('SLACK_ENABLED', 'False').lower() == 'true'
+        
+        # Slack Webhook URLの設定
+        slack_webhook_url = os.getenv('SLACK_WEBHOOK_URL')
+        
+        # Webhook URLのログ出力（デバッグ用）
+        logger.debug(f"SLACK_WEBHOOK_URL環境変数: {slack_webhook_url}")
+        
         if self.slack_enabled:
-            self.slack_webhook_url = os.getenv('SLACK_WEBHOOK_URL')
+            # Webhook URLが設定されているか確認
+            if not slack_webhook_url:
+                logger.warning("⚠️ SLACK_WEBHOOK_URL is not set, but Slack notifications are enabled")
+                self.slack_enabled = False
+                self.slack_webhook_url = None
+                self.slack_webhook_url_error = None
+                self.slack_webhook_url_warning = None
+                self.slack_webhook_url_info = None
+            else:
+                # URLの形式を確認
+                if not slack_webhook_url.startswith('https://hooks.slack.com/'):
+                    logger.warning(f"⚠️ Invalid Slack webhook URL format: {slack_webhook_url}")
+                
+                # Webhook URLを設定
+                self.slack_webhook_url = slack_webhook_url
+                self.slack_webhook_url_error = os.getenv('SLACK_WEBHOOK_URL_ERROR', self.slack_webhook_url)
+                self.slack_webhook_url_warning = os.getenv('SLACK_WEBHOOK_URL_WARNING', self.slack_webhook_url)
+                self.slack_webhook_url_info = os.getenv('SLACK_WEBHOOK_URL_INFO', self.slack_webhook_url)
+                
+                logger.debug(f"Slack通知が有効です")
+                logger.debug(f"slack_webhook_url: {self.slack_webhook_url}")
+                logger.debug(f"slack_webhook_url_error: {self.slack_webhook_url_error}")
+                logger.debug(f"slack_webhook_url_warning: {self.slack_webhook_url_warning}")
+                logger.debug(f"slack_webhook_url_info: {self.slack_webhook_url_info}")
         else:
             self.slack_webhook_url = None
+            self.slack_webhook_url_error = None
+            self.slack_webhook_url_warning = None
+            self.slack_webhook_url_info = None
+            logger.debug("Slack通知は無効です")
         
         # Logging configuration
         self.log_dir = os.getenv('LOG_DIR', str(self.project_root / 'logs'))
@@ -138,7 +175,7 @@ class Config:
     
     def get_s3_key(self, symbol: str, date: str = None, is_latest: bool = False) -> str:
         """
-        Get the S3 key for storing stock data.
+        Get the S3 key for storing stock data (旧バージョン).
         
         Args:
             symbol: Stock symbol
@@ -157,7 +194,7 @@ class Config:
     
     def get_metadata_key(self, symbol: str) -> str:
         """
-        Get the S3 key for storing metadata.
+        Get the S3 key for storing metadata (旧バージョン).
         
         Args:
             symbol: Stock symbol
@@ -166,6 +203,48 @@ class Config:
             S3 object key
         """
         return f"{self.s3_prefix}/{symbol}/metadata.json"
+    
+    def get_s3_key_v2(self, symbol: str, data_type: str = 'raw', date: str = None, is_latest: bool = False) -> str:
+        """
+        新しいフォルダ構造に基づいてS3キーを生成
+        
+        Args:
+            symbol: 銘柄シンボル
+            data_type: データタイプ ('raw' または 'processed')
+            date: 日付文字列 (YYYY-MM-DD)
+            is_latest: 最新データかどうか
+            
+        Returns:
+            S3オブジェクトキー
+        """
+        # 環境設定（test/prod）
+        env_prefix = 'test' if self.mock_mode else 'prod'
+        
+        # ベースパス
+        base_path = f"{env_prefix}/stock/{data_type}/{symbol}"
+        
+        if is_latest:
+            return f"{base_path}/latest.json"
+        elif date:
+            # YYYY-MM-DD形式から年/月/日のパスを生成
+            year, month, day = date.split('-')
+            return f"{base_path}/daily/{year}/{month}/{day}.json"
+        else:
+            return f"{base_path}/full.json"
+    
+    def get_metadata_key_v2(self, symbol: str, data_type: str = 'raw') -> str:
+        """
+        新しいフォルダ構造に基づいてメタデータのS3キーを生成
+        
+        Args:
+            symbol: 銘柄シンボル
+            data_type: データタイプ ('raw' または 'processed')
+            
+        Returns:
+            S3オブジェクトキー
+        """
+        env_prefix = 'test' if self.mock_mode else 'prod'
+        return f"{env_prefix}/stock/{data_type}/{symbol}/metadata.json"
     
     def to_dict(self) -> Dict[str, Any]:
         """

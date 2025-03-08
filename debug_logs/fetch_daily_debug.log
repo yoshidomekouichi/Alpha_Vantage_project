@@ -1,0 +1,839 @@
+2025-03-08 22:08:36,179 [DEBUG] デバッグログハンドラを追加しました
+2025-03-08 22:08:36,179 [DEBUG] ================================================================================
+2025-03-08 22:08:36,179 [DEBUG] fetch_daily.py の main 関数が呼び出されました
+2025-03-08 22:08:36,179 [DEBUG] Python バージョン: 3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]
+2025-03-08 22:08:36,179 [DEBUG] sys.path: ["/Users/koichi/Desktop/local_document/Alpha_Vantage_project/src", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python313.zip", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload", "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/lib/python3.13/site-packages"]
+2025-03-08 22:08:36,179 [DEBUG] 環境変数: {"MallocNanoZone": "0", "USER": "koichi", "COMMAND_MODE": "unix2003", "__CFBundleIdentifier": "com.todesktop.230313mzl4w4u92", "PATH": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin", "LOGNAME": "koichi", "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.6aapF4h3sB/Listeners", "HOME": "/Users/koichi", "SHELL": "/bin/zsh", "TMPDIR": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/", "__CF_USER_TEXT_ENCODING": "0x1F5:0x1:0xE", "XPC_SERVICE_NAME": "0", "XPC_FLAGS": "0x0", "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined", "CURSOR_TRACE_ID": "fc4bfce2744745829a81dfaed6f00b77", "SHLVL": "1", "PWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "OLDPWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "HOMEBREW_PREFIX": "/opt/homebrew", "HOMEBREW_CELLAR": "/opt/homebrew/Cellar", "HOMEBREW_REPOSITORY": "/opt/homebrew", "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:", "LDFLAGS": "-L/opt/homebrew/opt/openssl@3/lib", "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3/include", "PYTHONSTARTUP": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/pythonrc.py", "TERM_PROGRAM": "vscode", "TERM_PROGRAM_VERSION": "0.46.11", "LANG": "ja_JP.UTF-8", "COLORTERM": "truecolor", "PYDEVD_DISABLE_FILE_VALIDATION": "1", "DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.0.1-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "BUNDLED_DEBUGPY_PATH": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/bundled/libs/debugpy", "VSCODE_DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "GIT_ASKPASS": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh", "VSCODE_GIT_ASKPASS_NODE": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)", "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "", "VSCODE_GIT_ASKPASS_MAIN": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js", "VSCODE_GIT_IPC_HANDLE": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/vscode-git-4249c9b68f.sock", "ALPHA_VANTAGE_API_KEY": "SEEGFKL5YAYJPQ5O", "STOCK_SYMBOLS": "NVDA", "S3_BUCKET": "s3-data-uploader-bucket", "S3_PREFIX": "stock-data-mock", "S3_PREFIX_PROD": "stock-data-prod", "DEBUG_MODE": "true", "MOCK_MODE": "true", "SAVE_TO_S3": "true", "SAVE_INDIVIDUAL_DAYS": "false", "LOG_LEVEL": "INFO", "LOG_DIR": "logs", "EMAIL_ENABLED": "false", "SMTP_SERVER": "smtp.gmail.com", "SMTP_PORT": "587", "SMTP_USER": "yoshidome.kouichi@gmail.com", "SMTP_PASSWORD": "ttnobnzjzfgkzvjd", "FROM_EMAIL": "yoshidome.kouichi@gmail.com", "TO_EMAIL": "yoshidome.kouichi@gmail.com", "SLACK_ENABLED": "true", "SLACK_WEBHOOK_URL": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_ERROR": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_WARNING": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_INFO": "https://hooks.slack.com/services/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", "POSTGRES_DB": "prod_db", "POSTGRES_USER": "myuser", "POSTGRES_PASSWORD": "0000", "POSTGRES_HOST": "localhost", "POSTGRES_PORT": "5434", "VIRTUAL_ENV": "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv", "VIRTUAL_ENV_PROMPT": "venv", "VSCODE_INJECTION": "1", "ZDOTDIR": "/Users/koichi", "USER_ZDOTDIR": "/Users/koichi", "TERM": "xterm-256color", "PS1": "venv%n@%m %1~ %# ", "_": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin/python"}
+2025-03-08 22:08:36,179 [DEBUG] ❌ モジュール src.config のインポートに失敗しました: No module named 'src'
+2025-03-08 22:08:36,179 [DEBUG] ❌ モジュール src.utils.api_client のインポートに失敗しました: No module named 'src'
+2025-03-08 22:08:36,180 [DEBUG] ❌ モジュール src.utils.data_processing のインポートに失敗しました: No module named 'src'
+2025-03-08 22:08:36,180 [DEBUG] ❌ モジュール src.utils.storage のインポートに失敗しました: No module named 'src'
+2025-03-08 22:08:36,180 [DEBUG] ❌ モジュール src.utils.atomic_s3 のインポートに失敗しました: No module named 'src'
+2025-03-08 22:08:36,180 [DEBUG] ❌ モジュール src.utils.logging_utils のインポートに失敗しました: No module named 'src'
+2025-03-08 22:08:36,180 [DEBUG] ❌ モジュール src.utils.alerts のインポートに失敗しました: No module named 'src'
+2025-03-08 22:08:36,180 [DEBUG] ✅ モジュール config のインポートに成功しました
+2025-03-08 22:08:36,180 [DEBUG] ✅ モジュール utils.api_client のインポートに成功しました
+2025-03-08 22:08:36,180 [DEBUG] ✅ モジュール utils.data_processing のインポートに成功しました
+2025-03-08 22:08:36,180 [DEBUG] ✅ モジュール utils.storage のインポートに成功しました
+2025-03-08 22:08:36,180 [DEBUG] ✅ モジュール utils.atomic_s3 のインポートに成功しました
+2025-03-08 22:08:36,180 [DEBUG] ✅ モジュール utils.logging_utils のインポートに成功しました
+2025-03-08 22:08:36,180 [DEBUG] ✅ モジュール utils.alerts のインポートに成功しました
+2025-03-08 22:08:36,180 [DEBUG] ================================================================================
+2025-03-08 22:08:36,180 [DEBUG] 設定を読み込みます...
+2025-03-08 22:08:36,181 [DEBUG] 設定の読み込みが完了しました: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:08:36,181 [DEBUG] Lambda環境判定: False
+2025-03-08 22:08:36,181 [DEBUG] ローカル環境の設定: mock_mode=True, debug_mode=True, save_to_s3=True
+2025-03-08 22:08:36,181 [DEBUG] コンポーネントをセットアップします...
+2025-03-08 22:08:36,181 [INFO] ================================================================================
+2025-03-08 22:08:36,181 [INFO] setup_components 関数が呼び出されました
+2025-03-08 22:08:36,181 [INFO] config: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:08:36,181 [INFO] ローカル環境のため、ログディレクトリを logs に設定します
+2025-03-08 22:08:36,182 [INFO] ログディレクトリを作成しました: logs
+2025-03-08 22:08:36,183 [INFO] LoggerManagerの初期化に成功しました
+2025-03-08 22:08:36,183 [INFO] デバッグモードを有効化しました
+2025-03-08 22:08:36,183 [DEBUG] ================================================================================
+2025-03-08 22:08:36,183 [DEBUG] Slack設定の詳細:
+2025-03-08 22:08:36,183 [DEBUG] config.slack_enabled: True
+2025-03-08 22:08:36,184 [DEBUG] config.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:08:36,184 [DEBUG] config.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:08:36,184 [DEBUG] config.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:08:36,184 [DEBUG] config.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:08:36,184 [DEBUG] AlertManagerの内部状態:
+2025-03-08 22:08:36,184 [DEBUG] alert_manager.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:08:36,184 [DEBUG] alert_manager.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:08:36,184 [DEBUG] alert_manager.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:08:36,184 [DEBUG] alert_manager.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:08:36,184 [DEBUG] テスト用のSlack通知を送信します...
+2025-03-08 22:08:36,403 [DEBUG] ✅ テスト通知の送信に成功しました
+2025-03-08 22:08:36,403 [DEBUG] ================================================================================
+2025-03-08 22:08:36,403 [DEBUG] ⏱ Starting process_symbol
+2025-03-08 22:08:36,421 [DEBUG] ⏱ process_symbol completed in 0.02 seconds
+2025-03-08 22:11:52,130 [DEBUG] デバッグログハンドラを追加しました
+2025-03-08 22:11:52,131 [DEBUG] ================================================================================
+2025-03-08 22:11:52,131 [DEBUG] fetch_daily.py の main 関数が呼び出されました
+2025-03-08 22:11:52,131 [DEBUG] Python バージョン: 3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]
+2025-03-08 22:11:52,131 [DEBUG] sys.path: ["/Users/koichi/Desktop/local_document/Alpha_Vantage_project/src", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python313.zip", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload", "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/lib/python3.13/site-packages"]
+2025-03-08 22:11:52,131 [DEBUG] 環境変数: {"MallocNanoZone": "0", "USER": "koichi", "COMMAND_MODE": "unix2003", "__CFBundleIdentifier": "com.todesktop.230313mzl4w4u92", "PATH": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin", "LOGNAME": "koichi", "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.6aapF4h3sB/Listeners", "HOME": "/Users/koichi", "SHELL": "/bin/zsh", "TMPDIR": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/", "__CF_USER_TEXT_ENCODING": "0x1F5:0x1:0xE", "XPC_SERVICE_NAME": "0", "XPC_FLAGS": "0x0", "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined", "CURSOR_TRACE_ID": "fc4bfce2744745829a81dfaed6f00b77", "SHLVL": "1", "PWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "OLDPWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "HOMEBREW_PREFIX": "/opt/homebrew", "HOMEBREW_CELLAR": "/opt/homebrew/Cellar", "HOMEBREW_REPOSITORY": "/opt/homebrew", "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:", "LDFLAGS": "-L/opt/homebrew/opt/openssl@3/lib", "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3/include", "PYTHONSTARTUP": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/pythonrc.py", "TERM_PROGRAM": "vscode", "TERM_PROGRAM_VERSION": "0.46.11", "LANG": "ja_JP.UTF-8", "COLORTERM": "truecolor", "PYDEVD_DISABLE_FILE_VALIDATION": "1", "DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.0.1-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "BUNDLED_DEBUGPY_PATH": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/bundled/libs/debugpy", "VSCODE_DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "GIT_ASKPASS": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh", "VSCODE_GIT_ASKPASS_NODE": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)", "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "", "VSCODE_GIT_ASKPASS_MAIN": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js", "VSCODE_GIT_IPC_HANDLE": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/vscode-git-4249c9b68f.sock", "ALPHA_VANTAGE_API_KEY": "SEEGFKL5YAYJPQ5O", "STOCK_SYMBOLS": "NVDA", "S3_BUCKET": "s3-data-uploader-bucket", "S3_PREFIX": "stock-data-mock", "S3_PREFIX_PROD": "stock-data-prod", "DEBUG_MODE": "true", "MOCK_MODE": "true", "SAVE_TO_S3": "true", "SAVE_INDIVIDUAL_DAYS": "false", "LOG_LEVEL": "INFO", "LOG_DIR": "logs", "EMAIL_ENABLED": "false", "SMTP_SERVER": "smtp.gmail.com", "SMTP_PORT": "587", "SMTP_USER": "yoshidome.kouichi@gmail.com", "SMTP_PASSWORD": "ttnobnzjzfgkzvjd", "FROM_EMAIL": "yoshidome.kouichi@gmail.com", "TO_EMAIL": "yoshidome.kouichi@gmail.com", "SLACK_ENABLED": "true", "SLACK_WEBHOOK_URL": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_ERROR": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_WARNING": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_INFO": "https://hooks.slack.com/services/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", "POSTGRES_DB": "prod_db", "POSTGRES_USER": "myuser", "POSTGRES_PASSWORD": "0000", "POSTGRES_HOST": "localhost", "POSTGRES_PORT": "5434", "VIRTUAL_ENV": "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv", "VIRTUAL_ENV_PROMPT": "venv", "VSCODE_INJECTION": "1", "ZDOTDIR": "/Users/koichi", "USER_ZDOTDIR": "/Users/koichi", "TERM": "xterm-256color", "PS1": "venv%n@%m %1~ %# ", "_": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin/python"}
+2025-03-08 22:11:52,131 [DEBUG] ❌ モジュール src.config のインポートに失敗しました: No module named 'src'
+2025-03-08 22:11:52,131 [DEBUG] ❌ モジュール src.utils.api_client のインポートに失敗しました: No module named 'src'
+2025-03-08 22:11:52,131 [DEBUG] ❌ モジュール src.utils.data_processing のインポートに失敗しました: No module named 'src'
+2025-03-08 22:11:52,131 [DEBUG] ❌ モジュール src.utils.storage のインポートに失敗しました: No module named 'src'
+2025-03-08 22:11:52,131 [DEBUG] ❌ モジュール src.utils.atomic_s3 のインポートに失敗しました: No module named 'src'
+2025-03-08 22:11:52,131 [DEBUG] ❌ モジュール src.utils.logging_utils のインポートに失敗しました: No module named 'src'
+2025-03-08 22:11:52,131 [DEBUG] ❌ モジュール src.utils.alerts のインポートに失敗しました: No module named 'src'
+2025-03-08 22:11:52,131 [DEBUG] ✅ モジュール config のインポートに成功しました
+2025-03-08 22:11:52,131 [DEBUG] ✅ モジュール utils.api_client のインポートに成功しました
+2025-03-08 22:11:52,131 [DEBUG] ✅ モジュール utils.data_processing のインポートに成功しました
+2025-03-08 22:11:52,131 [DEBUG] ✅ モジュール utils.storage のインポートに成功しました
+2025-03-08 22:11:52,131 [DEBUG] ✅ モジュール utils.atomic_s3 のインポートに成功しました
+2025-03-08 22:11:52,131 [DEBUG] ✅ モジュール utils.logging_utils のインポートに成功しました
+2025-03-08 22:11:52,131 [DEBUG] ✅ モジュール utils.alerts のインポートに成功しました
+2025-03-08 22:11:52,131 [DEBUG] ================================================================================
+2025-03-08 22:11:52,131 [DEBUG] 設定を読み込みます...
+2025-03-08 22:11:52,133 [DEBUG] 設定の読み込みが完了しました: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:11:52,133 [DEBUG] Lambda環境判定: False
+2025-03-08 22:11:52,133 [DEBUG] ローカル環境の設定: mock_mode=True, debug_mode=True, save_to_s3=True
+2025-03-08 22:11:52,133 [DEBUG] コンポーネントをセットアップします...
+2025-03-08 22:11:52,133 [INFO] ================================================================================
+2025-03-08 22:11:52,133 [INFO] setup_components 関数が呼び出されました
+2025-03-08 22:11:52,133 [INFO] config: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:11:52,133 [INFO] ローカル環境のため、ログディレクトリを logs に設定します
+2025-03-08 22:11:52,133 [INFO] ログディレクトリを作成しました: logs
+2025-03-08 22:11:52,135 [INFO] LoggerManagerの初期化に成功しました
+2025-03-08 22:11:52,135 [INFO] デバッグモードを有効化しました
+2025-03-08 22:11:52,135 [DEBUG] ================================================================================
+2025-03-08 22:11:52,135 [DEBUG] Slack設定の詳細:
+2025-03-08 22:11:52,135 [DEBUG] config.slack_enabled: True
+2025-03-08 22:11:52,135 [DEBUG] config.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:11:52,135 [DEBUG] config.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:11:52,135 [DEBUG] config.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:11:52,135 [DEBUG] config.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:11:52,135 [DEBUG] AlertManagerの内部状態:
+2025-03-08 22:11:52,135 [DEBUG] alert_manager.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:11:52,135 [DEBUG] alert_manager.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:11:52,135 [DEBUG] alert_manager.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:11:52,135 [DEBUG] alert_manager.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:11:52,135 [DEBUG] テスト用のSlack通知を送信します...
+2025-03-08 22:11:52,493 [DEBUG] ✅ テスト通知の送信に成功しました
+2025-03-08 22:11:52,493 [DEBUG] ================================================================================
+2025-03-08 22:11:53,206 [DEBUG] ⏱ Starting process_symbol
+2025-03-08 22:11:53,229 [DEBUG] ⏱ process_symbol completed in 0.02 seconds
+2025-03-08 22:16:10,923 [DEBUG] デバッグログハンドラを追加しました
+2025-03-08 22:16:10,924 [DEBUG] ================================================================================
+2025-03-08 22:16:10,924 [DEBUG] fetch_daily.py の main 関数が呼び出されました
+2025-03-08 22:16:10,924 [DEBUG] Python バージョン: 3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]
+2025-03-08 22:16:10,924 [DEBUG] sys.path: ["/Users/koichi/Desktop/local_document/Alpha_Vantage_project/src", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python313.zip", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload", "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/lib/python3.13/site-packages"]
+2025-03-08 22:16:10,924 [DEBUG] 環境変数: {"MallocNanoZone": "0", "USER": "koichi", "COMMAND_MODE": "unix2003", "__CFBundleIdentifier": "com.todesktop.230313mzl4w4u92", "PATH": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin", "LOGNAME": "koichi", "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.6aapF4h3sB/Listeners", "HOME": "/Users/koichi", "SHELL": "/bin/zsh", "TMPDIR": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/", "__CF_USER_TEXT_ENCODING": "0x1F5:0x1:0xE", "XPC_SERVICE_NAME": "0", "XPC_FLAGS": "0x0", "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined", "CURSOR_TRACE_ID": "fc4bfce2744745829a81dfaed6f00b77", "SHLVL": "1", "PWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "OLDPWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "HOMEBREW_PREFIX": "/opt/homebrew", "HOMEBREW_CELLAR": "/opt/homebrew/Cellar", "HOMEBREW_REPOSITORY": "/opt/homebrew", "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:", "LDFLAGS": "-L/opt/homebrew/opt/openssl@3/lib", "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3/include", "PYTHONSTARTUP": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/pythonrc.py", "TERM_PROGRAM": "vscode", "TERM_PROGRAM_VERSION": "0.46.11", "LANG": "ja_JP.UTF-8", "COLORTERM": "truecolor", "PYDEVD_DISABLE_FILE_VALIDATION": "1", "DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.0.1-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "BUNDLED_DEBUGPY_PATH": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/bundled/libs/debugpy", "VSCODE_DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "GIT_ASKPASS": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh", "VSCODE_GIT_ASKPASS_NODE": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)", "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "", "VSCODE_GIT_ASKPASS_MAIN": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js", "VSCODE_GIT_IPC_HANDLE": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/vscode-git-4249c9b68f.sock", "ALPHA_VANTAGE_API_KEY": "SEEGFKL5YAYJPQ5O", "STOCK_SYMBOLS": "NVDA", "S3_BUCKET": "s3-data-uploader-bucket", "S3_PREFIX": "stock-data-mock", "S3_PREFIX_PROD": "stock-data-prod", "DEBUG_MODE": "true", "MOCK_MODE": "true", "SAVE_TO_S3": "true", "SAVE_INDIVIDUAL_DAYS": "false", "LOG_LEVEL": "INFO", "LOG_DIR": "logs", "EMAIL_ENABLED": "false", "SMTP_SERVER": "smtp.gmail.com", "SMTP_PORT": "587", "SMTP_USER": "yoshidome.kouichi@gmail.com", "SMTP_PASSWORD": "ttnobnzjzfgkzvjd", "FROM_EMAIL": "yoshidome.kouichi@gmail.com", "TO_EMAIL": "yoshidome.kouichi@gmail.com", "SLACK_ENABLED": "true", "SLACK_WEBHOOK_URL": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_ERROR": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_WARNING": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_INFO": "https://hooks.slack.com/services/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", "POSTGRES_DB": "prod_db", "POSTGRES_USER": "myuser", "POSTGRES_PASSWORD": "0000", "POSTGRES_HOST": "localhost", "POSTGRES_PORT": "5434", "VIRTUAL_ENV": "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv", "VIRTUAL_ENV_PROMPT": "venv", "VSCODE_INJECTION": "1", "ZDOTDIR": "/Users/koichi", "USER_ZDOTDIR": "/Users/koichi", "TERM": "xterm-256color", "PS1": "venv%n@%m %1~ %# ", "_": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin/python"}
+2025-03-08 22:16:10,924 [DEBUG] ❌ モジュール src.config のインポートに失敗しました: No module named 'src'
+2025-03-08 22:16:10,924 [DEBUG] ❌ モジュール src.utils.api_client のインポートに失敗しました: No module named 'src'
+2025-03-08 22:16:10,924 [DEBUG] ❌ モジュール src.utils.data_processing のインポートに失敗しました: No module named 'src'
+2025-03-08 22:16:10,924 [DEBUG] ❌ モジュール src.utils.storage のインポートに失敗しました: No module named 'src'
+2025-03-08 22:16:10,924 [DEBUG] ❌ モジュール src.utils.atomic_s3 のインポートに失敗しました: No module named 'src'
+2025-03-08 22:16:10,924 [DEBUG] ❌ モジュール src.utils.logging_utils のインポートに失敗しました: No module named 'src'
+2025-03-08 22:16:10,925 [DEBUG] ❌ モジュール src.utils.alerts のインポートに失敗しました: No module named 'src'
+2025-03-08 22:16:10,925 [DEBUG] ✅ モジュール config のインポートに成功しました
+2025-03-08 22:16:10,925 [DEBUG] ✅ モジュール utils.api_client のインポートに成功しました
+2025-03-08 22:16:10,925 [DEBUG] ✅ モジュール utils.data_processing のインポートに成功しました
+2025-03-08 22:16:10,925 [DEBUG] ✅ モジュール utils.storage のインポートに成功しました
+2025-03-08 22:16:10,925 [DEBUG] ✅ モジュール utils.atomic_s3 のインポートに成功しました
+2025-03-08 22:16:10,925 [DEBUG] ✅ モジュール utils.logging_utils のインポートに成功しました
+2025-03-08 22:16:10,925 [DEBUG] ✅ モジュール utils.alerts のインポートに成功しました
+2025-03-08 22:16:10,925 [DEBUG] ================================================================================
+2025-03-08 22:16:10,925 [DEBUG] 設定を読み込みます...
+2025-03-08 22:16:10,926 [DEBUG] 設定の読み込みが完了しました: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:16:10,926 [DEBUG] Lambda環境判定: False
+2025-03-08 22:16:10,926 [DEBUG] ローカル環境の設定: mock_mode=True, debug_mode=True, save_to_s3=True
+2025-03-08 22:16:10,926 [DEBUG] コンポーネントをセットアップします...
+2025-03-08 22:16:10,926 [INFO] ================================================================================
+2025-03-08 22:16:10,926 [INFO] setup_components 関数が呼び出されました
+2025-03-08 22:16:10,926 [INFO] config: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:16:10,926 [INFO] ローカル環境のため、ログディレクトリを logs に設定します
+2025-03-08 22:16:10,926 [INFO] ログディレクトリを作成しました: logs
+2025-03-08 22:16:10,928 [INFO] LoggerManagerの初期化に成功しました
+2025-03-08 22:16:10,928 [INFO] デバッグモードを有効化しました
+2025-03-08 22:16:10,928 [DEBUG] ================================================================================
+2025-03-08 22:16:10,928 [DEBUG] Slack設定の詳細:
+2025-03-08 22:16:10,928 [DEBUG] config.slack_enabled: True
+2025-03-08 22:16:10,928 [DEBUG] config.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:16:10,928 [DEBUG] config.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:16:10,928 [DEBUG] config.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:16:10,928 [DEBUG] config.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:16:10,928 [DEBUG] AlertManagerの内部状態:
+2025-03-08 22:16:10,928 [DEBUG] alert_manager.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:16:10,928 [DEBUG] alert_manager.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:16:10,928 [DEBUG] alert_manager.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:16:10,928 [DEBUG] alert_manager.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:16:10,928 [DEBUG] テスト用のSlack通知を送信します...
+2025-03-08 22:16:11,550 [DEBUG] ✅ テスト通知の送信に成功しました
+2025-03-08 22:16:11,550 [DEBUG] ================================================================================
+2025-03-08 22:16:12,679 [DEBUG] ⏱ Starting process_symbol
+2025-03-08 22:16:12,708 [DEBUG] ⏱ process_symbol completed in 0.03 seconds
+2025-03-08 22:24:26,309 [DEBUG] デバッグログハンドラを追加しました
+2025-03-08 22:24:26,310 [DEBUG] ================================================================================
+2025-03-08 22:24:26,310 [DEBUG] fetch_daily.py の main 関数が呼び出されました
+2025-03-08 22:24:26,310 [DEBUG] Python バージョン: 3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]
+2025-03-08 22:24:26,310 [DEBUG] sys.path: ["/Users/koichi/Desktop/local_document/Alpha_Vantage_project/src", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python313.zip", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload", "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/lib/python3.13/site-packages"]
+2025-03-08 22:24:26,310 [DEBUG] 環境変数: {"MallocNanoZone": "0", "USER": "koichi", "COMMAND_MODE": "unix2003", "__CFBundleIdentifier": "com.todesktop.230313mzl4w4u92", "PATH": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin", "LOGNAME": "koichi", "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.6aapF4h3sB/Listeners", "HOME": "/Users/koichi", "SHELL": "/bin/zsh", "TMPDIR": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/", "__CF_USER_TEXT_ENCODING": "0x1F5:0x1:0xE", "XPC_SERVICE_NAME": "0", "XPC_FLAGS": "0x0", "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined", "CURSOR_TRACE_ID": "fc4bfce2744745829a81dfaed6f00b77", "SHLVL": "1", "PWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "OLDPWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "HOMEBREW_PREFIX": "/opt/homebrew", "HOMEBREW_CELLAR": "/opt/homebrew/Cellar", "HOMEBREW_REPOSITORY": "/opt/homebrew", "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:", "LDFLAGS": "-L/opt/homebrew/opt/openssl@3/lib", "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3/include", "PYTHONSTARTUP": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/pythonrc.py", "TERM_PROGRAM": "vscode", "TERM_PROGRAM_VERSION": "0.46.11", "LANG": "ja_JP.UTF-8", "COLORTERM": "truecolor", "PYDEVD_DISABLE_FILE_VALIDATION": "1", "DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.0.1-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "BUNDLED_DEBUGPY_PATH": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/bundled/libs/debugpy", "VSCODE_DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "GIT_ASKPASS": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh", "VSCODE_GIT_ASKPASS_NODE": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)", "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "", "VSCODE_GIT_ASKPASS_MAIN": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js", "VSCODE_GIT_IPC_HANDLE": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/vscode-git-4249c9b68f.sock", "ALPHA_VANTAGE_API_KEY": "SEEGFKL5YAYJPQ5O", "STOCK_SYMBOLS": "NVDA", "S3_BUCKET": "s3-data-uploader-bucket", "S3_PREFIX": "stock-data-mock", "S3_PREFIX_PROD": "stock-data-prod", "DEBUG_MODE": "true", "MOCK_MODE": "true", "SAVE_TO_S3": "true", "SAVE_INDIVIDUAL_DAYS": "false", "LOG_LEVEL": "INFO", "LOG_DIR": "logs", "EMAIL_ENABLED": "false", "SMTP_SERVER": "smtp.gmail.com", "SMTP_PORT": "587", "SMTP_USER": "yoshidome.kouichi@gmail.com", "SMTP_PASSWORD": "ttnobnzjzfgkzvjd", "FROM_EMAIL": "yoshidome.kouichi@gmail.com", "TO_EMAIL": "yoshidome.kouichi@gmail.com", "SLACK_ENABLED": "true", "SLACK_WEBHOOK_URL": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_ERROR": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_WARNING": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_INFO": "https://hooks.slack.com/services/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", "POSTGRES_DB": "prod_db", "POSTGRES_USER": "myuser", "POSTGRES_PASSWORD": "0000", "POSTGRES_HOST": "localhost", "POSTGRES_PORT": "5434", "VIRTUAL_ENV": "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv", "VIRTUAL_ENV_PROMPT": "venv", "VSCODE_INJECTION": "1", "ZDOTDIR": "/Users/koichi", "USER_ZDOTDIR": "/Users/koichi", "TERM": "xterm-256color", "PS1": "venv%n@%m %1~ %# ", "_": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin/python"}
+2025-03-08 22:24:26,310 [DEBUG] ❌ モジュール src.config のインポートに失敗しました: No module named 'src'
+2025-03-08 22:24:26,310 [DEBUG] ❌ モジュール src.utils.api_client のインポートに失敗しました: No module named 'src'
+2025-03-08 22:24:26,310 [DEBUG] ❌ モジュール src.utils.data_processing のインポートに失敗しました: No module named 'src'
+2025-03-08 22:24:26,310 [DEBUG] ❌ モジュール src.utils.storage のインポートに失敗しました: No module named 'src'
+2025-03-08 22:24:26,310 [DEBUG] ❌ モジュール src.utils.atomic_s3 のインポートに失敗しました: No module named 'src'
+2025-03-08 22:24:26,310 [DEBUG] ❌ モジュール src.utils.logging_utils のインポートに失敗しました: No module named 'src'
+2025-03-08 22:24:26,311 [DEBUG] ❌ モジュール src.utils.alerts のインポートに失敗しました: No module named 'src'
+2025-03-08 22:24:26,311 [DEBUG] ✅ モジュール config のインポートに成功しました
+2025-03-08 22:24:26,311 [DEBUG] ✅ モジュール utils.api_client のインポートに成功しました
+2025-03-08 22:24:26,311 [DEBUG] ✅ モジュール utils.data_processing のインポートに成功しました
+2025-03-08 22:24:26,311 [DEBUG] ✅ モジュール utils.storage のインポートに成功しました
+2025-03-08 22:24:26,311 [DEBUG] ✅ モジュール utils.atomic_s3 のインポートに成功しました
+2025-03-08 22:24:26,311 [DEBUG] ✅ モジュール utils.logging_utils のインポートに成功しました
+2025-03-08 22:24:26,311 [DEBUG] ✅ モジュール utils.alerts のインポートに成功しました
+2025-03-08 22:24:26,311 [DEBUG] ================================================================================
+2025-03-08 22:24:26,311 [DEBUG] 設定を読み込みます...
+2025-03-08 22:24:26,312 [DEBUG] 設定の読み込みが完了しました: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:24:26,312 [DEBUG] Lambda環境判定: False
+2025-03-08 22:24:26,312 [DEBUG] ローカル環境の設定: mock_mode=True, debug_mode=True, save_to_s3=True
+2025-03-08 22:24:26,312 [DEBUG] コンポーネントをセットアップします...
+2025-03-08 22:24:26,312 [INFO] ================================================================================
+2025-03-08 22:24:26,312 [INFO] setup_components 関数が呼び出されました
+2025-03-08 22:24:26,312 [INFO] config: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:24:26,312 [INFO] ローカル環境のため、ログディレクトリを logs に設定します
+2025-03-08 22:24:26,312 [INFO] ログディレクトリを作成しました: logs
+2025-03-08 22:24:26,314 [INFO] LoggerManagerの初期化に成功しました
+2025-03-08 22:24:26,314 [INFO] デバッグモードを有効化しました
+2025-03-08 22:24:26,314 [DEBUG] ================================================================================
+2025-03-08 22:24:26,314 [DEBUG] Slack設定の詳細:
+2025-03-08 22:24:26,314 [DEBUG] config.slack_enabled: True
+2025-03-08 22:24:26,314 [DEBUG] config.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:24:26,314 [DEBUG] config.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:24:26,314 [DEBUG] config.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:24:26,314 [DEBUG] config.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:24:26,314 [DEBUG] AlertManagerの内部状態:
+2025-03-08 22:24:26,314 [DEBUG] alert_manager.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:24:26,314 [DEBUG] alert_manager.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:24:26,314 [DEBUG] alert_manager.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:24:26,314 [DEBUG] alert_manager.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:24:26,314 [DEBUG] テスト用のSlack通知を送信します...
+2025-03-08 22:24:27,274 [DEBUG] ✅ テスト通知の送信に成功しました
+2025-03-08 22:24:27,274 [DEBUG] ================================================================================
+2025-03-08 22:24:29,498 [DEBUG] ⏱ Starting process_symbol
+2025-03-08 22:24:29,530 [DEBUG] ⏱ process_symbol completed in 0.03 seconds
+2025-03-08 22:28:48,987 [DEBUG] デバッグログハンドラを追加しました
+2025-03-08 22:28:48,989 [DEBUG] ================================================================================
+2025-03-08 22:28:48,989 [DEBUG] fetch_daily.py の main 関数が呼び出されました
+2025-03-08 22:28:48,989 [DEBUG] Python バージョン: 3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]
+2025-03-08 22:28:48,989 [DEBUG] sys.path: ["/Users/koichi/Desktop/local_document/Alpha_Vantage_project/src", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python313.zip", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload", "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/lib/python3.13/site-packages"]
+2025-03-08 22:28:48,989 [DEBUG] 環境変数: {"MallocNanoZone": "0", "USER": "koichi", "COMMAND_MODE": "unix2003", "__CFBundleIdentifier": "com.todesktop.230313mzl4w4u92", "PATH": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin", "LOGNAME": "koichi", "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.6aapF4h3sB/Listeners", "HOME": "/Users/koichi", "SHELL": "/bin/zsh", "TMPDIR": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/", "__CF_USER_TEXT_ENCODING": "0x1F5:0x1:0xE", "XPC_SERVICE_NAME": "0", "XPC_FLAGS": "0x0", "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined", "CURSOR_TRACE_ID": "fc4bfce2744745829a81dfaed6f00b77", "SHLVL": "1", "PWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "OLDPWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/lambda", "HOMEBREW_PREFIX": "/opt/homebrew", "HOMEBREW_CELLAR": "/opt/homebrew/Cellar", "HOMEBREW_REPOSITORY": "/opt/homebrew", "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:", "LDFLAGS": "-L/opt/homebrew/opt/openssl@3/lib", "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3/include", "TERM_PROGRAM": "vscode", "TERM_PROGRAM_VERSION": "0.46.11", "LANG": "ja_JP.UTF-8", "COLORTERM": "truecolor", "PYDEVD_DISABLE_FILE_VALIDATION": "1", "DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.0.1-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "BUNDLED_DEBUGPY_PATH": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/bundled/libs/debugpy", "VSCODE_DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "GIT_ASKPASS": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh", "VSCODE_GIT_ASKPASS_NODE": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)", "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "", "VSCODE_GIT_ASKPASS_MAIN": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js", "VSCODE_GIT_IPC_HANDLE": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/vscode-git-4249c9b68f.sock", "ALPHA_VANTAGE_API_KEY": "SEEGFKL5YAYJPQ5O", "STOCK_SYMBOLS": "NVDA", "S3_BUCKET": "s3-data-uploader-bucket", "S3_PREFIX": "stock-data-mock", "S3_PREFIX_PROD": "stock-data-prod", "DEBUG_MODE": "true", "MOCK_MODE": "true", "SAVE_TO_S3": "true", "SAVE_INDIVIDUAL_DAYS": "false", "LOG_LEVEL": "INFO", "LOG_DIR": "logs", "EMAIL_ENABLED": "true", "SMTP_SERVER": "smtp.gmail.com", "SMTP_PORT": "587", "SMTP_USER": "yoshidome.kouichi@gmail.com", "SMTP_PASSWORD": "ttnobnzjzfgkzvjd", "FROM_EMAIL": "yoshidome.kouichi@gmail.com", "TO_EMAIL": "yoshidome.kouichi@gmail.com", "SLACK_ENABLED": "true", "SLACK_WEBHOOK_URL_ERROR": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_WARNING": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_INFO": "https://hooks.slack.com/services/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", "POSTGRES_DB": "prod_db", "POSTGRES_USER": "myuser", "POSTGRES_PASSWORD": "0000", "POSTGRES_HOST": "localhost", "POSTGRES_PORT": "5434", "VIRTUAL_ENV": "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv", "VIRTUAL_ENV_PROMPT": "venv", "VSCODE_INJECTION": "1", "ZDOTDIR": "/Users/koichi", "USER_ZDOTDIR": "/Users/koichi", "TERM": "xterm-256color", "PS1": "venv%n@%m %1~ %# ", "_": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin/python3"}
+2025-03-08 22:28:48,989 [DEBUG] ❌ モジュール src.config のインポートに失敗しました: No module named 'src'
+2025-03-08 22:28:48,989 [DEBUG] ❌ モジュール src.utils.api_client のインポートに失敗しました: No module named 'src'
+2025-03-08 22:28:48,989 [DEBUG] ❌ モジュール src.utils.data_processing のインポートに失敗しました: No module named 'src'
+2025-03-08 22:28:48,989 [DEBUG] ❌ モジュール src.utils.storage のインポートに失敗しました: No module named 'src'
+2025-03-08 22:28:48,989 [DEBUG] ❌ モジュール src.utils.atomic_s3 のインポートに失敗しました: No module named 'src'
+2025-03-08 22:28:48,989 [DEBUG] ❌ モジュール src.utils.logging_utils のインポートに失敗しました: No module named 'src'
+2025-03-08 22:28:48,989 [DEBUG] ❌ モジュール src.utils.alerts のインポートに失敗しました: No module named 'src'
+2025-03-08 22:28:48,989 [DEBUG] ✅ モジュール config のインポートに成功しました
+2025-03-08 22:28:48,989 [DEBUG] ✅ モジュール utils.api_client のインポートに成功しました
+2025-03-08 22:28:48,989 [DEBUG] ✅ モジュール utils.data_processing のインポートに成功しました
+2025-03-08 22:28:48,989 [DEBUG] ✅ モジュール utils.storage のインポートに成功しました
+2025-03-08 22:28:48,989 [DEBUG] ✅ モジュール utils.atomic_s3 のインポートに成功しました
+2025-03-08 22:28:48,989 [DEBUG] ✅ モジュール utils.logging_utils のインポートに成功しました
+2025-03-08 22:28:48,989 [DEBUG] ✅ モジュール utils.alerts のインポートに成功しました
+2025-03-08 22:28:48,989 [DEBUG] ================================================================================
+2025-03-08 22:28:48,989 [DEBUG] 設定を読み込みます...
+2025-03-08 22:28:48,991 [DEBUG] 設定の読み込みが完了しました: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:28:48,991 [DEBUG] Lambda環境判定: False
+2025-03-08 22:28:48,991 [DEBUG] ローカル環境の設定: mock_mode=True, debug_mode=True, save_to_s3=True
+2025-03-08 22:28:48,991 [DEBUG] コンポーネントをセットアップします...
+2025-03-08 22:28:48,991 [INFO] ================================================================================
+2025-03-08 22:28:48,991 [INFO] setup_components 関数が呼び出されました
+2025-03-08 22:28:48,991 [INFO] config: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:28:48,991 [INFO] ローカル環境のため、ログディレクトリを logs に設定します
+2025-03-08 22:28:48,991 [INFO] ログディレクトリを作成しました: logs
+2025-03-08 22:28:48,993 [INFO] LoggerManagerの初期化に成功しました
+2025-03-08 22:28:48,993 [INFO] デバッグモードを有効化しました
+2025-03-08 22:28:48,993 [DEBUG] ================================================================================
+2025-03-08 22:28:48,993 [DEBUG] Slack設定の詳細:
+2025-03-08 22:28:48,993 [DEBUG] config.slack_enabled: True
+2025-03-08 22:28:48,993 [DEBUG] config.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:28:48,993 [DEBUG] config.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:28:48,993 [DEBUG] config.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:28:48,993 [DEBUG] config.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:28:48,993 [DEBUG] AlertManagerの内部状態:
+2025-03-08 22:28:48,993 [DEBUG] alert_manager.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:28:48,993 [DEBUG] alert_manager.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:28:48,993 [DEBUG] alert_manager.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:28:48,993 [DEBUG] alert_manager.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:28:48,993 [DEBUG] テスト用のSlack通知を送信します...
+2025-03-08 22:28:49,448 [DEBUG] ✅ テスト通知の送信に成功しました
+2025-03-08 22:28:49,448 [DEBUG] ================================================================================
+2025-03-08 22:28:50,064 [DEBUG] ⏱ Starting process_symbol
+2025-03-08 22:28:50,096 [DEBUG] ⏱ process_symbol completed in 0.03 seconds
+2025-03-08 22:29:42,089 [DEBUG] デバッグログハンドラを追加しました
+2025-03-08 22:29:42,090 [DEBUG] ================================================================================
+2025-03-08 22:29:42,090 [DEBUG] fetch_daily.py の main 関数が呼び出されました
+2025-03-08 22:29:42,090 [DEBUG] Python バージョン: 3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]
+2025-03-08 22:29:42,090 [DEBUG] sys.path: ["/Users/koichi/Desktop/local_document/Alpha_Vantage_project/src", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python313.zip", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload", "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/lib/python3.13/site-packages"]
+2025-03-08 22:29:42,090 [DEBUG] 環境変数: {"MallocNanoZone": "0", "USER": "koichi", "COMMAND_MODE": "unix2003", "__CFBundleIdentifier": "com.todesktop.230313mzl4w4u92", "PATH": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin", "LOGNAME": "koichi", "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.6aapF4h3sB/Listeners", "HOME": "/Users/koichi", "SHELL": "/bin/zsh", "TMPDIR": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/", "__CF_USER_TEXT_ENCODING": "0x1F5:0x1:0xE", "XPC_SERVICE_NAME": "0", "XPC_FLAGS": "0x0", "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined", "CURSOR_TRACE_ID": "fc4bfce2744745829a81dfaed6f00b77", "SHLVL": "1", "PWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "OLDPWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/lambda", "HOMEBREW_PREFIX": "/opt/homebrew", "HOMEBREW_CELLAR": "/opt/homebrew/Cellar", "HOMEBREW_REPOSITORY": "/opt/homebrew", "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:", "LDFLAGS": "-L/opt/homebrew/opt/openssl@3/lib", "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3/include", "TERM_PROGRAM": "vscode", "TERM_PROGRAM_VERSION": "0.46.11", "LANG": "ja_JP.UTF-8", "COLORTERM": "truecolor", "PYDEVD_DISABLE_FILE_VALIDATION": "1", "DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.0.1-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "BUNDLED_DEBUGPY_PATH": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/bundled/libs/debugpy", "VSCODE_DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "GIT_ASKPASS": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh", "VSCODE_GIT_ASKPASS_NODE": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)", "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "", "VSCODE_GIT_ASKPASS_MAIN": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js", "VSCODE_GIT_IPC_HANDLE": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/vscode-git-4249c9b68f.sock", "ALPHA_VANTAGE_API_KEY": "SEEGFKL5YAYJPQ5O", "STOCK_SYMBOLS": "NVDA", "S3_BUCKET": "s3-data-uploader-bucket", "S3_PREFIX": "stock-data-mock", "S3_PREFIX_PROD": "stock-data-prod", "DEBUG_MODE": "true", "MOCK_MODE": "true", "SAVE_TO_S3": "true", "SAVE_INDIVIDUAL_DAYS": "false", "LOG_LEVEL": "INFO", "LOG_DIR": "logs", "EMAIL_ENABLED": "true", "SMTP_SERVER": "smtp.gmail.com", "SMTP_PORT": "587", "SMTP_USER": "yoshidome.kouichi@gmail.com", "SMTP_PASSWORD": "ttnobnzjzfgkzvjd", "FROM_EMAIL": "yoshidome.kouichi@gmail.com", "TO_EMAIL": "yoshidome.kouichi@gmail.com", "SLACK_ENABLED": "true", "SLACK_WEBHOOK_URL_ERROR": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_WARNING": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_INFO": "https://hooks.slack.com/services/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", "POSTGRES_DB": "prod_db", "POSTGRES_USER": "myuser", "POSTGRES_PASSWORD": "0000", "POSTGRES_HOST": "localhost", "POSTGRES_PORT": "5434", "VIRTUAL_ENV": "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv", "VIRTUAL_ENV_PROMPT": "venv", "VSCODE_INJECTION": "1", "ZDOTDIR": "/Users/koichi", "USER_ZDOTDIR": "/Users/koichi", "TERM": "xterm-256color", "PS1": "venv%n@%m %1~ %# ", "_": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin/python3"}
+2025-03-08 22:29:42,090 [DEBUG] ❌ モジュール src.config のインポートに失敗しました: No module named 'src'
+2025-03-08 22:29:42,090 [DEBUG] ❌ モジュール src.utils.api_client のインポートに失敗しました: No module named 'src'
+2025-03-08 22:29:42,090 [DEBUG] ❌ モジュール src.utils.data_processing のインポートに失敗しました: No module named 'src'
+2025-03-08 22:29:42,090 [DEBUG] ❌ モジュール src.utils.storage のインポートに失敗しました: No module named 'src'
+2025-03-08 22:29:42,090 [DEBUG] ❌ モジュール src.utils.atomic_s3 のインポートに失敗しました: No module named 'src'
+2025-03-08 22:29:42,090 [DEBUG] ❌ モジュール src.utils.logging_utils のインポートに失敗しました: No module named 'src'
+2025-03-08 22:29:42,090 [DEBUG] ❌ モジュール src.utils.alerts のインポートに失敗しました: No module named 'src'
+2025-03-08 22:29:42,090 [DEBUG] ✅ モジュール config のインポートに成功しました
+2025-03-08 22:29:42,090 [DEBUG] ✅ モジュール utils.api_client のインポートに成功しました
+2025-03-08 22:29:42,090 [DEBUG] ✅ モジュール utils.data_processing のインポートに成功しました
+2025-03-08 22:29:42,090 [DEBUG] ✅ モジュール utils.storage のインポートに成功しました
+2025-03-08 22:29:42,090 [DEBUG] ✅ モジュール utils.atomic_s3 のインポートに成功しました
+2025-03-08 22:29:42,090 [DEBUG] ✅ モジュール utils.logging_utils のインポートに成功しました
+2025-03-08 22:29:42,090 [DEBUG] ✅ モジュール utils.alerts のインポートに成功しました
+2025-03-08 22:29:42,090 [DEBUG] ================================================================================
+2025-03-08 22:29:42,090 [DEBUG] 設定を読み込みます...
+2025-03-08 22:29:42,092 [DEBUG] 設定の読み込みが完了しました: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:29:42,092 [DEBUG] Lambda環境判定: False
+2025-03-08 22:29:42,092 [DEBUG] ローカル環境の設定: mock_mode=True, debug_mode=True, save_to_s3=True
+2025-03-08 22:29:42,092 [DEBUG] コンポーネントをセットアップします...
+2025-03-08 22:29:42,092 [INFO] ================================================================================
+2025-03-08 22:29:42,092 [INFO] setup_components 関数が呼び出されました
+2025-03-08 22:29:42,092 [INFO] config: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:29:42,092 [INFO] ローカル環境のため、ログディレクトリを logs に設定します
+2025-03-08 22:29:42,092 [INFO] ログディレクトリを作成しました: logs
+2025-03-08 22:29:42,094 [INFO] LoggerManagerの初期化に成功しました
+2025-03-08 22:29:42,094 [INFO] デバッグモードを有効化しました
+2025-03-08 22:29:42,094 [DEBUG] ================================================================================
+2025-03-08 22:29:42,094 [DEBUG] Slack設定の詳細:
+2025-03-08 22:29:42,094 [DEBUG] config.slack_enabled: True
+2025-03-08 22:29:42,094 [DEBUG] config.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:29:42,094 [DEBUG] config.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:29:42,094 [DEBUG] config.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:29:42,094 [DEBUG] config.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:29:42,094 [DEBUG] AlertManagerの内部状態:
+2025-03-08 22:29:42,094 [DEBUG] alert_manager.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:29:42,094 [DEBUG] alert_manager.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:29:42,094 [DEBUG] alert_manager.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:29:42,094 [DEBUG] alert_manager.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:29:42,094 [DEBUG] テスト用のSlack通知を送信します...
+2025-03-08 22:29:42,453 [DEBUG] ✅ テスト通知の送信に成功しました
+2025-03-08 22:29:42,454 [DEBUG] ================================================================================
+2025-03-08 22:29:43,008 [DEBUG] ⏱ Starting process_symbol
+2025-03-08 22:29:43,031 [DEBUG] ⏱ process_symbol completed in 0.02 seconds
+2025-03-08 22:30:37,612 [DEBUG] デバッグログハンドラを追加しました
+2025-03-08 22:30:37,613 [DEBUG] ================================================================================
+2025-03-08 22:30:37,613 [DEBUG] fetch_daily.py の main 関数が呼び出されました
+2025-03-08 22:30:37,613 [DEBUG] Python バージョン: 3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]
+2025-03-08 22:30:37,613 [DEBUG] sys.path: ["/Users/koichi/Desktop/local_document/Alpha_Vantage_project/src", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python313.zip", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload", "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/lib/python3.13/site-packages"]
+2025-03-08 22:30:37,613 [DEBUG] 環境変数: {"MallocNanoZone": "0", "USER": "koichi", "COMMAND_MODE": "unix2003", "__CFBundleIdentifier": "com.todesktop.230313mzl4w4u92", "PATH": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin", "LOGNAME": "koichi", "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.6aapF4h3sB/Listeners", "HOME": "/Users/koichi", "SHELL": "/bin/zsh", "TMPDIR": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/", "__CF_USER_TEXT_ENCODING": "0x1F5:0x1:0xE", "XPC_SERVICE_NAME": "0", "XPC_FLAGS": "0x0", "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined", "CURSOR_TRACE_ID": "fc4bfce2744745829a81dfaed6f00b77", "SHLVL": "1", "PWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "OLDPWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/lambda", "HOMEBREW_PREFIX": "/opt/homebrew", "HOMEBREW_CELLAR": "/opt/homebrew/Cellar", "HOMEBREW_REPOSITORY": "/opt/homebrew", "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:", "LDFLAGS": "-L/opt/homebrew/opt/openssl@3/lib", "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3/include", "TERM_PROGRAM": "vscode", "TERM_PROGRAM_VERSION": "0.46.11", "LANG": "ja_JP.UTF-8", "COLORTERM": "truecolor", "PYDEVD_DISABLE_FILE_VALIDATION": "1", "DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.0.1-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "BUNDLED_DEBUGPY_PATH": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/bundled/libs/debugpy", "VSCODE_DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "GIT_ASKPASS": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh", "VSCODE_GIT_ASKPASS_NODE": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)", "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "", "VSCODE_GIT_ASKPASS_MAIN": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js", "VSCODE_GIT_IPC_HANDLE": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/vscode-git-4249c9b68f.sock", "ALPHA_VANTAGE_API_KEY": "SEEGFKL5YAYJPQ5O", "STOCK_SYMBOLS": "NVDA", "S3_BUCKET": "s3-data-uploader-bucket", "S3_PREFIX": "stock-data-mock", "S3_PREFIX_PROD": "stock-data-prod", "DEBUG_MODE": "true", "MOCK_MODE": "true", "SAVE_TO_S3": "true", "SAVE_INDIVIDUAL_DAYS": "false", "LOG_LEVEL": "INFO", "LOG_DIR": "logs", "EMAIL_ENABLED": "true", "SMTP_SERVER": "smtp.gmail.com", "SMTP_PORT": "587", "SMTP_USER": "yoshidome.kouichi@gmail.com", "SMTP_PASSWORD": "ttnobnzjzfgkzvjd", "FROM_EMAIL": "yoshidome.kouichi@gmail.com", "TO_EMAIL": "yoshidome.kouichi@gmail.com", "SLACK_ENABLED": "true", "SLACK_WEBHOOK_URL_ERROR": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_WARNING": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_INFO": "https://hooks.slack.com/services/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", "POSTGRES_DB": "prod_db", "POSTGRES_USER": "myuser", "POSTGRES_PASSWORD": "0000", "POSTGRES_HOST": "localhost", "POSTGRES_PORT": "5434", "VIRTUAL_ENV": "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv", "VIRTUAL_ENV_PROMPT": "venv", "VSCODE_INJECTION": "1", "ZDOTDIR": "/Users/koichi", "USER_ZDOTDIR": "/Users/koichi", "TERM": "xterm-256color", "PS1": "venv%n@%m %1~ %# ", "_": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin/python3"}
+2025-03-08 22:30:37,613 [DEBUG] ❌ モジュール src.config のインポートに失敗しました: No module named 'src'
+2025-03-08 22:30:37,613 [DEBUG] ❌ モジュール src.utils.api_client のインポートに失敗しました: No module named 'src'
+2025-03-08 22:30:37,613 [DEBUG] ❌ モジュール src.utils.data_processing のインポートに失敗しました: No module named 'src'
+2025-03-08 22:30:37,613 [DEBUG] ❌ モジュール src.utils.storage のインポートに失敗しました: No module named 'src'
+2025-03-08 22:30:37,613 [DEBUG] ❌ モジュール src.utils.atomic_s3 のインポートに失敗しました: No module named 'src'
+2025-03-08 22:30:37,613 [DEBUG] ❌ モジュール src.utils.logging_utils のインポートに失敗しました: No module named 'src'
+2025-03-08 22:30:37,613 [DEBUG] ❌ モジュール src.utils.alerts のインポートに失敗しました: No module named 'src'
+2025-03-08 22:30:37,613 [DEBUG] ✅ モジュール config のインポートに成功しました
+2025-03-08 22:30:37,613 [DEBUG] ✅ モジュール utils.api_client のインポートに成功しました
+2025-03-08 22:30:37,613 [DEBUG] ✅ モジュール utils.data_processing のインポートに成功しました
+2025-03-08 22:30:37,613 [DEBUG] ✅ モジュール utils.storage のインポートに成功しました
+2025-03-08 22:30:37,613 [DEBUG] ✅ モジュール utils.atomic_s3 のインポートに成功しました
+2025-03-08 22:30:37,613 [DEBUG] ✅ モジュール utils.logging_utils のインポートに成功しました
+2025-03-08 22:30:37,613 [DEBUG] ✅ モジュール utils.alerts のインポートに成功しました
+2025-03-08 22:30:37,613 [DEBUG] ================================================================================
+2025-03-08 22:30:37,613 [DEBUG] 設定を読み込みます...
+2025-03-08 22:30:37,615 [DEBUG] 設定の読み込みが完了しました: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": false,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:30:37,615 [DEBUG] Lambda環境判定: False
+2025-03-08 22:30:37,615 [DEBUG] ローカル環境の設定: mock_mode=True, debug_mode=True, save_to_s3=True
+2025-03-08 22:30:37,615 [DEBUG] コンポーネントをセットアップします...
+2025-03-08 22:30:37,615 [INFO] ================================================================================
+2025-03-08 22:30:37,615 [INFO] setup_components 関数が呼び出されました
+2025-03-08 22:30:37,615 [INFO] config: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": false,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:30:37,615 [INFO] ローカル環境のため、ログディレクトリを logs に設定します
+2025-03-08 22:30:37,615 [INFO] ログディレクトリを作成しました: logs
+2025-03-08 22:30:37,617 [INFO] LoggerManagerの初期化に成功しました
+2025-03-08 22:30:37,617 [INFO] デバッグモードを有効化しました
+2025-03-08 22:30:37,617 [DEBUG] ================================================================================
+2025-03-08 22:30:37,617 [DEBUG] Slack設定の詳細:
+2025-03-08 22:30:37,617 [DEBUG] config.slack_enabled: False
+2025-03-08 22:30:37,617 [DEBUG] config.slack_webhook_url: None
+2025-03-08 22:30:37,617 [DEBUG] config.slack_webhook_url_error: None
+2025-03-08 22:30:37,617 [DEBUG] config.slack_webhook_url_warning: None
+2025-03-08 22:30:37,617 [DEBUG] config.slack_webhook_url_info: None
+2025-03-08 22:30:37,617 [DEBUG] AlertManagerの内部状態:
+2025-03-08 22:30:37,617 [DEBUG] alert_manager.slack_webhook_url: None
+2025-03-08 22:30:37,617 [DEBUG] alert_manager.slack_webhook_url_error: None
+2025-03-08 22:30:37,617 [DEBUG] alert_manager.slack_webhook_url_warning: None
+2025-03-08 22:30:37,617 [DEBUG] alert_manager.slack_webhook_url_info: None
+2025-03-08 22:30:37,617 [DEBUG] ================================================================================
+2025-03-08 22:30:37,618 [DEBUG] ⏱ Starting process_symbol
+2025-03-08 22:30:37,635 [DEBUG] ⏱ process_symbol completed in 0.02 seconds
+2025-03-08 22:44:56,853 [DEBUG] デバッグログハンドラを追加しました
+2025-03-08 22:44:56,856 [DEBUG] ================================================================================
+2025-03-08 22:44:56,856 [DEBUG] fetch_daily.py の main 関数が呼び出されました
+2025-03-08 22:44:56,856 [DEBUG] Python バージョン: 3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]
+2025-03-08 22:44:56,856 [DEBUG] sys.path: ["/Users/koichi/Desktop/local_document/Alpha_Vantage_project/src", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python313.zip", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload", "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/lib/python3.13/site-packages"]
+2025-03-08 22:44:56,856 [DEBUG] 環境変数: {"MallocNanoZone": "0", "USER": "koichi", "COMMAND_MODE": "unix2003", "__CFBundleIdentifier": "com.todesktop.230313mzl4w4u92", "PATH": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin", "LOGNAME": "koichi", "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.6aapF4h3sB/Listeners", "HOME": "/Users/koichi", "SHELL": "/bin/zsh", "TMPDIR": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/", "__CF_USER_TEXT_ENCODING": "0x1F5:0x1:0xE", "XPC_SERVICE_NAME": "0", "XPC_FLAGS": "0x0", "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined", "CURSOR_TRACE_ID": "fc4bfce2744745829a81dfaed6f00b77", "SHLVL": "1", "PWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "OLDPWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/lambda", "HOMEBREW_PREFIX": "/opt/homebrew", "HOMEBREW_CELLAR": "/opt/homebrew/Cellar", "HOMEBREW_REPOSITORY": "/opt/homebrew", "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:", "LDFLAGS": "-L/opt/homebrew/opt/openssl@3/lib", "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3/include", "TERM_PROGRAM": "vscode", "TERM_PROGRAM_VERSION": "0.46.11", "LANG": "ja_JP.UTF-8", "COLORTERM": "truecolor", "PYDEVD_DISABLE_FILE_VALIDATION": "1", "DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.0.1-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "BUNDLED_DEBUGPY_PATH": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/bundled/libs/debugpy", "VSCODE_DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "GIT_ASKPASS": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh", "VSCODE_GIT_ASKPASS_NODE": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)", "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "", "VSCODE_GIT_ASKPASS_MAIN": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js", "VSCODE_GIT_IPC_HANDLE": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/vscode-git-4249c9b68f.sock", "ALPHA_VANTAGE_API_KEY": "SEEGFKL5YAYJPQ5O", "STOCK_SYMBOLS": "NVDA", "S3_BUCKET": "s3-data-uploader-bucket", "S3_PREFIX": "stock-data-mock", "S3_PREFIX_PROD": "stock-data-prod", "DEBUG_MODE": "true", "MOCK_MODE": "true", "SAVE_TO_S3": "true", "SAVE_INDIVIDUAL_DAYS": "false", "LOG_LEVEL": "INFO", "LOG_DIR": "logs", "EMAIL_ENABLED": "true", "SMTP_SERVER": "smtp.gmail.com", "SMTP_PORT": "587", "SMTP_USER": "yoshidome.kouichi@gmail.com", "SMTP_PASSWORD": "ttnobnzjzfgkzvjd", "FROM_EMAIL": "yoshidome.kouichi@gmail.com", "TO_EMAIL": "yoshidome.kouichi@gmail.com", "SLACK_ENABLED": "true", "SLACK_WEBHOOK_URL_ERROR": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_WARNING": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_INFO": "https://hooks.slack.com/services/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", "POSTGRES_DB": "prod_db", "POSTGRES_USER": "myuser", "POSTGRES_PASSWORD": "0000", "POSTGRES_HOST": "localhost", "POSTGRES_PORT": "5434", "VIRTUAL_ENV": "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv", "VIRTUAL_ENV_PROMPT": "venv", "VSCODE_INJECTION": "1", "ZDOTDIR": "/Users/koichi", "USER_ZDOTDIR": "/Users/koichi", "TERM": "xterm-256color", "PS1": "venv%n@%m %1~ %# ", "_": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin/python3"}
+2025-03-08 22:44:56,856 [DEBUG] ❌ モジュール src.config のインポートに失敗しました: No module named 'src'
+2025-03-08 22:44:56,856 [DEBUG] ❌ モジュール src.utils.api_client のインポートに失敗しました: No module named 'src'
+2025-03-08 22:44:56,856 [DEBUG] ❌ モジュール src.utils.data_processing のインポートに失敗しました: No module named 'src'
+2025-03-08 22:44:56,856 [DEBUG] ❌ モジュール src.utils.storage のインポートに失敗しました: No module named 'src'
+2025-03-08 22:44:56,856 [DEBUG] ❌ モジュール src.utils.atomic_s3 のインポートに失敗しました: No module named 'src'
+2025-03-08 22:44:56,856 [DEBUG] ❌ モジュール src.utils.logging_utils のインポートに失敗しました: No module named 'src'
+2025-03-08 22:44:56,857 [DEBUG] ❌ モジュール src.utils.alerts のインポートに失敗しました: No module named 'src'
+2025-03-08 22:44:56,857 [DEBUG] ✅ モジュール config のインポートに成功しました
+2025-03-08 22:44:56,857 [DEBUG] ✅ モジュール utils.api_client のインポートに成功しました
+2025-03-08 22:44:56,857 [DEBUG] ✅ モジュール utils.data_processing のインポートに成功しました
+2025-03-08 22:44:56,857 [DEBUG] ✅ モジュール utils.storage のインポートに成功しました
+2025-03-08 22:44:56,857 [DEBUG] ✅ モジュール utils.atomic_s3 のインポートに成功しました
+2025-03-08 22:44:56,857 [DEBUG] ✅ モジュール utils.logging_utils のインポートに成功しました
+2025-03-08 22:44:56,857 [DEBUG] ✅ モジュール utils.alerts のインポートに成功しました
+2025-03-08 22:44:56,857 [DEBUG] ================================================================================
+2025-03-08 22:44:56,857 [DEBUG] 設定を読み込みます...
+2025-03-08 22:44:56,858 [DEBUG] 設定の読み込みが完了しました: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:44:56,858 [DEBUG] Lambda環境判定: False
+2025-03-08 22:44:56,858 [DEBUG] ローカル環境の設定: mock_mode=True, debug_mode=True, save_to_s3=True
+2025-03-08 22:44:56,858 [DEBUG] コンポーネントをセットアップします...
+2025-03-08 22:44:56,858 [INFO] ================================================================================
+2025-03-08 22:44:56,858 [INFO] setup_components 関数が呼び出されました
+2025-03-08 22:44:56,858 [INFO] config: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:44:56,858 [INFO] ローカル環境のため、ログディレクトリを logs に設定します
+2025-03-08 22:44:56,858 [INFO] ログディレクトリを作成しました: logs
+2025-03-08 22:44:56,860 [INFO] LoggerManagerの初期化に成功しました
+2025-03-08 22:44:56,860 [INFO] デバッグモードを有効化しました
+2025-03-08 22:44:56,860 [DEBUG] ================================================================================
+2025-03-08 22:44:56,860 [DEBUG] Slack設定の詳細:
+2025-03-08 22:44:56,860 [DEBUG] config.slack_enabled: True
+2025-03-08 22:44:56,860 [DEBUG] config.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:44:56,860 [DEBUG] config.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:44:56,861 [DEBUG] config.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:44:56,861 [DEBUG] config.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:44:56,861 [DEBUG] AlertManagerの内部状態:
+2025-03-08 22:44:56,861 [DEBUG] alert_manager.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:44:56,861 [DEBUG] alert_manager.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:44:56,861 [DEBUG] alert_manager.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:44:56,861 [DEBUG] alert_manager.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:44:56,861 [DEBUG] テスト用のSlack通知を送信します...
+2025-03-08 22:44:57,319 [DEBUG] ✅ テスト通知の送信に成功しました
+2025-03-08 22:44:57,319 [DEBUG] ================================================================================
+2025-03-08 22:44:58,171 [DEBUG] ⏱ Starting process_symbol
+2025-03-08 22:44:58,255 [DEBUG] ⏱ process_symbol completed in 0.08 seconds
+2025-03-08 22:48:49,823 [DEBUG] デバッグログハンドラを追加しました
+2025-03-08 22:48:49,828 [DEBUG] ================================================================================
+2025-03-08 22:48:49,828 [DEBUG] fetch_daily.py の main 関数が呼び出されました
+2025-03-08 22:48:49,828 [DEBUG] Python バージョン: 3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]
+2025-03-08 22:48:49,828 [DEBUG] sys.path: ["/Users/koichi/Desktop/local_document/Alpha_Vantage_project/src", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python313.zip", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload", "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/lib/python3.13/site-packages"]
+2025-03-08 22:48:49,828 [DEBUG] 環境変数: {"MallocNanoZone": "0", "USER": "koichi", "COMMAND_MODE": "unix2003", "__CFBundleIdentifier": "com.todesktop.230313mzl4w4u92", "PATH": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin", "LOGNAME": "koichi", "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.6aapF4h3sB/Listeners", "HOME": "/Users/koichi", "SHELL": "/bin/zsh", "TMPDIR": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/", "__CF_USER_TEXT_ENCODING": "0x1F5:0x1:0xE", "XPC_SERVICE_NAME": "0", "XPC_FLAGS": "0x0", "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined", "CURSOR_TRACE_ID": "fc4bfce2744745829a81dfaed6f00b77", "SHLVL": "1", "PWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "OLDPWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/lambda", "HOMEBREW_PREFIX": "/opt/homebrew", "HOMEBREW_CELLAR": "/opt/homebrew/Cellar", "HOMEBREW_REPOSITORY": "/opt/homebrew", "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:", "LDFLAGS": "-L/opt/homebrew/opt/openssl@3/lib", "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3/include", "TERM_PROGRAM": "vscode", "TERM_PROGRAM_VERSION": "0.46.11", "LANG": "ja_JP.UTF-8", "COLORTERM": "truecolor", "PYDEVD_DISABLE_FILE_VALIDATION": "1", "DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.0.1-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "BUNDLED_DEBUGPY_PATH": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/bundled/libs/debugpy", "VSCODE_DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "GIT_ASKPASS": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh", "VSCODE_GIT_ASKPASS_NODE": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)", "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "", "VSCODE_GIT_ASKPASS_MAIN": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js", "VSCODE_GIT_IPC_HANDLE": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/vscode-git-4249c9b68f.sock", "ALPHA_VANTAGE_API_KEY": "SEEGFKL5YAYJPQ5O", "STOCK_SYMBOLS": "NVDA", "S3_BUCKET": "s3-data-uploader-bucket", "S3_PREFIX": "stock-data-mock", "S3_PREFIX_PROD": "stock-data-prod", "DEBUG_MODE": "true", "MOCK_MODE": "true", "SAVE_TO_S3": "true", "SAVE_INDIVIDUAL_DAYS": "false", "LOG_LEVEL": "INFO", "LOG_DIR": "logs", "EMAIL_ENABLED": "true", "SMTP_SERVER": "smtp.gmail.com", "SMTP_PORT": "587", "SMTP_USER": "yoshidome.kouichi@gmail.com", "SMTP_PASSWORD": "ttnobnzjzfgkzvjd", "FROM_EMAIL": "yoshidome.kouichi@gmail.com", "TO_EMAIL": "yoshidome.kouichi@gmail.com", "SLACK_ENABLED": "true", "SLACK_WEBHOOK_URL_ERROR": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_WARNING": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_INFO": "https://hooks.slack.com/services/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", "POSTGRES_DB": "prod_db", "POSTGRES_USER": "myuser", "POSTGRES_PASSWORD": "0000", "POSTGRES_HOST": "localhost", "POSTGRES_PORT": "5434", "VIRTUAL_ENV": "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv", "VIRTUAL_ENV_PROMPT": "venv", "VSCODE_INJECTION": "1", "ZDOTDIR": "/Users/koichi", "USER_ZDOTDIR": "/Users/koichi", "TERM": "xterm-256color", "PS1": "venv%n@%m %1~ %# ", "_": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin/python3"}
+2025-03-08 22:48:49,828 [DEBUG] ❌ モジュール src.config のインポートに失敗しました: No module named 'src'
+2025-03-08 22:48:49,828 [DEBUG] ❌ モジュール src.utils.api_client のインポートに失敗しました: No module named 'src'
+2025-03-08 22:48:49,828 [DEBUG] ❌ モジュール src.utils.data_processing のインポートに失敗しました: No module named 'src'
+2025-03-08 22:48:49,828 [DEBUG] ❌ モジュール src.utils.storage のインポートに失敗しました: No module named 'src'
+2025-03-08 22:48:49,828 [DEBUG] ❌ モジュール src.utils.atomic_s3 のインポートに失敗しました: No module named 'src'
+2025-03-08 22:48:49,828 [DEBUG] ❌ モジュール src.utils.logging_utils のインポートに失敗しました: No module named 'src'
+2025-03-08 22:48:49,828 [DEBUG] ❌ モジュール src.utils.alerts のインポートに失敗しました: No module named 'src'
+2025-03-08 22:48:49,828 [DEBUG] ✅ モジュール config のインポートに成功しました
+2025-03-08 22:48:49,828 [DEBUG] ✅ モジュール utils.api_client のインポートに成功しました
+2025-03-08 22:48:49,828 [DEBUG] ✅ モジュール utils.data_processing のインポートに成功しました
+2025-03-08 22:48:49,828 [DEBUG] ✅ モジュール utils.storage のインポートに成功しました
+2025-03-08 22:48:49,828 [DEBUG] ✅ モジュール utils.atomic_s3 のインポートに成功しました
+2025-03-08 22:48:49,828 [DEBUG] ✅ モジュール utils.logging_utils のインポートに成功しました
+2025-03-08 22:48:49,828 [DEBUG] ✅ モジュール utils.alerts のインポートに成功しました
+2025-03-08 22:48:49,828 [DEBUG] ================================================================================
+2025-03-08 22:48:49,828 [DEBUG] 設定を読み込みます...
+2025-03-08 22:48:49,830 [DEBUG] 設定の読み込みが完了しました: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:48:49,830 [DEBUG] Lambda環境判定: False
+2025-03-08 22:48:49,830 [DEBUG] ローカル環境の設定: mock_mode=True, debug_mode=True, save_to_s3=True
+2025-03-08 22:48:49,830 [DEBUG] コンポーネントをセットアップします...
+2025-03-08 22:48:49,830 [INFO] ================================================================================
+2025-03-08 22:48:49,830 [INFO] setup_components 関数が呼び出されました
+2025-03-08 22:48:49,830 [INFO] config: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:48:49,830 [INFO] ローカル環境のため、ログディレクトリを logs に設定します
+2025-03-08 22:48:49,830 [INFO] ログディレクトリを作成しました: logs
+2025-03-08 22:48:49,833 [INFO] LoggerManagerの初期化に成功しました
+2025-03-08 22:48:49,833 [INFO] デバッグモードを有効化しました
+2025-03-08 22:48:49,833 [DEBUG] ================================================================================
+2025-03-08 22:48:49,833 [DEBUG] Slack設定の詳細:
+2025-03-08 22:48:49,833 [DEBUG] config.slack_enabled: True
+2025-03-08 22:48:49,833 [DEBUG] config.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:48:49,833 [DEBUG] config.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:48:49,833 [DEBUG] config.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:48:49,833 [DEBUG] config.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:48:49,833 [DEBUG] AlertManagerの内部状態:
+2025-03-08 22:48:49,833 [DEBUG] alert_manager.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:48:49,833 [DEBUG] alert_manager.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:48:49,833 [DEBUG] alert_manager.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:48:49,833 [DEBUG] alert_manager.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:48:49,833 [DEBUG] テスト用のSlack通知を送信します...
+2025-03-08 22:48:50,279 [DEBUG] ✅ テスト通知の送信に成功しました
+2025-03-08 22:48:50,280 [DEBUG] ================================================================================
+2025-03-08 22:48:50,526 [DEBUG] ⏱ Starting process_symbol
+2025-03-08 22:48:50,620 [DEBUG] ⏱ process_symbol completed in 0.09 seconds
+2025-03-08 22:55:13,393 [DEBUG] デバッグログハンドラを追加しました
+2025-03-08 22:55:13,396 [DEBUG] ================================================================================
+2025-03-08 22:55:13,398 [DEBUG] fetch_daily.py の main 関数が呼び出されました
+2025-03-08 22:55:13,398 [DEBUG] Python バージョン: 3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]
+2025-03-08 22:55:13,398 [DEBUG] sys.path: ["/Users/koichi/Desktop/local_document/Alpha_Vantage_project/src", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python313.zip", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload", "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/lib/python3.13/site-packages"]
+2025-03-08 22:55:13,398 [DEBUG] 環境変数: {"MallocNanoZone": "0", "USER": "koichi", "COMMAND_MODE": "unix2003", "__CFBundleIdentifier": "com.todesktop.230313mzl4w4u92", "PATH": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin", "LOGNAME": "koichi", "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.6aapF4h3sB/Listeners", "HOME": "/Users/koichi", "SHELL": "/bin/zsh", "TMPDIR": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/", "__CF_USER_TEXT_ENCODING": "0x1F5:0x1:0xE", "XPC_SERVICE_NAME": "0", "XPC_FLAGS": "0x0", "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined", "CURSOR_TRACE_ID": "fc4bfce2744745829a81dfaed6f00b77", "SHLVL": "1", "PWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "OLDPWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "HOMEBREW_PREFIX": "/opt/homebrew", "HOMEBREW_CELLAR": "/opt/homebrew/Cellar", "HOMEBREW_REPOSITORY": "/opt/homebrew", "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:", "LDFLAGS": "-L/opt/homebrew/opt/openssl@3/lib", "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3/include", "PYTHONSTARTUP": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/pythonrc.py", "TERM_PROGRAM": "vscode", "TERM_PROGRAM_VERSION": "0.46.11", "LANG": "ja_JP.UTF-8", "COLORTERM": "truecolor", "PYDEVD_DISABLE_FILE_VALIDATION": "1", "DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.0.1-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "BUNDLED_DEBUGPY_PATH": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/bundled/libs/debugpy", "VSCODE_DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "GIT_ASKPASS": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh", "VSCODE_GIT_ASKPASS_NODE": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)", "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "", "VSCODE_GIT_ASKPASS_MAIN": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js", "VSCODE_GIT_IPC_HANDLE": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/vscode-git-4249c9b68f.sock", "ALPHA_VANTAGE_API_KEY": "SEEGFKL5YAYJPQ5O", "STOCK_SYMBOLS": "NVDA", "S3_BUCKET": "s3-data-uploader-bucket", "S3_PREFIX": "stock-data-mock", "S3_PREFIX_PROD": "stock-data-prod", "DEBUG_MODE": "true", "MOCK_MODE": "true", "SAVE_TO_S3": "true", "SAVE_INDIVIDUAL_DAYS": "false", "LOG_LEVEL": "INFO", "LOG_DIR": "logs", "EMAIL_ENABLED": "false", "SMTP_SERVER": "smtp.gmail.com", "SMTP_PORT": "587", "SMTP_USER": "yoshidome.kouichi@gmail.com", "SMTP_PASSWORD": "ttnobnzjzfgkzvjd", "FROM_EMAIL": "yoshidome.kouichi@gmail.com", "TO_EMAIL": "yoshidome.kouichi@gmail.com", "SLACK_ENABLED": "true", "SLACK_WEBHOOK_URL": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_ERROR": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_WARNING": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_INFO": "https://hooks.slack.com/services/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", "POSTGRES_DB": "prod_db", "POSTGRES_USER": "myuser", "POSTGRES_PASSWORD": "0000", "POSTGRES_HOST": "localhost", "POSTGRES_PORT": "5434", "VIRTUAL_ENV": "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv", "VIRTUAL_ENV_PROMPT": "venv", "VSCODE_INJECTION": "1", "ZDOTDIR": "/Users/koichi", "USER_ZDOTDIR": "/Users/koichi", "TERM": "xterm-256color", "PS1": "venv%n@%m %1~ %# ", "_": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin/python"}
+2025-03-08 22:55:13,398 [DEBUG] ❌ モジュール src.config のインポートに失敗しました: No module named 'src'
+2025-03-08 22:55:13,398 [DEBUG] ❌ モジュール src.utils.api_client のインポートに失敗しました: No module named 'src'
+2025-03-08 22:55:13,398 [DEBUG] ❌ モジュール src.utils.data_processing のインポートに失敗しました: No module named 'src'
+2025-03-08 22:55:13,399 [DEBUG] ❌ モジュール src.utils.storage のインポートに失敗しました: No module named 'src'
+2025-03-08 22:55:13,399 [DEBUG] ❌ モジュール src.utils.atomic_s3 のインポートに失敗しました: No module named 'src'
+2025-03-08 22:55:13,399 [DEBUG] ❌ モジュール src.utils.logging_utils のインポートに失敗しました: No module named 'src'
+2025-03-08 22:55:13,399 [DEBUG] ❌ モジュール src.utils.alerts のインポートに失敗しました: No module named 'src'
+2025-03-08 22:55:13,399 [DEBUG] ✅ モジュール config のインポートに成功しました
+2025-03-08 22:55:13,399 [DEBUG] ✅ モジュール utils.api_client のインポートに成功しました
+2025-03-08 22:55:13,399 [DEBUG] ✅ モジュール utils.data_processing のインポートに成功しました
+2025-03-08 22:55:13,399 [DEBUG] ✅ モジュール utils.storage のインポートに成功しました
+2025-03-08 22:55:13,399 [DEBUG] ✅ モジュール utils.atomic_s3 のインポートに成功しました
+2025-03-08 22:55:13,399 [DEBUG] ✅ モジュール utils.logging_utils のインポートに成功しました
+2025-03-08 22:55:13,399 [DEBUG] ✅ モジュール utils.alerts のインポートに成功しました
+2025-03-08 22:55:13,399 [DEBUG] ================================================================================
+2025-03-08 22:55:13,399 [DEBUG] 設定を読み込みます...
+2025-03-08 22:55:13,408 [DEBUG] 設定の読み込みが完了しました: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:55:13,408 [DEBUG] Lambda環境判定: False
+2025-03-08 22:55:13,408 [DEBUG] ローカル環境の設定: mock_mode=True, debug_mode=True, save_to_s3=True
+2025-03-08 22:55:13,408 [DEBUG] コンポーネントをセットアップします...
+2025-03-08 22:55:13,408 [INFO] ================================================================================
+2025-03-08 22:55:13,408 [INFO] setup_components 関数が呼び出されました
+2025-03-08 22:55:13,408 [INFO] config: {
+  "debug_mode": true,
+  "mock_mode": true,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:55:13,408 [INFO] ローカル環境のため、ログディレクトリを logs に設定します
+2025-03-08 22:55:13,408 [INFO] ログディレクトリを作成しました: logs
+2025-03-08 22:55:13,412 [INFO] LoggerManagerの初期化に成功しました
+2025-03-08 22:55:13,412 [INFO] デバッグモードを有効化しました
+2025-03-08 22:55:13,413 [DEBUG] ================================================================================
+2025-03-08 22:55:13,413 [DEBUG] Slack設定の詳細:
+2025-03-08 22:55:13,413 [DEBUG] config.slack_enabled: True
+2025-03-08 22:55:13,413 [DEBUG] config.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:55:13,414 [DEBUG] config.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:55:13,414 [DEBUG] config.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:55:13,414 [DEBUG] config.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:55:13,414 [DEBUG] AlertManagerの内部状態:
+2025-03-08 22:55:13,414 [DEBUG] alert_manager.slack_webhook_url: https://hooks.slack.com/services/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
+2025-03-08 22:55:13,414 [DEBUG] alert_manager.slack_webhook_url_error: https://hooks.slack.com/services/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
+2025-03-08 22:55:13,414 [DEBUG] alert_manager.slack_webhook_url_warning: https://hooks.slack.com/services/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
+2025-03-08 22:55:13,414 [DEBUG] alert_manager.slack_webhook_url_info: https://hooks.slack.com/services/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
+2025-03-08 22:55:13,414 [DEBUG] テスト用のSlack通知を送信します...
+2025-03-08 22:55:13,851 [DEBUG] ✅ テスト通知の送信に成功しました
+2025-03-08 22:55:13,851 [DEBUG] ================================================================================
+2025-03-08 22:55:14,252 [DEBUG] ⏱ Starting process_symbol
+2025-03-08 22:55:14,298 [DEBUG] ⏱ process_symbol completed in 0.05 seconds
+2025-03-08 22:56:29,836 [DEBUG] デバッグログハンドラを追加しました
+2025-03-08 22:56:29,840 [DEBUG] ================================================================================
+2025-03-08 22:56:29,840 [DEBUG] fetch_daily.py の main 関数が呼び出されました
+2025-03-08 22:56:29,840 [DEBUG] Python バージョン: 3.13.2 (main, Feb  4 2025, 14:51:09) [Clang 16.0.0 (clang-1600.0.26.6)]
+2025-03-08 22:56:29,840 [DEBUG] sys.path: ["/Users/koichi/Desktop/local_document/Alpha_Vantage_project/src", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python313.zip", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13", "/opt/homebrew/Cellar/python@3.13/3.13.2/Frameworks/Python.framework/Versions/3.13/lib/python3.13/lib-dynload", "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/lib/python3.13/site-packages"]
+2025-03-08 22:56:29,840 [DEBUG] 環境変数: {"MallocNanoZone": "0", "USER": "koichi", "COMMAND_MODE": "unix2003", "__CFBundleIdentifier": "com.todesktop.230313mzl4w4u92", "PATH": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/deactivate/zsh:/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv/bin:/Users/koichi/.codeium/windsurf/bin:/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin:/opt/homebrew/opt/openssl@3/bin:/usr/local/opt/openssl/bin:/Users/koichi/Library/Python/3.9/bin:/Users/koichi/.npm-global/bin:/Users/koichi/anaconda3/bin", "LOGNAME": "koichi", "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.6aapF4h3sB/Listeners", "HOME": "/Users/koichi", "SHELL": "/bin/zsh", "TMPDIR": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/", "__CF_USER_TEXT_ENCODING": "0x1F5:0x1:0xE", "XPC_SERVICE_NAME": "0", "XPC_FLAGS": "0x0", "ORIGINAL_XDG_CURRENT_DESKTOP": "undefined", "CURSOR_TRACE_ID": "fc4bfce2744745829a81dfaed6f00b77", "SHLVL": "1", "PWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "OLDPWD": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project", "HOMEBREW_PREFIX": "/opt/homebrew", "HOMEBREW_CELLAR": "/opt/homebrew/Cellar", "HOMEBREW_REPOSITORY": "/opt/homebrew", "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:", "LDFLAGS": "-L/opt/homebrew/opt/openssl@3/lib", "CPPFLAGS": "-I/opt/homebrew/opt/openssl@3/include", "PYTHONSTARTUP": "/Users/koichi/.cursor/extensions/ms-python.python-2024.12.3-darwin-arm64/python_files/pythonrc.py", "TERM_PROGRAM": "vscode", "TERM_PROGRAM_VERSION": "0.46.11", "LANG": "ja_JP.UTF-8", "COLORTERM": "truecolor", "PYDEVD_DISABLE_FILE_VALIDATION": "1", "DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.0.1-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "BUNDLED_DEBUGPY_PATH": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/bundled/libs/debugpy", "VSCODE_DEBUGPY_ADAPTER_ENDPOINTS": "/Users/koichi/.vscode/extensions/ms-python.debugpy-2025.4.0-darwin-arm64/.noConfigDebugAdapterEndpoints/endpoint-14dfe42ece082fa4.txt", "GIT_ASKPASS": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass.sh", "VSCODE_GIT_ASKPASS_NODE": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)", "VSCODE_GIT_ASKPASS_EXTRA_ARGS": "", "VSCODE_GIT_ASKPASS_MAIN": "/Applications/Cursor.app/Contents/Resources/app/extensions/git/dist/askpass-main.js", "VSCODE_GIT_IPC_HANDLE": "/var/folders/jr/djhgjptn6618khqd4q8n3s540000gn/T/vscode-git-4249c9b68f.sock", "ALPHA_VANTAGE_API_KEY": "SEEGFKL5YAYJPQ5O", "STOCK_SYMBOLS": "NVDA", "S3_BUCKET": "s3-data-uploader-bucket", "S3_PREFIX": "stock-data-mock", "S3_PREFIX_PROD": "stock-data-prod", "DEBUG_MODE": "true", "MOCK_MODE": "true", "SAVE_TO_S3": "true", "SAVE_INDIVIDUAL_DAYS": "false", "LOG_LEVEL": "INFO", "LOG_DIR": "logs", "EMAIL_ENABLED": "false", "SMTP_SERVER": "smtp.gmail.com", "SMTP_PORT": "587", "SMTP_USER": "yoshidome.kouichi@gmail.com", "SMTP_PASSWORD": "ttnobnzjzfgkzvjd", "FROM_EMAIL": "yoshidome.kouichi@gmail.com", "TO_EMAIL": "yoshidome.kouichi@gmail.com", "SLACK_ENABLED": "true", "SLACK_WEBHOOK_URL": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_ERROR": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_WARNING": "https://hooks.slack.com/services/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", "SLACK_WEBHOOK_URL_INFO": "https://hooks.slack.com/services/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", "POSTGRES_DB": "prod_db", "POSTGRES_USER": "myuser", "POSTGRES_PASSWORD": "0000", "POSTGRES_HOST": "localhost", "POSTGRES_PORT": "5434", "VIRTUAL_ENV": "/Users/koichi/Library/CloudStorage/GoogleDrive-yoshidome.kouichi@gmail.com/.shortcut-targets-by-id/1YPflACfNCBy1sNnuIrSAGpX5J8mL3Pcn/Google Drive/01.Private/Documents/Alpha_Vantage_project/venv", "VIRTUAL_ENV_PROMPT": "venv", "VSCODE_INJECTION": "1", "ZDOTDIR": "/Users/koichi", "USER_ZDOTDIR": "/Users/koichi", "TERM": "xterm-256color", "PS1": "venv%n@%m %1~ %# ", "_": "/Users/koichi/Desktop/local_document/Alpha_Vantage_project/venv/bin/python"}
+2025-03-08 22:56:29,840 [DEBUG] ❌ モジュール src.config のインポートに失敗しました: No module named 'src'
+2025-03-08 22:56:29,840 [DEBUG] ❌ モジュール src.utils.api_client のインポートに失敗しました: No module named 'src'
+2025-03-08 22:56:29,840 [DEBUG] ❌ モジュール src.utils.data_processing のインポートに失敗しました: No module named 'src'
+2025-03-08 22:56:29,840 [DEBUG] ❌ モジュール src.utils.storage のインポートに失敗しました: No module named 'src'
+2025-03-08 22:56:29,840 [DEBUG] ❌ モジュール src.utils.atomic_s3 のインポートに失敗しました: No module named 'src'
+2025-03-08 22:56:29,840 [DEBUG] ❌ モジュール src.utils.logging_utils のインポートに失敗しました: No module named 'src'
+2025-03-08 22:56:29,840 [DEBUG] ❌ モジュール src.utils.alerts のインポートに失敗しました: No module named 'src'
+2025-03-08 22:56:29,840 [DEBUG] ✅ モジュール config のインポートに成功しました
+2025-03-08 22:56:29,840 [DEBUG] ✅ モジュール utils.api_client のインポートに成功しました
+2025-03-08 22:56:29,840 [DEBUG] ✅ モジュール utils.data_processing のインポートに成功しました
+2025-03-08 22:56:29,840 [DEBUG] ✅ モジュール utils.storage のインポートに成功しました
+2025-03-08 22:56:29,840 [DEBUG] ✅ モジュール utils.atomic_s3 のインポートに成功しました
+2025-03-08 22:56:29,840 [DEBUG] ✅ モジュール utils.logging_utils のインポートに成功しました
+2025-03-08 22:56:29,840 [DEBUG] ✅ モジュール utils.alerts のインポートに成功しました
+2025-03-08 22:56:29,840 [DEBUG] ================================================================================
+2025-03-08 22:56:29,840 [DEBUG] 設定を読み込みます...
+2025-03-08 22:56:29,842 [DEBUG] 設定の読み込みが完了しました: {
+  "debug_mode": true,
+  "mock_mode": false,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:56:29,842 [DEBUG] Lambda環境判定: False
+2025-03-08 22:56:29,842 [DEBUG] ローカル環境の設定: mock_mode=False, debug_mode=True, save_to_s3=True
+2025-03-08 22:56:29,842 [DEBUG] コンポーネントをセットアップします...
+2025-03-08 22:56:29,842 [INFO] ================================================================================
+2025-03-08 22:56:29,842 [INFO] setup_components 関数が呼び出されました
+2025-03-08 22:56:29,842 [INFO] config: {
+  "debug_mode": true,
+  "mock_mode": false,
+  "api_base_url": "https://www.alphavantage.co/query",
+  "stock_symbols": [
+    "NVDA"
+  ],
+  "s3_bucket": "s3-data-uploader-bucket",
+  "s3_region": "ap-northeast-1",
+  "s3_prefix": "stock-data-mock",
+  "email_enabled": false,
+  "slack_enabled": true,
+  "log_dir": "logs",
+  "log_level": "INFO"
+}
+2025-03-08 22:56:29,842 [INFO] ローカル環境のため、ログディレクトリを logs に設定します
+2025-03-08 22:56:29,842 [INFO] ログディレクトリを作成しました: logs
+2025-03-08 22:56:29,842 [INFO] LoggerManagerの初期化に成功しました
+2025-03-08 22:56:29,842 [INFO] デバッグモードを有効化しました

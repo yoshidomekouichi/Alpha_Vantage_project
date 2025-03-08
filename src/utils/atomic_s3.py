@@ -52,6 +52,9 @@ class AtomicS3:
         tmp_key = f"{key}.tmp.{uuid.uuid4()}"
         
         try:
+            # デバッグ情報を出力
+            logger.debug(f"Atomic update: key={key}, tmp_key={tmp_key}")
+            
             # Call the update function with the temporary key
             success = update_func(tmp_key, *args, **kwargs)
             
@@ -60,16 +63,20 @@ class AtomicS3:
                 return False
             
             # Copy the temporary object to the final key
+            copy_source = {'Bucket': str(self.s3.bucket_name), 'Key': str(tmp_key)}
+            logger.debug(f"Copying from temporary object: {copy_source}")
+            
             self.s3.s3_client.copy_object(
-                Bucket=self.s3.bucket_name,
-                CopySource={'Bucket': self.s3.bucket_name, 'Key': tmp_key},
-                Key=key
+                Bucket=str(self.s3.bucket_name),
+                CopySource=copy_source,
+                Key=str(key)
             )
             
             # Delete the temporary object
+            logger.debug(f"Deleting temporary object: {tmp_key}")
             self.s3.s3_client.delete_object(
-                Bucket=self.s3.bucket_name,
-                Key=tmp_key
+                Bucket=str(self.s3.bucket_name),
+                Key=str(tmp_key)
             )
             
             logger.info(f"✅ Successfully performed atomic update to s3://{self.s3.bucket_name}/{key}")
@@ -78,12 +85,17 @@ class AtomicS3:
         except Exception as e:
             logger.exception(f"❌ Error during atomic update: {e}")
             
+            # エラーの詳細情報を出力
+            import traceback
+            logger.error(f"詳細なエラー情報: {traceback.format_exc()}")
+            
             # Try to clean up the temporary object
             try:
                 if self.s3.object_exists(tmp_key):
+                    logger.debug(f"Cleaning up temporary object after error: {tmp_key}")
                     self.s3.s3_client.delete_object(
-                        Bucket=self.s3.bucket_name,
-                        Key=tmp_key
+                        Bucket=str(self.s3.bucket_name),
+                        Key=str(tmp_key)
                     )
             except Exception as cleanup_error:
                 logger.warning(f"⚠️ Failed to clean up temporary object: {cleanup_error}")
@@ -101,7 +113,8 @@ class AtomicS3:
         Returns:
             Boolean indicating success
         """
-        return self.atomic_update(key, self.s3.save_json, data)
+        # save_jsonメソッドの引数順序が(key, data)なので、dataをkwargsとして渡す
+        return self.atomic_update(key, self.s3.save_json, data=data)
     
     def atomic_csv_update(self, key: str, df) -> bool:
         """
@@ -114,7 +127,8 @@ class AtomicS3:
         Returns:
             Boolean indicating success
         """
-        return self.atomic_update(key, self.s3.save_csv, df)
+        # save_csvメソッドの引数順序を確認して適切に渡す
+        return self.atomic_update(key, self.s3.save_csv, df=df)
     
     def atomic_parquet_update(self, key: str, df) -> bool:
         """
@@ -127,4 +141,5 @@ class AtomicS3:
         Returns:
             Boolean indicating success
         """
-        return self.atomic_update(key, self.s3.save_parquet, df)
+        # save_parquetメソッドの引数順序を確認して適切に渡す
+        return self.atomic_update(key, self.s3.save_parquet, df=df)

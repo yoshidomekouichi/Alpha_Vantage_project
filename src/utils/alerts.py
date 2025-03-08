@@ -10,6 +10,7 @@ import logging
 import json
 import smtplib
 import requests
+import traceback
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import Dict, Any, Optional, List, Union
@@ -151,30 +152,59 @@ class AlertManager:
             logger.warning("⚠️ Slack webhook URL not provided, skipping Slack alert")
             return False
         
+        # URLの形式を確認
+        if not webhook.startswith('https://hooks.slack.com/'):
+            logger.error(f"❌ Invalid Slack webhook URL format: {webhook}")
+            return False
+        
         try:
-            # Create attachment
-            attachment = {
-                "color": color,
-                "text": message,
-                "mrkdwn_in": ["text", "fields"]
-            }
+            # Slack APIの最新仕様に合わせたペイロードを作成
+            payload = {"text": title or message}
+            blocks = []
             
+            # タイトルがある場合はヘッダーブロックを追加
             if title:
-                attachment["title"] = title
-                
-            if fields:
-                attachment["fields"] = fields
+                blocks.append({
+                    "type": "header",
+                    "text": {
+                        "type": "plain_text",
+                        "text": title
+                    }
+                })
             
-            # Create payload
-            payload = {
-                "attachments": [attachment]
-            }
+            # メッセージ本文を追加
+            blocks.append({
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": message
+                }
+            })
             
-            # Send message
+            # フィールドがある場合は追加
+            if fields and len(fields) > 0:
+                for field in fields:
+                    blocks.append({
+                        "type": "section",
+                        "fields": [
+                            {
+                                "type": "mrkdwn",
+                                "text": f"*{field['title']}*\n{field['value']}"
+                            }
+                        ]
+                    })
+            
+            # 区切り線を追加
+            blocks.append({"type": "divider"})
+            
+            # ペイロードにブロックを設定
+            payload["blocks"] = blocks
+            
+            # Slack APIにリクエストを送信
             response = requests.post(
                 webhook,
-                data=json.dumps(payload),
-                headers={"Content-Type": "application/json"}
+                json=payload,
+                timeout=10
             )
             
             if response.status_code == 200:
@@ -184,9 +214,32 @@ class AlertManager:
                 logger.error(f"❌ Error sending Slack alert: {response.status_code} {response.text}")
                 return False
                 
+        except requests.exceptions.Timeout:
+            logger.error("❌ Timeout error when sending Slack alert")
+            return False
+        except requests.exceptions.ConnectionError as conn_error:
+            logger.error(f"❌ Connection error when sending Slack alert: {conn_error}")
+            return False
         except Exception as e:
             logger.exception(f"❌ Error sending Slack alert: {e}")
             return False
+            
+    def test_slack_connection(self, webhook_url: Optional[str] = None) -> bool:
+        """
+        Test the Slack connection by sending a simple test message.
+        
+        Args:
+            webhook_url: Override webhook URL
+            
+        Returns:
+            Boolean indicating success
+        """
+        test_message = "🔍 This is a test message from AlertManager"
+        return self.send_slack(
+            message=test_message,
+            title="Slack Connection Test",
+            webhook_url=webhook_url
+        )
     
     def send_error_alert(
         self,
@@ -257,44 +310,42 @@ class AlertManager:
     
     def send_success_alert(
         self,
-        message: str,
-        details: Optional[str] = None,
+        success_message: str,
+        success_details: Optional[str] = None,
         source: Optional[str] = None,
         send_email: bool = True,
         send_slack: bool = True,
-        additional_fields: Optional[List[Dict[str, str]]] = None,
-        stock_data: Optional[Dict[str, Any]] = None
+        additional_fields: Optional[List[Dict[str, str]]] = None
     ) -> bool:
         """
         Send a success alert to all configured channels.
         
         Args:
-            message: Success message
-            details: Additional details
+            success_message: Short success message
+            success_details: Detailed success information
             source: Source of the success (e.g., script name)
             send_email: Whether to send an email alert
             send_slack: Whether to send a Slack alert
             additional_fields: Additional fields to include in the Slack message
-            stock_data: Stock data to include in the message (for daily updates)
             
         Returns:
             Boolean indicating if at least one alert was sent successfully
         """
         source_info = f" in {source}" if source else ""
-        subject = f"✅ SUCCESS{source_info}: {message}"
+        subject = f"✅ SUCCESS{source_info}: {success_message}"
         
         # Create message body
-        body = f"Success{source_info}:\n\n{message}"
-        if details:
-            body += f"\n\nDetails:\n{details}"
+        body = f"Success{source_info}:\n\n{success_message}"
+        if success_details:
+            body += f"\n\nDetails:\n{success_details}"
         
         # Create HTML body for email
         html_body = f"""
         <h2>Success{source_info}</h2>
-        <p><strong>{message}</strong></p>
+        <p><strong>{success_message}</strong></p>
         """
-        if details:
-            html_body += f"<h3>Details:</h3><pre>{details}</pre>"
+        if success_details:
+            html_body += f"<h3>Details:</h3><pre>{success_details}</pre>"
         
         # Send alerts
         email_success = False
@@ -307,37 +358,16 @@ class AlertManager:
             fields = []
             if source:
                 fields.append({"title": "Source", "value": source, "short": True})
-            
-            # Add stock data if provided
-            if stock_data:
-                # Format stock data for display
-                if 'symbol' in stock_data:
-                    fields.append({"title": "Symbol", "value": stock_data['symbol'], "short": True})
-                
-                if 'latest_date' in stock_data:
-                    fields.append({"title": "Date", "value": stock_data['latest_date'], "short": True})
-                
-                # Add price information if available
-                if 'data_points' in stock_data and stock_data['data_points'] > 0:
-                    price_info = "Latest price information available"
-                    fields.append({"title": "Data Points", "value": str(stock_data['data_points']), "short": True})
-                    
-                # Add date range if available
-                if 'date_range' in stock_data:
-                    date_range = stock_data['date_range']
-                    range_text = f"From {date_range.get('start', 'N/A')} to {date_range.get('end', 'N/A')}"
-                    fields.append({"title": "Date Range", "value": range_text, "short": False})
-            
-            if details:
-                fields.append({"title": "Details", "value": f"```{details}```", "short": False})
+            if success_details:
+                fields.append({"title": "Details", "value": f"```{success_details}```", "short": False})
             
             # Add additional fields if provided
             if additional_fields:
                 fields.extend(additional_fields)
                 
             slack_success = self.send_slack(
-                message=message,
-                title="✅ SUCCESS",
+                message=success_message,
+                title=subject,
                 color="#36a64f",  # Green
                 fields=fields,
                 webhook_url=self.slack_webhook_url_info
@@ -429,6 +459,73 @@ class AlertManager:
                 color="#FFA500",  # Orange
                 fields=fields,
                 webhook_url=self.slack_webhook_url_warning
+            )
+        
+        return email_success or slack_success
+    
+    def send_info_alert(
+        self,
+        info_message: str,
+        info_details: Optional[str] = None,
+        source: Optional[str] = None,
+        send_email: bool = True,
+        send_slack: bool = True,
+        additional_fields: Optional[List[Dict[str, str]]] = None
+    ) -> bool:
+        """
+        Send an informational alert to all configured channels.
+        
+        Args:
+            info_message: Short informational message
+            info_details: Detailed information
+            source: Source of the information (e.g., script name)
+            send_email: Whether to send an email alert
+            send_slack: Whether to send a Slack alert
+            additional_fields: Additional fields to include in the Slack message
+            
+        Returns:
+            Boolean indicating if at least one alert was sent successfully
+        """
+        source_info = f" from {source}" if source else ""
+        subject = f"ℹ️ INFO{source_info}: {info_message}"
+        
+        # Create message body
+        body = f"Information{source_info}:\n\n{info_message}"
+        if info_details:
+            body += f"\n\nDetails:\n{info_details}"
+        
+        # Create HTML body for email
+        html_body = f"""
+        <h2>Information{source_info}</h2>
+        <p><strong>{info_message}</strong></p>
+        """
+        if info_details:
+            html_body += f"<h3>Details:</h3><pre>{info_details}</pre>"
+        
+        # Send alerts
+        email_success = False
+        slack_success = False
+        
+        if send_email and self.email_config:
+            email_success = self.send_email(subject, body, html_body)
+            
+        if send_slack and self.slack_webhook_url_info:
+            fields = []
+            if source:
+                fields.append({"title": "Source", "value": source, "short": True})
+            if info_details:
+                fields.append({"title": "Details", "value": f"```{info_details}```", "short": False})
+            
+            # Add additional fields if provided
+            if additional_fields:
+                fields.extend(additional_fields)
+                
+            slack_success = self.send_slack(
+                message=info_message,
+                title=subject,
+                color="#3AA3E3",  # Blue
+                fields=fields,
+                webhook_url=self.slack_webhook_url_info
             )
         
         return email_success or slack_success

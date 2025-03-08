@@ -37,7 +37,22 @@ class S3Storage:
                 import boto3
                 from botocore.exceptions import ClientError
                 self.ClientError = ClientError
-                self.s3_client = boto3.client('s3', region_name=region_name)
+                
+                # 環境変数から認証情報を取得
+                aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
+                aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+                
+                # デバッグ情報を出力
+                logger.debug(f"S3Storage初期化: bucket_name={bucket_name}, region_name={region_name}")
+                logger.debug(f"AWS認証情報: access_key_id={aws_access_key_id[:4]}..., secret_key={aws_secret_access_key[:4] if aws_secret_access_key else None}...")
+                
+                # 認証情報を明示的に設定
+                self.s3_client = boto3.client(
+                    's3',
+                    region_name=str(region_name),  # 文字列に変換して確実に文字列を渡す
+                    aws_access_key_id=str(aws_access_key_id) if aws_access_key_id else None,
+                    aws_secret_access_key=str(aws_secret_access_key) if aws_secret_access_key else None
+                )
             except Exception as e:
                 logger.warning(f"⚠️ Failed to initialize boto3: {e}. Using mock mode.")
                 self.mock_mode = True
@@ -49,13 +64,13 @@ class S3Storage:
         global logger
         logger = custom_logger
     
-    def save_json(self, data: Dict[str, Any], key: str) -> bool:
+    def save_json(self, key: str, data: Dict[str, Any]) -> bool:
         """
         Save data as JSON to S3.
         
         Args:
-            data: Data to save
             key: S3 object key (path)
+            data: Data to save
             
         Returns:
             Boolean indicating success
@@ -65,10 +80,17 @@ class S3Storage:
             return True
             
         try:
+            # データをJSON文字列に変換
             json_data = json.dumps(data, indent=2)
+            
+            # デバッグ情報を出力
+            logger.debug(f"S3 put_object: bucket={self.bucket_name}, key={key}")
+            logger.debug(f"JSON data size: {len(json_data)} bytes")
+            
+            # S3にオブジェクトを保存
             self.s3_client.put_object(
-                Bucket=self.bucket_name,
-                Key=key,
+                Bucket=str(self.bucket_name),  # 文字列に変換
+                Key=str(key),  # 文字列に変換
                 Body=json_data,
                 ContentType='application/json'
             )
@@ -76,6 +98,9 @@ class S3Storage:
             return True
         except Exception as e:
             logger.exception(f"❌ Error saving JSON data to S3: {e}")
+            # エラーの詳細情報を出力
+            import traceback
+            logger.error(f"詳細なエラー情報: {traceback.format_exc()}")
             return False
     
     def save_csv(self, df: pd.DataFrame, key: str) -> bool:
