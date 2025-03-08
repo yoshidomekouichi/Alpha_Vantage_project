@@ -11,8 +11,25 @@ import sys
 import json
 import logging
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import traceback
+
+# タイムゾーン処理用
+try:
+    # Python 3.9以降の標準ライブラリ
+    from zoneinfo import ZoneInfo
+    def get_jst_time():
+        return datetime.now(ZoneInfo("Asia/Tokyo"))
+except ImportError:
+    # Python 3.9未満またはzoneinfo非対応環境用
+    try:
+        import pytz
+        def get_jst_time():
+            return datetime.now(pytz.timezone('Asia/Tokyo'))
+    except ImportError:
+        # pytzも利用できない場合は、UTCに9時間を加算
+        def get_jst_time():
+            return datetime.now() + timedelta(hours=9)
 
 # Lambda環境変数を設定
 os.environ['AWS_LAMBDA_EXECUTION'] = 'true'
@@ -183,6 +200,7 @@ def lambda_handler(event, context):
             
             # 各シンボルに対して処理を実行
             results = {}
+            error_details = {}  # エラーの詳細を記録する辞書
             for symbol in symbols:
                 logger.info(f"シンボル {symbol} の処理を開始します...")
                 
@@ -205,9 +223,16 @@ def lambda_handler(event, context):
                     
                     # レスポンスを確認
                     if response.status_code != 200:
-                        logger.error(f"APIリクエストが失敗しました: ステータスコード {response.status_code}")
+                        error_msg = f"APIリクエストが失敗しました: ステータスコード {response.status_code}"
+                        logger.error(error_msg)
                         logger.error(f"レスポンス: {response.text}")
                         results[symbol] = 'error'
+                        error_details[symbol] = {
+                            'error_type': 'API Request Error',
+                            'status_code': response.status_code,
+                            'message': error_msg,
+                            'response': response.text[:200] + '...' if len(response.text) > 200 else response.text
+                        }
                         continue
                     
                     # JSONデータを解析
@@ -215,13 +240,25 @@ def lambda_handler(event, context):
                     
                     # エラーチェック
                     if "Error Message" in data:
-                        logger.error(f"APIエラー: {data['Error Message']}")
+                        error_msg = f"APIエラー: {data['Error Message']}"
+                        logger.error(error_msg)
                         results[symbol] = 'error'
+                        error_details[symbol] = {
+                            'error_type': 'API Error',
+                            'message': error_msg,
+                            'api_error': data['Error Message']
+                        }
                         continue
                     
                     if "Time Series (Daily)" not in data:
-                        logger.error(f"予期しないAPIレスポンス形式: {data}")
+                        error_msg = f"予期しないAPIレスポンス形式"
+                        logger.error(f"{error_msg}: {data}")
                         results[symbol] = 'error'
+                        error_details[symbol] = {
+                            'error_type': 'Unexpected Response Format',
+                            'message': error_msg,
+                            'response_keys': list(data.keys())
+                        }
                         continue
                     
                     # 最新の日付のデータを取得
@@ -244,9 +281,16 @@ def lambda_handler(event, context):
                     logger.info(f"データを取得しました: {symbol} ({latest_date})")
                     
                 except Exception as e:
-                    logger.error(f"データ取得中にエラーが発生しました: {e}")
+                    error_msg = f"データ取得中にエラーが発生しました: {e}"
+                    logger.error(error_msg)
                     logger.error(traceback.format_exc())
                     results[symbol] = 'error'
+                    error_details[symbol] = {
+                        'error_type': 'Data Fetch Error',
+                        'message': error_msg,
+                        'symbol': symbol,
+                        'error': str(e)
+                    }
                     continue
                 
                 # S3にデータを保存
@@ -261,8 +305,26 @@ def lambda_handler(event, context):
                     logger.info(f"データをS3に保存しました: s3://{s3_bucket}/{s3_key}")
                     results[symbol] = 'success'
                 except ClientError as e:
-                    logger.error(f"S3へのデータ保存に失敗しました: {e}")
+                    error_msg = f"S3へのデータ保存に失敗しました: {e}"
+                    logger.error(error_msg)
                     results[symbol] = 'error'
+                    error_details[symbol] = {
+                        'error_type': 'S3 Storage Error',
+                        'message': error_msg,
+                        's3_bucket': s3_bucket,
+                        's3_key': s3_key,
+                        'error': str(e)
+                    }
+                except Exception as e:
+                    error_msg = f"S3へのデータ保存中に予期しないエラーが発生しました: {e}"
+                    logger.error(error_msg)
+                    logger.error(traceback.format_exc())
+                    results[symbol] = 'error'
+                    error_details[symbol] = {
+                        'error_type': 'Unexpected S3 Error',
+                        'message': error_msg,
+                        'error': str(e)
+                    }
             
             # 実行時間を計算
             end_time = time.time()
@@ -277,13 +339,15 @@ def lambda_handler(event, context):
                 try:
                     # 実行環境情報を取得
                     env_info = f"Environment: {env_type}"
-                    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    utc_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    jst_timestamp = get_jst_time().strftime("%Y-%m-%d %H:%M:%S")
                     
                     # 共通のフィールド
                     common_fields = [
                         {"title": "Environment", "value": env_type, "short": True},
                         {"title": "Execution Time", "value": f"{execution_time:.2f} seconds", "short": True},
-                        {"title": "Timestamp", "value": timestamp, "short": True},
+                        {"title": "Timestamp (UTC)", "value": utc_timestamp, "short": True},
+                        {"title": "Timestamp (JST)", "value": jst_timestamp, "short": True},
                     ]
                     
                     # 結果に基づいて通知を送信
@@ -297,6 +361,16 @@ def lambda_handler(event, context):
                             {"title": "Success Count", "value": str(success_count), "short": True},
                             {"title": "Failure Count", "value": str(failure_count), "short": True}
                         ]
+                        
+                        # エラーの詳細情報を追加
+                        for symbol in failed_symbols:
+                            if symbol in error_details:
+                                error_info = error_details[symbol]
+                                failure_fields.append({
+                                    "title": f"Error Details for {symbol}",
+                                    "value": f"Type: {error_info.get('error_type', 'Unknown')}\nMessage: {error_info.get('message', 'No message')}",
+                                    "short": False
+                                })
                         
                         # 詳細な結果情報
                         detailed_results = "\n".join([f"{symbol}: {result}" for symbol, result in results.items()])
@@ -389,13 +463,15 @@ Total successful: {success_count}
             try:
                 # 実行環境情報を取得
                 env_info = f"Environment: {env_type}"
-                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                utc_timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                jst_timestamp = get_jst_time().strftime("%Y-%m-%d %H:%M:%S")
                 
                 # エラー情報を詳細に含める
                 error_fields = [
                     {"title": "Environment", "value": env_type, "short": True},
                     {"title": "Execution Time", "value": f"{execution_time:.2f} seconds", "short": True},
-                    {"title": "Timestamp", "value": timestamp, "short": True},
+                    {"title": "Timestamp (UTC)", "value": utc_timestamp, "short": True},
+                    {"title": "Timestamp (JST)", "value": jst_timestamp, "short": True},
                     {"title": "Error", "value": str(e), "short": False}
                 ]
                 
