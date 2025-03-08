@@ -26,6 +26,14 @@ sys.path.append('.')
 sys.path.append('/var/task')  # Lambda環境でのルートディレクトリ
 
 # 依存関係のインポートを遅延させる（Lambda実行時に必要なものだけをインポート）
+try:
+    from utils.alerts import AlertManager
+except ImportError:
+    # Lambda環境では直接インポートを試みる
+    try:
+        from alerts import AlertManager
+    except ImportError:
+        logger.error("AlertManagerのインポートに失敗しました")
 
 def setup_logging():
     """
@@ -84,6 +92,41 @@ def lambda_handler(event, context):
     stock_symbols = os.environ.get('STOCK_SYMBOLS', 'NVDA,AAPL,MSFT')
     mock_mode = os.environ.get('MOCK_MODE', 'false').lower() == 'true'
     debug_mode = os.environ.get('DEBUG_MODE', 'false').lower() == 'true'
+    
+    # Slack通知の設定を取得
+    slack_enabled = os.environ.get('SLACK_ENABLED', 'false').lower() == 'true'
+    slack_webhook_url = os.environ.get('SLACK_WEBHOOK_URL', '')
+    slack_webhook_url_error = os.environ.get('SLACK_WEBHOOK_URL_ERROR', slack_webhook_url)
+    slack_webhook_url_warning = os.environ.get('SLACK_WEBHOOK_URL_WARNING', slack_webhook_url)
+    slack_webhook_url_info = os.environ.get('SLACK_WEBHOOK_URL_INFO', slack_webhook_url)
+    
+    # AlertManagerの初期化
+    alert_manager = None
+    if slack_enabled:
+        try:
+            alert_manager = AlertManager(
+                None,  # email_config
+                slack_webhook_url,
+                slack_webhook_url_error,
+                slack_webhook_url_warning,
+                slack_webhook_url_info
+            )
+            alert_manager.set_logger(logger)
+            logger.info("AlertManagerを初期化しました")
+            
+            # デバッグモードの場合はSlack設定の詳細をログに出力
+            if debug_mode:
+                logger.debug("=" * 80)
+                logger.debug("Slack設定の詳細:")
+                logger.debug(f"slack_enabled: {slack_enabled}")
+                logger.debug(f"slack_webhook_url: {slack_webhook_url}")
+                logger.debug(f"slack_webhook_url_error: {slack_webhook_url_error}")
+                logger.debug(f"slack_webhook_url_warning: {slack_webhook_url_warning}")
+                logger.debug(f"slack_webhook_url_info: {slack_webhook_url_info}")
+                logger.debug("=" * 80)
+        except Exception as e:
+            logger.error(f"AlertManagerの初期化に失敗しました: {e}")
+            logger.error(traceback.format_exc())
     
     # 実行モードを設定
     env_type = "Lambda"
@@ -225,12 +268,108 @@ def lambda_handler(event, context):
             end_time = time.time()
             execution_time = end_time - start_time
             
+            # 結果を集計
+            success_count = sum(1 for result in results.values() if result == 'success')
+            failure_count = sum(1 for result in results.values() if result != 'success')
+            
+            # Slack通知を送信
+            if slack_enabled and alert_manager:
+                try:
+                    # 実行環境情報を取得
+                    env_info = f"Environment: {env_type}"
+                    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    
+                    # 共通のフィールド
+                    common_fields = [
+                        {"title": "Environment", "value": env_type, "short": True},
+                        {"title": "Execution Time", "value": f"{execution_time:.2f} seconds", "short": True},
+                        {"title": "Timestamp", "value": timestamp, "short": True},
+                    ]
+                    
+                    # 結果に基づいて通知を送信
+                    if failure_count > 0:
+                        # 失敗したシンボルを抽出
+                        failed_symbols = [symbol for symbol, result in results.items() if result != 'success']
+                        
+                        # 失敗情報を詳細に含める
+                        failure_fields = [
+                            {"title": "Failed Symbols", "value": ", ".join(failed_symbols), "short": False},
+                            {"title": "Success Count", "value": str(success_count), "short": True},
+                            {"title": "Failure Count", "value": str(failure_count), "short": True}
+                        ]
+                        
+                        # 詳細な結果情報
+                        detailed_results = "\n".join([f"{symbol}: {result}" for symbol, result in results.items()])
+                        
+                        # 警告アラートを送信
+                        alert_message = f"⚠️ Lambda: Daily stock data fetch completed with {failure_count} failures"
+                        alert_details = f"""
+WARNING: Some stock data fetch operations failed.
+
+Execution time: {execution_time:.2f} seconds
+Environment: {env_type}
+Successful: {success_count}
+Failed: {failure_count}
+
+Failed symbols: {', '.join(failed_symbols)}
+
+Detailed results:
+{detailed_results}
+"""
+                        alert_manager.send_warning_alert(
+                            alert_message,
+                            alert_details,
+                            source="lambda_function.py",
+                            send_email=False,
+                            send_slack=True,
+                            additional_fields=common_fields + failure_fields
+                        )
+                        logger.info("✅ 警告通知を送信しました")
+                    else:
+                        # 成功したシンボルを抽出
+                        successful_symbols = [symbol for symbol, result in results.items() if result == 'success']
+                        
+                        # 成功情報を詳細に含める
+                        success_fields = [
+                            {"title": "Successful Symbols", "value": ", ".join(successful_symbols), "short": False},
+                            {"title": "Total Successful", "value": str(success_count), "short": True}
+                        ]
+                        
+                        # 成功アラートを送信
+                        alert_message = f"✅ Lambda: Daily stock data fetch completed successfully for all {success_count} symbols"
+                        alert_details = f"""
+INFO: Stock data fetch summary.
+
+Execution time: {execution_time:.2f} seconds
+Environment: {env_type}
+Successful symbols: {', '.join(successful_symbols)}
+Total successful: {success_count}
+"""
+                        alert_manager.send_success_alert(
+                            alert_message,
+                            alert_details,
+                            source="lambda_function.py",
+                            send_email=False,
+                            send_slack=True,
+                            additional_fields=common_fields + success_fields
+                        )
+                        logger.info("✅ 成功通知を送信しました")
+                except Exception as e:
+                    logger.error(f"❌ Slack通知処理中にエラーが発生しました: {e}")
+                    logger.error(traceback.format_exc())
+            elif slack_enabled:
+                logger.warning("AlertManagerが初期化されていないため、Slack通知を送信できません")
+            else:
+                logger.info("Slack通知は無効化されています")
+            
             return {
                 'statusCode': 200,
                 'body': json.dumps({
                     'success': True,
                     'execution_time': f"{execution_time:.2f} seconds",
-                    'results': results
+                    'results': results,
+                    'success_count': success_count,
+                    'failure_count': failure_count
                 })
             }
         except ImportError as e:
@@ -244,6 +383,46 @@ def lambda_handler(event, context):
         
         logger.error(f"❌ Lambda関数でエラーが発生しました: {e}")
         logger.error(traceback.format_exc())
+        
+        # エラー通知をSlackに送信
+        if slack_enabled and alert_manager:
+            try:
+                # 実行環境情報を取得
+                env_info = f"Environment: {env_type}"
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                
+                # エラー情報を詳細に含める
+                error_fields = [
+                    {"title": "Environment", "value": env_type, "short": True},
+                    {"title": "Execution Time", "value": f"{execution_time:.2f} seconds", "short": True},
+                    {"title": "Timestamp", "value": timestamp, "short": True},
+                    {"title": "Error", "value": str(e), "short": False}
+                ]
+                
+                # エラーアラートを送信
+                alert_message = f"❌ Lambda: Daily stock data fetch failed with error"
+                alert_details = f"""
+ERROR: Lambda function execution failed.
+
+Execution time: {execution_time:.2f} seconds
+Environment: {env_type}
+Error: {str(e)}
+
+Stack trace:
+{traceback.format_exc()}
+"""
+                alert_manager.send_error_alert(
+                    alert_message,
+                    alert_details,
+                    source="lambda_function.py",
+                    send_email=False,
+                    send_slack=True,
+                    additional_fields=error_fields
+                )
+                logger.info("✅ エラー通知を送信しました")
+            except Exception as notify_error:
+                logger.error(f"❌ Slack通知処理中にエラーが発生しました: {notify_error}")
+                logger.error(traceback.format_exc())
         
         # Lambda関数の戻り値（エラー）
         return {
