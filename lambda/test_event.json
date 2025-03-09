@@ -1,0 +1,13 @@
+{
+  "version": "0",
+  "id": "89d1a02d-5ec7-412e-9b10-c604abd78f48",
+  "detail-type": "Scheduled Event",
+  "source": "aws.events",
+  "account": "123456789012",
+  "time": "2025-03-07T22:00:00Z",
+  "region": "ap-northeast-1",
+  "resources": [
+    "arn:aws:events:ap-northeast-1:123456789012:rule/FetchDailyLambdaSchedule"
+  ],
+  "detail": {}
+}
