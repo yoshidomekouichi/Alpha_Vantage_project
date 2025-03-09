@@ -1,0 +1,1 @@
+{"errorMessage": "Unable to import module 'fetch_daily_lambda': Unable to import required dependencies:\nnumpy: Error importing numpy: you should not try to import numpy from\n        its source directory; please exit the numpy source tree, and relaunch\n        your python interpreter from there.", "errorType": "Runtime.ImportModuleError", "requestId": "", "stackTrace": []}
