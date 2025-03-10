@@ -1,0 +1,13 @@
+{
+  "version": "0",
+  "id": "test-event-id",
+  "detail-type": "Scheduled Event",
+  "source": "aws.events",
+  "account": "123456789012",
+  "time": "2025-03-10T14:15:00Z",
+  "region": "ap-northeast-1",
+  "resources": [
+    "arn:aws:events:ap-northeast-1:123456789012:rule/StockDataFetchSchedule"
+  ],
+  "detail": {}
+}

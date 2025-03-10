@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  mock-test
+
+  SAM Template for Stock Data Fetch Lambda Function Test
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+
+Resources:
+  StockDataFetchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: stock_data_fetch/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          ALPHA_VANTAGE_API_KEY: demo
+          S3_BUCKET: mock-bucket
+          REGION: ap-northeast-1
+          STOCK_SYMBOLS: NVDA,AAPL,MSFT
+          MOCK_MODE: true
+          DEBUG_MODE: true
+          SLACK_ENABLED: false
+          # PostgreSQL環境変数
+          POSTGRES_DB: prod_db
+          POSTGRES_USER: myuser
+          POSTGRES_PASSWORD: 0000
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5434
+          # データ保存先の設定（S3またはPostgreSQL）
+          STORAGE_TYPE: postgres  # 's3' または 'postgres'
+
+Outputs:
+  StockDataFetchFunction:
+    Description: "Stock Data Fetch Lambda Function ARN"
+    Value: !GetAtt StockDataFetchFunction.Arn
+  StockDataFetchFunctionIamRole:
+    Description: "Implicit IAM Role created for Stock Data Fetch function"
+    Value: !GetAtt StockDataFetchFunctionRole.Arn
