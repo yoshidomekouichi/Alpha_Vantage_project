@@ -24,7 +24,6 @@ class AlertManager:
     def __init__(
         self,
         email_config: Optional[Dict[str, str]] = None,
-        slack_webhook_url: Optional[str] = None,
         slack_webhook_url_error: Optional[str] = None,
         slack_webhook_url_warning: Optional[str] = None,
         slack_webhook_url_info: Optional[str] = None
@@ -40,18 +39,16 @@ class AlertManager:
                 - smtp_password: SMTP password
                 - from_email: Sender email address
                 - to_email: Recipient email address(es) (string or list)
-            slack_webhook_url: Default Slack webhook URL for sending messages
             slack_webhook_url_error: Slack webhook URL for error messages
             slack_webhook_url_warning: Slack webhook URL for warning messages
             slack_webhook_url_info: Slack webhook URL for info messages
         """
         self.email_config = email_config
-        self.slack_webhook_url = slack_webhook_url
         
         # Slack webhook URLs for different alert levels
-        self.slack_webhook_url_error = slack_webhook_url_error or slack_webhook_url
-        self.slack_webhook_url_warning = slack_webhook_url_warning or slack_webhook_url
-        self.slack_webhook_url_info = slack_webhook_url_info or slack_webhook_url
+        self.slack_webhook_url_error = slack_webhook_url_error
+        self.slack_webhook_url_warning = slack_webhook_url_warning
+        self.slack_webhook_url_info = slack_webhook_url_info
         
     def set_logger(self, custom_logger):
         """Set a custom logger for the alert manager."""
@@ -146,11 +143,11 @@ class AlertManager:
         Returns:
             Boolean indicating success
         """
-        webhook = webhook_url or self.slack_webhook_url
-        
-        if not webhook:
+        if not webhook_url:
             logger.warning("⚠️ Slack webhook URL not provided, skipping Slack alert")
             return False
+        
+        webhook = webhook_url
         
         # URLの形式を確認
         if not webhook.startswith('https://hooks.slack.com/'):
@@ -229,11 +226,19 @@ class AlertManager:
         Test the Slack connection by sending a simple test message.
         
         Args:
-            webhook_url: Override webhook URL
+            webhook_url: Webhook URL to test (required)
             
         Returns:
             Boolean indicating success
         """
+        if not webhook_url:
+            # デフォルトでinfo用のWebhook URLを使用
+            webhook_url = self.slack_webhook_url_info
+            
+        if not webhook_url:
+            logger.warning("⚠️ No Slack webhook URL provided for testing")
+            return False
+            
         test_message = "🔍 This is a test message from AlertManager"
         return self.send_slack(
             message=test_message,
@@ -248,7 +253,8 @@ class AlertManager:
         source: Optional[str] = None,
         send_email: bool = True,
         send_slack: bool = True,
-        additional_fields: Optional[List[Dict[str, str]]] = None
+        additional_fields: Optional[List[Dict[str, str]]] = None,
+        webhook_url: Optional[str] = None
     ) -> bool:
         """
         Send an error alert to all configured channels.
@@ -298,12 +304,15 @@ class AlertManager:
             if additional_fields:
                 fields.extend(additional_fields)
                 
+            # webhook_urlパラメータが指定されていれば、それを使用
+            webhook = webhook_url if webhook_url else self.slack_webhook_url_error
+            
             slack_success = self.send_slack(
                 message=error_message,
                 title="❌ ERROR",
                 color="#FF0000",  # Red
                 fields=fields,
-                webhook_url=self.slack_webhook_url_error
+                webhook_url=webhook
             )
         
         return email_success or slack_success
@@ -315,7 +324,8 @@ class AlertManager:
         source: Optional[str] = None,
         send_email: bool = True,
         send_slack: bool = True,
-        additional_fields: Optional[List[Dict[str, str]]] = None
+        additional_fields: Optional[List[Dict[str, str]]] = None,
+        webhook_url: Optional[str] = None
     ) -> bool:
         """
         Send a success alert to all configured channels.
@@ -365,12 +375,15 @@ class AlertManager:
             if additional_fields:
                 fields.extend(additional_fields)
                 
+            # webhook_urlパラメータが指定されていれば、それを使用
+            webhook = webhook_url if webhook_url else self.slack_webhook_url_info
+            
             slack_success = self.send_slack(
                 message=success_message,
                 title=subject,
                 color="#36a64f",  # Green
                 fields=fields,
-                webhook_url=self.slack_webhook_url_info
+                webhook_url=webhook
             )
         
         return email_success or slack_success
@@ -383,7 +396,8 @@ class AlertManager:
         send_email: bool = True,
         send_slack: bool = True,
         additional_fields: Optional[List[Dict[str, str]]] = None,
-        data_issues: Optional[Dict[str, Any]] = None
+        data_issues: Optional[Dict[str, Any]] = None,
+        webhook_url: Optional[str] = None
     ) -> bool:
         """
         Send a warning alert to all configured channels.
@@ -453,12 +467,15 @@ class AlertManager:
             if additional_fields:
                 fields.extend(additional_fields)
                 
+            # webhook_urlパラメータが指定されていれば、それを使用
+            webhook = webhook_url if webhook_url else self.slack_webhook_url_warning
+            
             slack_success = self.send_slack(
                 message=warning_message,
                 title="⚠️ WARNING",
                 color="#FFA500",  # Orange
                 fields=fields,
-                webhook_url=self.slack_webhook_url_warning
+                webhook_url=webhook
             )
         
         return email_success or slack_success
@@ -470,7 +487,8 @@ class AlertManager:
         source: Optional[str] = None,
         send_email: bool = True,
         send_slack: bool = True,
-        additional_fields: Optional[List[Dict[str, str]]] = None
+        additional_fields: Optional[List[Dict[str, str]]] = None,
+        webhook_url: Optional[str] = None
     ) -> bool:
         """
         Send an informational alert to all configured channels.
@@ -520,12 +538,15 @@ class AlertManager:
             if additional_fields:
                 fields.extend(additional_fields)
                 
+            # webhook_urlパラメータが指定されていれば、それを使用
+            webhook = webhook_url if webhook_url else self.slack_webhook_url_info
+            
             slack_success = self.send_slack(
                 message=info_message,
                 title=subject,
                 color="#3AA3E3",  # Blue
                 fields=fields,
-                webhook_url=self.slack_webhook_url_info
+                webhook_url=webhook
             )
         
         return email_success or slack_success

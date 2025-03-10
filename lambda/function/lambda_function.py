@@ -123,7 +123,6 @@ def lambda_handler(event, context):
         try:
             alert_manager = AlertManager(
                 None,  # email_config
-                slack_webhook_url,
                 slack_webhook_url_error,
                 slack_webhook_url_warning,
                 slack_webhook_url_info
@@ -203,6 +202,7 @@ def lambda_handler(event, context):
             error_details = {}  # エラーの詳細を記録する辞書
             data_sizes = {}     # 各シンボルのデータサイズを記録する辞書
             s3_paths = {}       # 各シンボルのS3パスを記録する辞書
+            symbol_dates = {}   # 各シンボルの日付を記録する辞書
             latest_date = None  # 最新の日付（すべてのシンボルで共通）
             for symbol in symbols:
                 logger.info(f"シンボル {symbol} の処理を開始します...")
@@ -346,8 +346,9 @@ def lambda_handler(event, context):
                 except Exception as e:
                     logger.warning(f"データサイズ比較処理中にエラーが発生しました: {e}")
                 
-                # 最新の日付を保存（すべてのシンボルで共通）
-                latest_date = stock_data['date']
+                # 各シンボルの日付を保存
+                symbol_date = stock_data['date']
+                symbol_dates[symbol] = symbol_date
                 
                 # S3にデータを保存
                 try:
@@ -365,10 +366,12 @@ def lambda_handler(event, context):
                         
                         # 標準階層構造(V2)のS3キーを生成
                         # 1. 日次データ用のキー
+                        # 各シンボルごとにAPIから取得した日付を使用
+                        symbol_date = stock_data['date']  # APIから取得した日付
                         daily_key = get_s3_key(
                             symbol=symbol,
                             data_type='raw',
-                            date=latest_date,
+                            date=symbol_date,  # APIから取得した日付を使用
                             is_latest=False,
                             is_mock=is_mock
                         )
@@ -397,7 +400,7 @@ def lambda_handler(event, context):
                     except ImportError:
                         # s3_paths.pyが見つからない場合は旧形式を使用
                         logger.warning("s3_paths.pyが見つからないため、旧形式のS3パスを使用します")
-                        daily_key = f"daily/{symbol}/{latest_date}.json"
+                        daily_key = f"daily/{symbol}/{symbol_date}.json"  # APIから取得した日付を使用
                         latest_key = f"{symbol}/latest.json"
                         full_key = f"{symbol}/full.json"
                         metadata_key = f"{symbol}/metadata.json"
@@ -410,11 +413,11 @@ def lambda_handler(event, context):
                     metadata = {
                         'symbol': symbol,
                         'last_updated': datetime.now().isoformat(),
-                        'latest_date': latest_date,
+                        'latest_date': symbol_date,  # 各シンボルの日付を使用
                         'data_points': 1,  # 日次データのみの場合
                         'date_range': {
-                            'start': latest_date,
-                            'end': latest_date
+                            'start': symbol_date,  # 各シンボルの日付を使用
+                            'end': symbol_date     # 各シンボルの日付を使用
                         }
                     }
                     
@@ -555,7 +558,9 @@ Detailed results:
                         successful_symbols = [symbol for symbol, result in results.items() if result == 'success']
                         
                         # データ日付の情報
-                        data_date_field = {"title": "Data Date", "value": latest_date, "short": True}
+                        # 各シンボルの日付を表示
+                        date_info = ", ".join([f"{symbol}: {date}" for symbol, date in symbol_dates.items()])
+                        data_date_field = {"title": "Data Dates", "value": date_info, "short": False}
                         
                         # データ情報フィールドを作成
                         total_data_size = sum(data_sizes.values())
@@ -668,15 +673,21 @@ Detailed results:
                         
                         # 成功アラートを送信
                         alert_message = f"✅ Lambda: Daily stock data fetch completed successfully for all {success_count} symbols"
+                        
+                        # 各シンボルの日付情報を詳細に含める
+                        date_details = "\n".join([f"- {symbol}: {date}" for symbol, date in symbol_dates.items()])
+                        
                         alert_details = f"""
 INFO: Stock data fetch summary.
 
 Execution time: {execution_time:.2f} seconds
 Environment: {env_type}
-Data date: {latest_date}
 Successful symbols: {', '.join(successful_symbols)}
 Total successful: {success_count}
 Total data size: {total_data_size / 1024:.2f} KB
+
+Data dates:
+{date_details}
 """
                         alert_manager.send_success_alert(
                             alert_message,

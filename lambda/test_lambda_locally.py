@@ -25,7 +25,8 @@ with open(test_event_path, 'r') as f:
 # Lambda関数のハンドラーをインポート
 sys.path.insert(0, './package')  # パッケージディレクトリをパスに追加
 sys.path.insert(0, '.')  # カレントディレクトリをパスに追加
-from fetch_daily_lambda import handler
+sys.path.insert(0, './function')  # function ディレクトリをパスに追加
+from lambda_function import lambda_handler as handler
 
 # Lambda関数を実行
 print("Lambda関数を実行中...")

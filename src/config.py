@@ -83,6 +83,12 @@ class Config:
         self.s3_region = os.getenv('AWS_REGION', 'ap-northeast-1')
         self.s3_prefix = os.getenv('S3_PREFIX', 'stock-data')
         
+        # S3保存設定
+        self.save_to_s3 = os.getenv('SAVE_TO_S3', 'True').lower() == 'true'
+        
+        # Local storage configuration
+        self.local_storage_dir = os.getenv('LOCAL_STORAGE_DIR', str(self.project_root / 'local_data'))
+        
         # Email configuration
         self.email_enabled = os.getenv('EMAIL_ENABLED', 'False').lower() == 'true'
         if self.email_enabled:
@@ -101,41 +107,64 @@ class Config:
         self.slack_enabled = os.getenv('SLACK_ENABLED', 'False').lower() == 'true'
         
         # Slack Webhook URLの設定
-        slack_webhook_url = os.getenv('SLACK_WEBHOOK_URL')
+        slack_webhook_url_error = os.getenv('SLACK_WEBHOOK_URL_ERROR')
+        slack_webhook_url_warning = os.getenv('SLACK_WEBHOOK_URL_WARNING')
+        slack_webhook_url_info = os.getenv('SLACK_WEBHOOK_URL_INFO')
+        slack_webhook_url_local_test = os.getenv('SLACK_WEBHOOK_URL_LOCAL_TEST')
+        
+        # 後方互換性のために、SLACK_WEBHOOK_URLも読み込む
+        default_webhook_url = os.getenv('SLACK_WEBHOOK_URL')
         
         # Webhook URLのログ出力（デバッグ用）
-        logger.debug(f"SLACK_WEBHOOK_URL環境変数: {slack_webhook_url}")
+        logger.debug(f"SLACK_WEBHOOK_URL_ERROR環境変数: {slack_webhook_url_error}")
+        logger.debug(f"SLACK_WEBHOOK_URL_WARNING環境変数: {slack_webhook_url_warning}")
+        logger.debug(f"SLACK_WEBHOOK_URL_INFO環境変数: {slack_webhook_url_info}")
+        logger.debug(f"SLACK_WEBHOOK_URL_LOCAL_TEST環境変数: {slack_webhook_url_local_test}")
+        logger.debug(f"SLACK_WEBHOOK_URL環境変数（後方互換性）: {default_webhook_url}")
         
         if self.slack_enabled:
-            # Webhook URLが設定されているか確認
-            if not slack_webhook_url:
-                logger.warning("⚠️ SLACK_WEBHOOK_URL is not set, but Slack notifications are enabled")
+            # 各Webhook URLが設定されているか確認
+            # デフォルトのWebhook URLがあれば、それを使用
+            if not slack_webhook_url_error:
+                slack_webhook_url_error = default_webhook_url
+            if not slack_webhook_url_warning:
+                slack_webhook_url_warning = default_webhook_url
+            if not slack_webhook_url_info:
+                slack_webhook_url_info = default_webhook_url
+                
+            # いずれかのWebhook URLが設定されているか確認
+            if not (slack_webhook_url_error or slack_webhook_url_warning or slack_webhook_url_info):
+                logger.warning("⚠️ No Slack webhook URLs are set, but Slack notifications are enabled")
                 self.slack_enabled = False
-                self.slack_webhook_url = None
                 self.slack_webhook_url_error = None
                 self.slack_webhook_url_warning = None
                 self.slack_webhook_url_info = None
             else:
                 # URLの形式を確認
-                if not slack_webhook_url.startswith('https://hooks.slack.com/'):
-                    logger.warning(f"⚠️ Invalid Slack webhook URL format: {slack_webhook_url}")
+                for url_name, url in [
+                    ("SLACK_WEBHOOK_URL_ERROR", slack_webhook_url_error),
+                    ("SLACK_WEBHOOK_URL_WARNING", slack_webhook_url_warning),
+                    ("SLACK_WEBHOOK_URL_INFO", slack_webhook_url_info)
+                ]:
+                    if url and not url.startswith('https://hooks.slack.com/'):
+                        logger.warning(f"⚠️ Invalid Slack webhook URL format for {url_name}: {url}")
                 
                 # Webhook URLを設定
-                self.slack_webhook_url = slack_webhook_url
-                self.slack_webhook_url_error = os.getenv('SLACK_WEBHOOK_URL_ERROR', self.slack_webhook_url)
-                self.slack_webhook_url_warning = os.getenv('SLACK_WEBHOOK_URL_WARNING', self.slack_webhook_url)
-                self.slack_webhook_url_info = os.getenv('SLACK_WEBHOOK_URL_INFO', self.slack_webhook_url)
+                self.slack_webhook_url_error = slack_webhook_url_error
+                self.slack_webhook_url_warning = slack_webhook_url_warning
+                self.slack_webhook_url_info = slack_webhook_url_info
+                self.slack_webhook_url_local_test = slack_webhook_url_local_test
                 
                 logger.debug(f"Slack通知が有効です")
-                logger.debug(f"slack_webhook_url: {self.slack_webhook_url}")
                 logger.debug(f"slack_webhook_url_error: {self.slack_webhook_url_error}")
                 logger.debug(f"slack_webhook_url_warning: {self.slack_webhook_url_warning}")
                 logger.debug(f"slack_webhook_url_info: {self.slack_webhook_url_info}")
+                logger.debug(f"slack_webhook_url_local_test: {self.slack_webhook_url_local_test}")
         else:
-            self.slack_webhook_url = None
             self.slack_webhook_url_error = None
             self.slack_webhook_url_warning = None
             self.slack_webhook_url_info = None
+            self.slack_webhook_url_local_test = None
             logger.debug("Slack通知は無効です")
         
         # Logging configuration
@@ -161,8 +190,8 @@ class Config:
                 if not os.getenv(key):
                     missing_vars.append(key)
         
-        if self.slack_enabled and not self.slack_webhook_url:
-            missing_vars.append('SLACK_WEBHOOK_URL')
+        if self.slack_enabled and not (self.slack_webhook_url_error or self.slack_webhook_url_warning or self.slack_webhook_url_info):
+            missing_vars.append('SLACK_WEBHOOK_URL_* (at least one)')
         
         # Log warnings for missing variables
         if missing_vars:
@@ -261,6 +290,7 @@ class Config:
             's3_bucket': self.s3_bucket,
             's3_region': self.s3_region,
             's3_prefix': self.s3_prefix,
+            'save_to_s3': self.save_to_s3,
             'email_enabled': self.email_enabled,
             'slack_enabled': self.slack_enabled,
             'log_dir': self.log_dir,
